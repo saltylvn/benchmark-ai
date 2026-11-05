@@ -1,8 +1,12 @@
 # Atlas
 
+**[Play the war room locally](#browser-demo)** — `npm run preview`, then open [http://127.0.0.1:4173](http://127.0.0.1:4173). Mock mode, no API key, nothing is sent.
+
 An escalation lands at 8:47. The calendar was already double-booked. **Atlas** is a small swarm that rewrites the day, protects a morning focus block, and drafts the email and the Slack note. Nothing is sent.
 
 The Tuesday in the fixture belongs to Jordan Hale, a fictional client-support analyst who is also holding time to build a tool (CaseFlow) and to take a short wellness walk. Accounts, payers, and case ids are invented. The demo runs with no API keys.
+
+The picture below is the approved rewrite. The browser demo plays the swarm that gets there: war room, day plan, and morning brief.
 
 ```bash
 npm install
@@ -150,6 +154,26 @@ Tuesday, November 10, 2026. Working hours 08:30–17:30.
 
 At 08:47 Dana Okonkwo writes from Meridian Medical Group. Go-live is Friday. About 140 claims are stuck in pending remit. She needs a morning call and a written status before 12:15. The fixture lives in `src/fixtures/tuesday.ts`.
 
+## Browser demo
+
+The page in `docs/` runs the same `runWorkflow` function as the CLI. Play, pause, or step the war room. The critic rejects the first plan, then the day flips. **Day plan** and **Brief** are the other tabs. Drafts are labeled not sent. Deep links: `#war`, `#plan`, `#brief`.
+
+```bash
+npm install
+npm run preview
+```
+
+Open [http://127.0.0.1:4173](http://127.0.0.1:4173).
+
+### Sharing it while the source stays private
+
+Public GitHub Pages is not available to hiring teams on a private repository. This repo is meant to stay private, so `https://saltylvn.github.io/agentic-workflows/` is not a public hiring link. The demo is a static folder (`docs/index.html`, `docs/styles.css`, `docs/app.js`) with no keys in it. Publish that folder on its own if you want a passwordless URL:
+
+- Deploy `docs/` to any public static host (Netlify, Cloudflare Pages, S3, a separate **public** repo that contains only that folder).
+- Or, only if this repository is public, enable GitHub Pages with source **GitHub Actions**. `.github/workflows/pages.yml` publishes `docs/` on each push to `main`, at `https://saltylvn.github.io/agentic-workflows/`.
+
+Making the repository private turns that Pages URL off for anyone without repo access. The local preview keeps working.
+
 ## Run it
 
 Node 20 or newer.
@@ -174,7 +198,9 @@ npm run demo:all
 | `npm run demo:all` | Plan, brief, then war room. |
 | `npm run demo:live` | Same as `demo`, with optional prose polish. |
 | `npm test` | Scheduler properties and both workflows. |
-| `npm run typecheck` | `tsc --noEmit`. |
+| `npm run preview` | Browser demo on port 4173. |
+| `npm run build:web` | Rebuild `docs/app.js` for GitHub Pages. |
+| `npm run typecheck` | `tsc --noEmit`, including the browser demo. |
 
 Mock mode is the default, including when `OPENAI_API_KEY` happens to be set. Live polish is opt-in:
 
@@ -202,6 +228,8 @@ src/
   fixtures/          the Tuesday
   render/            terminal layout
   cli.ts             war-room | plan | brief | trace | all
+web/main.ts          browser shell around the same swarm
+docs/                GitHub Pages demo (index, styles, built app.js)
 tests/               node:test, via tsx
 docs/war-room.png    the approved rewrite
 ```
