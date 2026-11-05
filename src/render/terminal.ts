@@ -157,7 +157,7 @@ function banner(state: RunState, options: RenderOptions, title: string): string 
   const rule = "─".repeat(WIDTH);
   return [
     paint(options, "2", rule),
-    `${paint(options, "1", "QUORUM")}  ${title}`,
+    `${paint(options, "1", "ATLAS")}  ${title}`,
     `${state.dateLabel}  ·  ${state.persona}, ${state.role}`,
     paint(options, "2", `mode ${state.modelName}  ·  status ${state.status}  ·  nothing is sent from this demo`),
     paint(options, "2", rule),

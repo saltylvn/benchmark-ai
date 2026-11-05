@@ -1,6 +1,6 @@
-# Quorum
+# Atlas
 
-An escalation lands at 8:47. The calendar was already double-booked. **Quorum** is a small swarm that rewrites the day, protects a morning focus block, and drafts the email and the Slack note. Nothing is sent.
+An escalation lands at 8:47. The calendar was already double-booked. **Atlas** is a small swarm that rewrites the day, protects a morning focus block, and drafts the email and the Slack note. Nothing is sent.
 
 The Tuesday in the fixture belongs to Jordan Hale, a fictional client-support analyst who is also holding time to build a tool (CaseFlow) and to take a short wellness walk. Accounts, payers, and case ids are invented. The demo runs with no API keys.
 
@@ -126,7 +126,7 @@ The pipeline is the whole `npm run demo` run. The call card is specific on purpo
 ## Design choices
 
 1. **The schedule is a pure function.** Two strategies live in `src/schedule/plan.ts`. `client-first` places client meetings early, keeps lunch and the walk, then drops focus into the largest remaining gap. `protect-focus` places a true escalation first, reserves a morning block of at least 90 minutes, then fits everyone else. Re-running the demo prints the same day.
-2. **A model is optional prose polish.** `npm run demo` is mock mode even if a key is sitting in the environment. `npm run demo:live` can restyle the brief and the drafts when `QUORUM_PROVIDER=openai` and `OPENAI_API_KEY` are set. The prompt tells it to keep times, names, and case ids. Schedule decisions stay in `plan.ts`. If the call fails, the deterministic draft stands.
+2. **A model is optional prose polish.** `npm run demo` is mock mode even if a key is sitting in the environment. `npm run demo:live` can restyle the brief and the drafts when `ATLAS_PROVIDER=openai` and `OPENAI_API_KEY` are set. The prompt tells it to keep times, names, and case ids. Schedule decisions stay in `plan.ts`. If the call fails, the deterministic draft stands.
 3. **The critic is allowed to say no.** The handoff is a named failure. The planner picks the next strategy from that failure.
 4. **Drafts stay in the process.** Calendar, email, and Slack actions are `status: "draft"`. There is no send path to wire by accident.
 5. **The constraints are the point.** Focus has a 90-minute floor. The wellness walk can move up to 90 minutes and cannot be deleted. Samira's 1:1 and Halcyon's 15:30 window are fixed. Client calls get a prep buffer. Fixed meetings keep a 10-minute lead-in.
@@ -180,7 +180,7 @@ Mock mode is the default, including when `OPENAI_API_KEY` happens to be set. Liv
 
 ```bash
 cp .env.example .env
-# QUORUM_PROVIDER=openai
+# ATLAS_PROVIDER=openai
 # OPENAI_API_KEY=...
 npm run demo:live
 ```

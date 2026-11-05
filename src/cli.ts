@@ -4,7 +4,7 @@ import { runWorkflow } from "./orchestrator/supervisor.js";
 import { resolveModel } from "./providers/model.js";
 import { renderBrief, renderPlan, renderTraceJson, renderWarRoom, type RenderOptions } from "./render/terminal.js";
 
-const HELP = `Quorum — agentic workflows for a day that fights back
+const HELP = `Atlas — agentic workflows for a day that fights back
 
 Usage
   npm run demo            War room. Escalation at 08:47, swarm rewrites the day.
@@ -14,7 +14,7 @@ Usage
   npm run demo:all        Plan, brief, then war room.
   npm run demo:live       Same as demo, but polish prose if a provider is configured.
 
-Mock mode is the default. Pass --live with QUORUM_PROVIDER=openai and
+Mock mode is the default. Pass --live with ATLAS_PROVIDER=openai and
 OPENAI_API_KEY to restyle prose. The schedule never goes through a model.
 `;
 
@@ -30,7 +30,7 @@ export async function main(argv: string[]): Promise<number> {
 
   if (live && model.name === "mock") {
     process.stderr.write(
-      "Live prose polish is off. Set QUORUM_PROVIDER=openai and OPENAI_API_KEY, then pass --live. Running mock.\n",
+      "Live prose polish is off. Set ATLAS_PROVIDER=openai and OPENAI_API_KEY, then pass --live. Running mock.\n",
     );
   }
 

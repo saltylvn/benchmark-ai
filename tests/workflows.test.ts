@@ -62,7 +62,7 @@ describe("cli", () => {
   it("runs the hero demo in mock mode", () => {
     const result = spawnSync(process.execPath, ["--import", "tsx", "src/cli.ts", "war-room"], {
       encoding: "utf8",
-      env: { ...process.env, NO_COLOR: "1", QUORUM_PROVIDER: "mock" },
+      env: { ...process.env, NO_COLOR: "1", ATLAS_PROVIDER: "mock" },
     });
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /Meridian/);

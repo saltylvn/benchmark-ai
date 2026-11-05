@@ -66,7 +66,7 @@ function readContent(payload: unknown): string {
 
 export function resolveModel(live: boolean): ProseModel {
   if (!live) return MOCK;
-  if ((process.env.QUORUM_PROVIDER ?? "mock") !== "openai") return MOCK;
+  if ((process.env.ATLAS_PROVIDER ?? "mock") !== "openai") return MOCK;
   if (!process.env.OPENAI_API_KEY) return MOCK;
   return openAIModel();
 }
