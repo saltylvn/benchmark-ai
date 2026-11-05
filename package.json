@@ -1,0 +1,25 @@
+{
+  "name": "atlas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A runnable showcase of agentic workflows: day planning, multi-agent orchestration, and a five-minute war-room demo.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "demo": "tsx src/cli.ts war-room",
+    "demo:plan": "tsx src/cli.ts plan",
+    "demo:brief": "tsx src/cli.ts brief",
+    "demo:trace": "tsx src/cli.ts trace",
+    "demo:all": "tsx src/cli.ts all",
+    "demo:live": "tsx src/cli.ts war-room --live",
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
