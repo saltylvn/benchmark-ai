@@ -162,11 +162,11 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
 }
 
 .top-inner {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 1rem;
   min-height: 4.25rem;
-  flex-wrap: wrap;
   padding: 0.6rem 0;
 }
 
@@ -174,7 +174,7 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
   display: flex;
   align-items: baseline;
   gap: 0.55rem;
-  margin-right: auto;
+  justify-self: start;
 }
 
 .brand strong {
@@ -186,9 +186,60 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
 
 .brand span { color: var(--muted); font-size: 0.92rem; }
 
-.tabs, .theme { display: flex; gap: 0.35rem; }
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  justify-self: center;
+}
 
-.theme button { padding-inline: 0.7rem; }
+.tabs button {
+  font-size: 0.78rem;
+  padding: 0.32rem 0.7rem;
+}
+
+.top-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  justify-self: end;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-left: 0.15rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.35rem;
+}
+
+.knob-track {
+  position: relative;
+  width: 2.55rem;
+  height: 1.4rem;
+  border-radius: 999px;
+  background: var(--line-strong);
+}
+
+.knob {
+  position: absolute;
+  top: 0.16rem;
+  left: 0.16rem;
+  width: 1.08rem;
+  height: 1.08rem;
+  border-radius: 50%;
+  background: var(--paper);
+  transition: transform 160ms ease;
+}
+
+.theme-toggle[aria-pressed="true"] .knob-track { background: var(--focus-fill); }
+
+.theme-toggle[aria-pressed="true"] .knob { transform: translateX(1.15rem); }
+
+@media (prefers-reduced-motion: reduce) {
+  .knob { transition: none; }
+}
 
 .tabs button[aria-pressed="true"] {
   background: var(--ink);
@@ -208,7 +259,22 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
   justify-content: space-between;
   gap: 1.5rem;
   align-items: flex-end;
+  flex-wrap: wrap;
   padding: 1.6rem 0 0.4rem;
+}
+
+.lede.is-done .controls {
+  flex: 1 0 100%;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.85rem;
+}
+
+.lede.is-done #play {
+  font-size: 1.35rem;
+  font-weight: 650;
+  padding: 0.95rem 2.75rem;
+  border-radius: 999px;
 }
 
 .lede h1 {
@@ -223,6 +289,8 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
 .lede p { margin: 0; color: var(--muted); max-width: 40rem; }
 
 .controls { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+
+.secondary { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
 
 .controls .primary {
   background: var(--urgent-fill);
@@ -537,11 +605,19 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
 }
 
 @media (max-width: 860px) {
+  .top-inner {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand tools"
+      "tabs tabs";
+  }
+  .brand { grid-area: brand; }
+  .tabs { grid-area: tabs; }
+  .top-tools { grid-area: tools; }
   .split { grid-template-columns: 1fr; }
   .side { position: static; }
   .lede { flex-direction: column; align-items: flex-start; }
   .day li { grid-template-columns: 1fr; gap: 0.1rem; }
-  .pill { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

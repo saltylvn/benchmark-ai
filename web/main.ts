@@ -72,11 +72,13 @@ function shell(state: RunState): string {
           <button type="button" data-tab="plan" aria-pressed="false">Day plan</button>
           <button type="button" data-tab="brief" aria-pressed="false">Brief</button>
         </nav>
-        <div class="theme" role="group" aria-label="Appearance">
-          <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
-          <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+        <div class="top-tools">
+          <p class="pill">Mock mode · nothing sent</p>
+          <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Switch to dark mode">
+            <span class="knob-track" aria-hidden="true"><span class="knob"></span></span>
+            <span class="theme-toggle-text">Light</span>
+          </button>
         </div>
-        <p class="pill">Mock mode · nothing sent</p>
       </div>
     </header>
     <main class="wrap">
@@ -88,9 +90,11 @@ function shell(state: RunState): string {
           </div>
           <div class="controls">
             <button type="button" class="primary" id="play">Play</button>
-            <button type="button" id="step">Step</button>
-            <button type="button" id="skip">Skip to result</button>
-            <span class="count" id="count"></span>
+            <div class="secondary">
+              <button type="button" id="step">Step</button>
+              <button type="button" id="skip">Skip to result</button>
+              <span class="count" id="count"></span>
+            </div>
           </div>
         </div>
         <p class="keys">Space plays and pauses. Right arrow steps. Click a block to read why it moved.</p>
@@ -146,12 +150,10 @@ function bind(): void {
     pickedBlock = pickedBlock === node.dataset.block ? null : node.dataset.block;
     frame();
   });
-  document.querySelectorAll<HTMLButtonElement>("[data-theme-choice]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const choice = button.dataset.themeChoice === "dark" ? "dark" : "light";
-      localStorage.setItem(THEME_KEY, choice);
-      applyTheme(choice);
-    });
+  byId("theme-toggle").addEventListener("click", () => {
+    const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    localStorage.setItem(THEME_KEY, next);
+    applyTheme(next);
   });
   applyTheme(readTheme());
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
@@ -185,10 +187,13 @@ function readTheme(): "light" | "dark" | "system" {
 function applyTheme(choice: "light" | "dark" | "system"): void {
   const dark = choice === "dark" || (choice === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
   document.documentElement.dataset.theme = dark ? "dark" : "light";
-  const shown = dark ? "dark" : "light";
-  document.querySelectorAll<HTMLButtonElement>("[data-theme-choice]").forEach((button) => {
-    button.setAttribute("aria-pressed", button.dataset.themeChoice === shown ? "true" : "false");
-  });
+  const toggle = document.querySelector<HTMLButtonElement>("#theme-toggle");
+  const label = toggle?.querySelector(".theme-toggle-text");
+  if (toggle) {
+    toggle.setAttribute("aria-pressed", dark ? "true" : "false");
+    toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+  }
+  if (label) label.textContent = dark ? "Dark" : "Light";
 }
 
 function show(next: Tab, updateHash = true): void {
@@ -227,13 +232,20 @@ function play(): void {
 function pause(): void {
   playing = false;
   window.clearInterval(timer);
-  const button = document.querySelector<HTMLButtonElement>("#play");
-  if (button) button.textContent = cursor >= war.trace.length ? "Replay" : "Play";
+  syncPlayButton();
 }
 
 function toggle(): void {
   if (playing) pause();
   else play();
+}
+
+function syncPlayButton(): void {
+  const done = !playing && cursor >= war.trace.length;
+  const playButton = document.querySelector<HTMLButtonElement>("#play");
+  const lede = document.querySelector(".lede");
+  if (playButton) playButton.textContent = playing ? "Pause" : done ? "Play demo" : "Play";
+  lede?.classList.toggle("is-done", done);
 }
 
 function advance(): void {
@@ -248,8 +260,7 @@ function frame(): void {
   const active = activeIndex >= 0 ? war.trace[activeIndex] : undefined;
   const approved = revealed.some((event) => event.agent === "critic" && /approved/i.test(event.title));
   const rejected = revealed.some((event) => event.agent === "critic" && /rejected/i.test(event.title));
-  const playButton = document.querySelector<HTMLButtonElement>("#play");
-  if (playButton) playButton.textContent = playing ? "Pause" : cursor >= war.trace.length ? "Replay" : "Play";
+  syncPlayButton();
   byId("count").textContent = `${cursor} / ${war.trace.length}`;
   byId("rail").innerHTML = rail(active);
   byId("trace").innerHTML =
