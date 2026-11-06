@@ -1,6 +1,6 @@
 import { findOverlaps } from "../src/schedule/gaps.js";
 import { runWorkflow } from "../src/orchestrator/supervisor.js";
-import { WORK_END, WORK_START, range } from "../src/time.js";
+import { range } from "../src/time.js";
 import type { CalendarEvent, CallCard, RunState, TraceEvent } from "../src/types.js";
 
 type Tab = "war" | "plan" | "brief";
@@ -62,8 +62,53 @@ frame();
 window.scrollTo(0, 0);
 if (!reduced && tab === "war") play();
 
-function hubspotMark(): string {
-  return `<svg class="hubspot" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF7A59" d="M18.164 7.93V5.084a2.198 2.198 0 0 0 1.267-1.978v-.067A2.2 2.2 0 0 0 17.238.845h-.067a2.2 2.2 0 0 0-2.193 2.193v.067a2.196 2.196 0 0 0 1.252 1.973V7.93a6.22 6.22 0 0 0-2.969 1.31L5.434 3.145a2.499 2.499 0 0 0 .08-.64 2.58 2.58 0 1 0-2.58 2.58c.48 0 .93-.132 1.31-.36l7.697 5.99a6.176 6.176 0 0 0 .077 7.172l-2.304 2.304a2.056 2.056 0 0 0-.607-.097 2.066 2.066 0 1 0 2.066 2.066 2.05 2.05 0 0 0-.097-.607l2.272-2.272a6.197 6.197 0 1 0 4.816-10.0zm-.931 9.3a3.11 3.11 0 1 1 0-6.221 3.11 3.11 0 0 1 0 6.221z"/></svg>`;
+function team(): { id: string; name: string; role: string; job: string }[] {
+  return [
+    {
+      id: "intake",
+      name: "Intake",
+      role: "Reader",
+      job: "Reads the calendar and the inbox. Flags conflicts and deadlines. Does not move a meeting.",
+    },
+    {
+      id: "researcher",
+      name: "Research",
+      role: "Account specialist",
+      job: "Pulls the HubSpot company record. Separates what we know, what to ask, and what not to promise.",
+    },
+    {
+      id: "planner",
+      name: "Planner",
+      role: "Scheduler",
+      job: "Proposes one day on Google Calendar. If the critic rejects the morning, it protects focus and tries again.",
+    },
+    {
+      id: "critic",
+      name: "Critic",
+      role: "Reviewer",
+      job: "Scores the plan. Names the failure and sends it back to Atlas, or approves it.",
+    },
+    {
+      id: "executor",
+      name: "Executor",
+      role: "Drafter",
+      job: "Writes the calendar changes, the email, and the Slack note. Does not send them.",
+    },
+    {
+      id: "brief",
+      name: "Brief",
+      role: "Writer",
+      job: "Turns the approved plan into three outcomes and the call card.",
+    },
+  ];
+}
+
+function connectorIcons(): string {
+  return `<span class="connectors" aria-label="Connected to HubSpot, Google Calendar, and Slack">
+    <span class="bubble" title="HubSpot"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF7A59" d="M18.164 7.93V5.084a2.198 2.198 0 0 0 1.267-1.978v-.067A2.2 2.2 0 0 0 17.238.845h-.067a2.2 2.2 0 0 0-2.193 2.193v.067a2.196 2.196 0 0 0 1.252 1.973V7.93a6.22 6.22 0 0 0-2.969 1.31L5.434 3.145a2.499 2.499 0 0 0 .08-.64 2.58 2.58 0 1 0-2.58 2.58c.48 0 .93-.132 1.31-.36l7.697 5.99a6.176 6.176 0 0 0 .077 7.172l-2.304 2.304a2.056 2.056 0 0 0-.607-.097 2.066 2.066 0 1 0 2.066 2.066 2.05 2.05 0 0 0-.097-.607l2.272-2.272a6.197 6.197 0 1 0 4.816-10.0zm-.931 9.3a3.11 3.11 0 1 1 0-6.221 3.11 3.11 0 0 1 0 6.221z"/></svg></span>
+    <span class="bubble" title="Google Calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" fill="#fff"/><path fill="#1a73e8" d="M3 8h18V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v1z"/><path fill="#1a73e8" d="M3 8h18v2H3z"/><path fill="#ea4335" d="M8 3.2h1.6v3.2H8z"/><path fill="#fbbc04" d="M14.4 3.2H16v3.2h-1.6z"/><text x="12" y="16.6" text-anchor="middle" font-size="7.5" font-family="Arial, sans-serif" font-weight="700" fill="#1a73e8">31</text></svg></span>
+    <span class="bubble" title="Slack"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#36C5F0" d="M6.3 14.6a1.7 1.7 0 1 1-1.7-1.7h1.7v1.7zm.9 0a1.7 1.7 0 1 1 3.4 0v4.3a1.7 1.7 0 1 1-3.4 0v-4.3z"/><path fill="#2EB67D" d="M9.4 6.3a1.7 1.7 0 1 1 1.7-1.7v1.7H9.4zm0 .9a1.7 1.7 0 1 1 0 3.4H5.1a1.7 1.7 0 1 1 0-3.4h4.3z"/><path fill="#ECB22E" d="M17.7 9.4a1.7 1.7 0 1 1 1.7 1.7h-1.7V9.4zm-.9 0a1.7 1.7 0 1 1-3.4 0V5.1a1.7 1.7 0 1 1 3.4 0v4.3z"/><path fill="#E01E5A" d="M14.6 17.7a1.7 1.7 0 1 1-1.7 1.7v-1.7h1.7zm0-.9a1.7 1.7 0 1 1 0-3.4h4.3a1.7 1.7 0 1 1 0 3.4h-4.3z"/></svg></span>
+  </span>`;
 }
 
 function shell(state: RunState): string {
@@ -73,11 +118,7 @@ function shell(state: RunState): string {
       <div class="wrap top-inner">
         <div class="brand">
           <strong>Atlas</strong>
-          <span class="crm" title="Company and contact records are read from HubSpot">
-            ${hubspotMark()}
-            <span>HubSpot</span>
-            <span class="connected">Connected</span>
-          </span>
+          ${connectorIcons()}
         </div>
         <nav class="tabs" aria-label="Demos">
           <button type="button" data-tab="war" aria-pressed="true">War room</button>
@@ -113,11 +154,35 @@ function shell(state: RunState): string {
           </li>
         </ul>
       </section>
+      <section class="org" id="org" aria-label="Agents reporting to Atlas">
+        <p class="kicker">Orchestration</p>
+        <h2>These agents report to Atlas.</h2>
+        <p class="org-lead">Atlas is the head agent. It does not do the specialist work. It decides who goes next, and a rejection comes back to Atlas before the planner tries again.</p>
+        <div class="org-chart">
+          <article class="org-head" data-agent="supervisor">
+            <strong>Atlas</strong>
+            <span class="role">Head agent</span>
+            <span class="job">Routes the team. Reads the shared board and hands the job to one specialist at a time.</span>
+          </article>
+          <div class="org-stem" aria-hidden="true"></div>
+          <ul class="org-team">
+            ${team()
+              .map(
+                (agent) => `<li data-agent="${agent.id}">
+              <strong>${esc(agent.name)}</strong>
+              <span class="role">${esc(agent.role)}</span>
+              <span class="job">${esc(agent.job)}</span>
+            </li>`,
+              )
+              .join("")}
+          </ul>
+        </div>
+      </section>
       <section id="view-war">
         <div class="lede">
           <div>
             <h1>An escalation at 8:47.</h1>
-            <p>${esc(state.dateLabel)}. ${esc(state.persona)} already has a double-booked morning. Company and contact records are read from HubSpot. Press play and the swarm rewrites the day.</p>
+            <p>${esc(state.dateLabel)}. ${esc(state.persona)} already has a double-booked morning. HubSpot holds the company record, the day is on Google Calendar, and the note is ready for Slack. Press play and the swarm rewrites the day.</p>
           </div>
           <div class="controls">
             <button type="button" class="primary" id="play">Play</button>
@@ -296,6 +361,9 @@ function frame(): void {
   syncPlayButton();
   byId("count").textContent = `${cursor} / ${war.trace.length}`;
   byId("rail").innerHTML = rail(active);
+  document.querySelectorAll<HTMLElement>("[data-agent]").forEach((node) => {
+    node.classList.toggle("is-on", node.dataset.agent === active?.agent);
+  });
   byId("trace").innerHTML =
     revealed.length === 0
       ? `<li class="step"><span class="who supervisor">Supervisor</span> <strong>Waiting to open the war room.</strong></li>`
@@ -353,14 +421,6 @@ function boardHtml(blocks: BlockView[], approved: boolean, rejected: boolean): s
       <h2>${approved ? "The rewrite" : "Tuesday as it stands"}</h2>
       <p class="caption">${approved ? "Critic approved. Focus stays in the morning." : "Northwind is sitting on the focus block."}</p>
       ${scheduleHtml(blocks)}
-      <ul class="agenda">
-        ${blocks
-          .map(
-            (block) =>
-              `<li><time>${esc(range(block.start, block.end))}</time>${esc(SHORT[block.title] ?? block.title)}</li>`,
-          )
-          .join("")}
-      </ul>
       ${
         rejected && !approved && failure
           ? `<p class="callout"><strong>${esc(String(war.critiques[0]?.score ?? ""))}/100 · ${esc(failure.code)}</strong>${esc(failure.detail)}</p>`
@@ -384,7 +444,7 @@ function briefCard(headline: string, outcomes: string[], callCard: CallCard | un
   const card = callCard;
   return `
     <article class="card">
-      <p class="kicker">Brief · ${hubspotMark()} HubSpot</p>
+      <p class="kicker">Brief</p>
       <h2>${esc(headline)}</h2>
       <ol class="outcomes">${outcomes.map((item) => `<li>${esc(item)}</li>`).join("")}</ol>
       ${
@@ -521,27 +581,57 @@ function renderBrief(state: RunState): void {
   `;
 }
 
+const CAL_START = 8 * 60;
+const CAL_END = 18 * 60;
+const HOUR_PX = 64;
+
 function scheduleHtml(blocks: BlockView[]): string {
   const lanes = Math.max(1, ...blocks.map((block) => block.lane + 1));
-  const height = lanes * 40 + 8;
+  const height = ((CAL_END - CAL_START) / 60) * HOUR_PX;
+  const hours = Array.from({ length: (CAL_END - CAL_START) / 60 }, (_, index) => CAL_START + index * 60);
   return `
-    <div class="track-wrap">
-      <div class="hours"><span>08:30</span><span>11:00</span><span>13:30</span><span>16:00</span><span>17:30</span></div>
-      <div class="track" style="height:${height}px">
+    <div class="gcal" style="height:${height}px">
+      <div class="g-gutter" aria-hidden="true">
+        ${hours
+          .map(
+            (minute) =>
+              `<div class="g-hour" style="height:${HOUR_PX}px"><span>${minute === CAL_START ? "" : esc(hourLabel(minute))}</span></div>`,
+          )
+          .join("")}
+      </div>
+      <div class="g-day">
+        ${hours.map(() => `<div class="g-line" style="height:${HOUR_PX}px"></div>`).join("")}
         ${blocks
           .map((block) => {
-            const span = WORK_END - WORK_START;
-            const left = ((block.start - WORK_START) / span) * 100;
-            const width = Math.max(((block.end - block.start) / span) * 100, 1.2);
+            const top = ((block.start - CAL_START) / 60) * HOUR_PX;
+            const eventHeight = Math.max(((block.end - block.start) / 60) * HOUR_PX - 3, 18);
+            const width = 100 / lanes;
+            const left = block.lane * width;
             const name = SHORT[block.title] ?? block.title;
             const selected = pickedBlock === block.id ? " is-selected" : "";
             const clash = block.clash ? " is-clash" : "";
-            return `<button type="button" class="block ${esc(kindOf(block))}${selected}${clash}" data-block="${esc(block.id)}" style="left:${left}%;width:${width}%;top:${4 + block.lane * 40}px" title="${esc(block.title)}" aria-label="${esc(block.title)}, ${esc(range(block.start, block.end))}">${width > 7 ? esc(name) : ""}</button>`;
+            const when = `${gClock(block.start)} – ${gClock(block.end)}`;
+            return `<button type="button" class="g-event ${esc(kindOf(block))}${selected}${clash}" data-block="${esc(block.id)}" style="top:${top + 1}px;height:${eventHeight}px;left:calc(${left}% + 2px);width:calc(${width}% - 6px)" title="${esc(block.title)}" aria-label="${esc(block.title)}, ${esc(when)}"><span class="g-title">${esc(name)}</span>${eventHeight > 36 ? `<span class="g-when">${esc(when)}</span>` : ""}</button>`;
           })
           .join("")}
       </div>
     </div>
   `;
+}
+
+function hourLabel(minutes: number): string {
+  const hour = Math.floor(minutes / 60);
+  const suffix = hour >= 12 ? "PM" : "AM";
+  const twelve = hour % 12 === 0 ? 12 : hour % 12;
+  return `${twelve} ${suffix}`;
+}
+
+function gClock(minutes: number): string {
+  const hour = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const suffix = hour >= 12 ? "PM" : "AM";
+  const twelve = hour % 12 === 0 ? 12 : hour % 12;
+  return mins === 0 ? `${twelve} ${suffix}` : `${twelve}:${String(mins).padStart(2, "0")} ${suffix}`;
 }
 
 function viewsFromEvents(events: CalendarEvent[]): BlockView[] {

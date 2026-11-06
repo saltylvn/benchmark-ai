@@ -156,7 +156,7 @@ At 08:47 Dana Okonkwo writes from Meridian Medical Group. Go-live is Friday. Abo
 
 ## Browser demo
 
-The page in `docs/` runs the same `runWorkflow` function as the CLI. It starts from the system light or dark setting. The switch at the top right flips between them. When the war room finishes, Play demo sits centered under the title. The header shows a HubSpot connection: company and contact records in the demo are read from that CRM. Play, pause, or step the war room. The critic rejects the first plan, then the day flips. **Day plan** and **Brief** are the other tabs. Drafts are labeled not sent. Deep links: `#war`, `#plan`, `#brief`.
+The page in `docs/` runs the same `runWorkflow` function as the CLI. It starts from the system light or dark setting. The switch at the top right flips between them. When the war room finishes, Play demo sits centered under the title. The header shows three connected systems as icon bubbles: HubSpot, Google Calendar, and Slack. Play, pause, or step the war room. The critic rejects the first plan, then the day flips. **Day plan** and **Brief** are the other tabs. Drafts are labeled not sent. Deep links: `#war`, `#plan`, `#brief`.
 
 ```bash
 npm install
