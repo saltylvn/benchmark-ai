@@ -59,6 +59,7 @@ renderBrief(morning);
 const initial = tabFromHash();
 if (initial && initial !== "war") show(initial, false);
 frame();
+window.scrollTo(0, 0);
 if (!reduced && tab === "war") play();
 
 function hubspotMark(): string {
@@ -93,7 +94,26 @@ function shell(state: RunState): string {
       </div>
     </header>
     <main class="wrap">
-      <section id="war">
+      <section class="about">
+        <p class="kicker">Context</p>
+        <h2>A support day, planned from the calendar and HubSpot.</h2>
+        <p>Atlas is a small team of agents for the hour before the day gets away from you. It reads the calendar and the company records already in HubSpot, then decides what to move, what to protect, and what to say before a hard client call. This page is one sample Tuesday. Nothing is sent.</p>
+        <ul class="benefits">
+          <li>
+            <strong>The morning stays usable.</strong>
+            <span>Focus time and the wellness walk survive a calendar that was already double-booked.</span>
+          </li>
+          <li>
+            <strong>A bad plan gets rejected.</strong>
+            <span>The first schedule clears every client call and loses the morning. The critic sends it back.</span>
+          </li>
+          <li>
+            <strong>You walk in prepared.</strong>
+            <span>The call card, the email, and the Slack note are drafted from the HubSpot record. You choose what goes out.</span>
+          </li>
+        </ul>
+      </section>
+      <section id="view-war">
         <div class="lede">
           <div>
             <h1>An escalation at 8:47.</h1>
@@ -125,8 +145,8 @@ function shell(state: RunState): string {
           <div class="side" id="side"></div>
         </div>
       </section>
-      <section id="plan" hidden></section>
-      <section id="brief" hidden></section>
+      <section id="view-plan" hidden></section>
+      <section id="view-brief" hidden></section>
       <footer class="foot">
         Same engine as <code>npm run demo</code>. Fixture accounts are fictional. Drafts stay in the browser.
         <a href="https://github.com/saltylvn/agentic-workflows">Source</a>
@@ -212,12 +232,13 @@ function show(next: Tab, updateHash = true): void {
   tab = next;
   if (next !== "war") pause();
   for (const name of ["war", "plan", "brief"] as const) {
-    byId(name).hidden = name !== next;
+    byId(`view-${name}`).hidden = name !== next;
     const button = document.querySelector<HTMLButtonElement>(`[data-tab="${name}"]`);
     if (!button) continue;
     button.setAttribute("aria-pressed", name === next ? "true" : "false");
   }
   if (updateHash && location.hash !== `#${next}`) history.replaceState(null, "", `#${next}`);
+  window.scrollTo(0, 0);
 }
 
 function tabFromHash(): Tab | null {
@@ -424,7 +445,7 @@ function renderPlan(state: RunState): void {
     focusBlock && northwind
       ? `Focus stays ${range(focusBlock.start, focusBlock.end)}. Northwind moves to ${range(northwind.start, northwind.end)}.`
       : "Proposed day";
-  byId("plan").innerHTML = `
+  byId("view-plan").innerHTML = `
     <div class="lede">
       <div>
         <h1>The morning, before anyone writes.</h1>
@@ -471,10 +492,10 @@ function renderPlan(state: RunState): void {
 function renderBrief(state: RunState): void {
   const brief = state.brief;
   if (!brief) {
-    byId("brief").innerHTML = `<p>No brief.</p>`;
+    byId("view-brief").innerHTML = `<p>No brief.</p>`;
     return;
   }
-  byId("brief").innerHTML = `
+  byId("view-brief").innerHTML = `
     <div class="lede">
       <div>
         <h1>Morning brief</h1>
