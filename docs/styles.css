@@ -172,9 +172,55 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
 
 .brand {
   display: flex;
-  align-items: baseline;
-  gap: 0.55rem;
+  align-items: center;
+  gap: 0.7rem;
   justify-self: start;
+  min-width: 0;
+}
+
+.crm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.55rem 0.18rem 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.hubspot {
+  width: 1.05rem;
+  height: 1.05rem;
+  display: block;
+  flex: none;
+}
+
+.kicker .hubspot {
+  width: 0.9rem;
+  height: 0.9rem;
+  display: inline-block;
+  vertical-align: -0.15rem;
+}
+
+.connected {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  color: var(--good);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.connected::before {
+  content: "";
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: var(--good);
 }
 
 .brand strong {

@@ -61,12 +61,23 @@ if (initial && initial !== "war") show(initial, false);
 frame();
 if (!reduced && tab === "war") play();
 
+function hubspotMark(): string {
+  return `<svg class="hubspot" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF7A59" d="M18.164 7.93V5.084a2.198 2.198 0 0 0 1.267-1.978v-.067A2.2 2.2 0 0 0 17.238.845h-.067a2.2 2.2 0 0 0-2.193 2.193v.067a2.196 2.196 0 0 0 1.252 1.973V7.93a6.22 6.22 0 0 0-2.969 1.31L5.434 3.145a2.499 2.499 0 0 0 .08-.64 2.58 2.58 0 1 0-2.58 2.58c.48 0 .93-.132 1.31-.36l7.697 5.99a6.176 6.176 0 0 0 .077 7.172l-2.304 2.304a2.056 2.056 0 0 0-.607-.097 2.066 2.066 0 1 0 2.066 2.066 2.05 2.05 0 0 0-.097-.607l2.272-2.272a6.197 6.197 0 1 0 4.816-10.0zm-.931 9.3a3.11 3.11 0 1 1 0-6.221 3.11 3.11 0 0 1 0 6.221z"/></svg>`;
+}
+
 function shell(state: RunState): string {
   const mail = state.inbox[0];
   return `
     <header class="top">
       <div class="wrap top-inner">
-        <div class="brand"><strong>Atlas</strong><span>War room</span></div>
+        <div class="brand">
+          <strong>Atlas</strong>
+          <span class="crm" title="Company and contact records are read from HubSpot">
+            ${hubspotMark()}
+            <span>HubSpot</span>
+            <span class="connected">Connected</span>
+          </span>
+        </div>
         <nav class="tabs" aria-label="Demos">
           <button type="button" data-tab="war" aria-pressed="true">War room</button>
           <button type="button" data-tab="plan" aria-pressed="false">Day plan</button>
@@ -86,7 +97,7 @@ function shell(state: RunState): string {
         <div class="lede">
           <div>
             <h1>An escalation at 8:47.</h1>
-            <p>${esc(state.dateLabel)}. ${esc(state.persona)} already has a double-booked morning. Press play and the swarm rewrites the day.</p>
+            <p>${esc(state.dateLabel)}. ${esc(state.persona)} already has a double-booked morning. Company and contact records are read from HubSpot. Press play and the swarm rewrites the day.</p>
           </div>
           <div class="controls">
             <button type="button" class="primary" id="play">Play</button>
@@ -351,7 +362,7 @@ function briefCard(headline: string, outcomes: string[], callCard: CallCard | un
   const card = callCard;
   return `
     <article class="card">
-      <p class="kicker">Brief</p>
+      <p class="kicker">Brief · ${hubspotMark()} HubSpot</p>
       <h2>${esc(headline)}</h2>
       <ol class="outcomes">${outcomes.map((item) => `<li>${esc(item)}</li>`).join("")}</ol>
       ${
