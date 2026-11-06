@@ -69,31 +69,31 @@ function team(): { id: string; name: string; role: string; job: string }[] {
       id: "intake",
       name: "Intake",
       role: "Reader",
-      job: "Reads the calendar and the inbox. Flags conflicts and deadlines. Does not move a meeting.",
+      job: "Reads the calendar and the inbox, and flags conflicts.",
     },
     {
       id: "researcher",
       name: "Research",
       role: "Account specialist",
-      job: "Pulls the HubSpot company record. Separates what we know, what to ask, and what not to promise.",
+      job: "Pulls the HubSpot company record.",
     },
     {
       id: "planner",
       name: "Planner",
       role: "Scheduler",
-      job: "Proposes one day on Google Calendar. If the critic rejects the morning, it protects focus and tries again.",
+      job: "Proposes the day on Google Calendar.",
     },
     {
       id: "critic",
       name: "Critic",
       role: "Reviewer",
-      job: "Scores the plan. Names the failure and sends it back to Atlas, or approves it.",
+      job: "Scores the plan and sends a failure back to Atlas, or approves it.",
     },
     {
       id: "executor",
       name: "Executor",
       role: "Drafter",
-      job: "Writes the calendar changes, the email, and the Slack note. Does not send them.",
+      job: "Writes the calendar, email, and Slack drafts, and does not send them.",
     },
     {
       id: "brief",
@@ -163,7 +163,7 @@ function shell(state: RunState): string {
           <article class="org-head" data-agent="supervisor">
             <strong>Atlas</strong>
             <span class="role">Head agent</span>
-            <span class="job">Routes the team. Reads the shared board and hands the job to one specialist at a time.</span>
+            <span class="job">Routes the team and hands the job to one specialist at a time.</span>
             <span class="state">Waiting</span>
           </article>
           <div class="org-stem" aria-hidden="true"></div>
@@ -180,6 +180,15 @@ function shell(state: RunState): string {
               .join("")}
           </ul>
         </div>
+        <ol class="org-flow" aria-label="How a run moves">
+          <li>Intake</li>
+          <li>Research</li>
+          <li>Planner</li>
+          <li>Critic</li>
+          <li>Executor</li>
+          <li>Brief</li>
+        </ol>
+        <p class="org-return">If the critic rejects the plan, it goes back to Atlas, and Atlas sends the planner again.</p>
       </section>
       <section id="view-war">
         <div class="lede">

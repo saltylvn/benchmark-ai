@@ -361,9 +361,8 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
 .org-head,
 .org-team li {
   background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  box-shadow: var(--shadow);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
 }
 
 .org-head {
@@ -454,6 +453,40 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
 .org-team li.is-on {
   border-color: var(--focus);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 28%, transparent);
+}
+
+.org-flow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 1.15rem 0 0.4rem;
+  padding: 0;
+}
+
+.org-flow li {
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid var(--line-strong);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.org-flow li:not(:last-child)::after {
+  content: "→";
+  margin-left: 0.45rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.org-return {
+  margin: 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .lede {
