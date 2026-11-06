@@ -36,7 +36,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #141311;
     --paper: #211e1a;
     --ink: #f4efe6;
@@ -70,6 +70,41 @@
     --glow: rgba(224, 123, 132, 0.14);
     color-scheme: dark;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #141311;
+  --paper: #211e1a;
+  --ink: #f4efe6;
+  --muted: #b7ae9f;
+  --line: #3a342c;
+  --line-strong: #534a40;
+  --focus: #b7c4f5;
+  --urgent: #f3b4b9;
+  --client: #f0c08a;
+  --focus-fill: #4458a8;
+  --urgent-fill: #b33b45;
+  --client-fill: #c56a16;
+  --prep: #e4d0a4;
+  --prep-ink: #3a2e16;
+  --internal: #6d8c9a;
+  --personal: #218a5e;
+  --break: #d5cec2;
+  --break-ink: #2a261f;
+  --admin: #8d877d;
+  --standup: #6d7580;
+  --bad: #f3b4b9;
+  --good: #9ed9bc;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  --header: rgba(20, 19, 17, 0.92);
+  --prose: #e6dfd2;
+  --grid: rgba(244, 239, 230, 0.14);
+  --callout-bg: #3a2426;
+  --callout-ink: #f6d0d3;
+  --on-ink: #141311;
+  --clash: #f4efe6;
+  --glow: rgba(224, 123, 132, 0.14);
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -151,7 +186,9 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
 
 .brand span { color: var(--muted); font-size: 0.92rem; }
 
-.tabs { display: flex; gap: 0.35rem; }
+.tabs, .theme { display: flex; gap: 0.35rem; }
+
+.theme button { padding-inline: 0.7rem; }
 
 .tabs button[aria-pressed="true"] {
   background: var(--ink);

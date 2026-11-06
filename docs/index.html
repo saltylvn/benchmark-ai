@@ -10,6 +10,18 @@
     <meta name="theme-color" content="#f3f0e8" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#141311" media="(prefers-color-scheme: dark)" />
     <title>Atlas · War room</title>
+    <script>
+      (function () {
+        var choice = "system";
+        try {
+          choice = localStorage.getItem("atlas-theme") || "system";
+        } catch (error) {}
+        var dark =
+          choice === "dark" ||
+          (choice !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+      })();
+    </script>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>

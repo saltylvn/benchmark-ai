@@ -16,6 +16,7 @@ type BlockView = {
 };
 
 const PIPELINE = ["intake", "researcher", "planner", "critic", "executor", "brief"] as const;
+const THEME_KEY = "atlas-theme";
 
 const SHORT: Record<string, string> = {
   "Team standup": "Standup",
@@ -71,6 +72,10 @@ function shell(state: RunState): string {
           <button type="button" data-tab="plan" aria-pressed="false">Day plan</button>
           <button type="button" data-tab="brief" aria-pressed="false">Brief</button>
         </nav>
+        <div class="theme" role="group" aria-label="Appearance">
+          <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+          <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+        </div>
         <p class="pill">Mock mode · nothing sent</p>
       </div>
     </header>
@@ -141,6 +146,17 @@ function bind(): void {
     pickedBlock = pickedBlock === node.dataset.block ? null : node.dataset.block;
     frame();
   });
+  document.querySelectorAll<HTMLButtonElement>("[data-theme-choice]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const choice = button.dataset.themeChoice === "dark" ? "dark" : "light";
+      localStorage.setItem(THEME_KEY, choice);
+      applyTheme(choice);
+    });
+  });
+  applyTheme(readTheme());
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    if (readTheme() === "system") applyTheme("system");
+  });
   window.addEventListener("hashchange", () => {
     const next = tabFromHash();
     if (next) show(next, false);
@@ -157,6 +173,21 @@ function bind(): void {
       pause();
       advance();
     }
+  });
+}
+
+function readTheme(): "light" | "dark" | "system" {
+  const stored = localStorage.getItem(THEME_KEY);
+  if (stored === "light" || stored === "dark") return stored;
+  return "system";
+}
+
+function applyTheme(choice: "light" | "dark" | "system"): void {
+  const dark = choice === "dark" || (choice === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  const shown = dark ? "dark" : "light";
+  document.querySelectorAll<HTMLButtonElement>("[data-theme-choice]").forEach((button) => {
+    button.setAttribute("aria-pressed", button.dataset.themeChoice === shown ? "true" : "false");
   });
 }
 

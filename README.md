@@ -156,7 +156,7 @@ At 08:47 Dana Okonkwo writes from Meridian Medical Group. Go-live is Friday. Abo
 
 ## Browser demo
 
-The page in `docs/` runs the same `runWorkflow` function as the CLI, and it follows the system light or dark setting. Play, pause, or step the war room. The critic rejects the first plan, then the day flips. **Day plan** and **Brief** are the other tabs. Drafts are labeled not sent. Deep links: `#war`, `#plan`, `#brief`.
+The page in `docs/` runs the same `runWorkflow` function as the CLI. It starts from the system light or dark setting, and the Light and Dark buttons switch it on the page. Play, pause, or step the war room. The critic rejects the first plan, then the day flips. **Day plan** and **Brief** are the other tabs. Drafts are labeled not sent. Deep links: `#war`, `#plan`, `#brief`.
 
 ```bash
 npm install
