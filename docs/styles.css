@@ -396,6 +396,18 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
   line-height: 1.4;
 }
 
+.state {
+  display: inline-block;
+  margin-top: 0.55rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.is-on .state { color: var(--focus); }
+
 .org-stem {
   width: 2px;
   height: 1.1rem;
@@ -695,14 +707,40 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
 
 .caption { margin: 0 0 0.7rem; color: var(--muted); font-size: 0.88rem; }
 
+.gcal-frame {
+  width: min(640px, 100%);
+  margin: 0.25rem auto 0;
+}
+
+.gcal-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 56px;
+  margin-left: 64px;
+  margin-bottom: 0.35rem;
+  color: #1a73e8;
+}
+
+.gcal-date span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.gcal-date strong {
+  font-size: 1.6rem;
+  line-height: 1;
+  font-weight: 500;
+}
+
 .gcal {
   display: grid;
   grid-template-columns: 64px 1fr;
-  border: 1px solid #dadce0;
-  border-radius: 8px;
+  border-top: 1px solid #dadce0;
   background: #fff;
-  overflow: auto;
-  max-height: 560px;
+  overflow: visible;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -725,8 +763,18 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
 .g-day { position: relative; }
 
 .g-line {
+  position: relative;
   box-sizing: border-box;
   border-top: 1px solid #e8eaed;
+}
+
+.g-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid #f1f3f4;
 }
 
 .g-event {
@@ -773,8 +821,10 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
 .g-event.is-clash { box-shadow: inset 0 0 0 1px #d93025; }
 
 :root[data-theme="dark"] .gcal { background: #292a2d; border-color: #3c4043; }
+:root[data-theme="dark"] .gcal-date { color: #8ab4f8; }
 :root[data-theme="dark"] .g-hour span { color: #9aa0a6; }
 :root[data-theme="dark"] .g-line { border-top-color: #3c4043; }
+:root[data-theme="dark"] .g-line::after { border-top-color: #35363a; }
 :root[data-theme="dark"] .g-event.focus { background: #174ea6; border-left-color: #8ab4f8; color: #e8f0fe; }
 :root[data-theme="dark"] .g-event.urgent { background: #8c1d18; border-left-color: #f28b82; color: #fce8e6; }
 :root[data-theme="dark"] .g-event.client { background: #7a4f01; border-left-color: #fdd663; color: #fef7e0; }

@@ -1,3 +1,4 @@
+import { DAY } from "../src/fixtures/tuesday.js";
 import { findOverlaps } from "../src/schedule/gaps.js";
 import { runWorkflow } from "../src/orchestrator/supervisor.js";
 import { range } from "../src/time.js";
@@ -137,8 +138,8 @@ function shell(state: RunState): string {
     <main class="wrap">
       <section class="about">
         <p class="kicker">Context</p>
-        <h2>A support day, planned from the calendar and HubSpot.</h2>
-        <p>Atlas is a small team of agents for the hour before the day gets away from you. It reads the calendar and the company records already in HubSpot, then decides what to move, what to protect, and what to say before a hard client call. This page is one sample Tuesday. Nothing is sent.</p>
+        <h2>How a support analyst keeps the morning.</h2>
+        <p>This is one Tuesday for Jordan Hale, a client-support analyst who also holds time to build CaseFlow and to take a short walk. Atlas is the head agent. Research reads the company in HubSpot, the planner rewrites the day on the calendar, and the executor drafts the Slack note. Nothing is sent. The war room below is the hard morning, an escalation at 8:47. Day plan and Brief are that same morning before the email.</p>
         <ul class="benefits">
           <li>
             <strong>The morning stays usable.</strong>
@@ -150,7 +151,7 @@ function shell(state: RunState): string {
           </li>
           <li>
             <strong>You walk in prepared.</strong>
-            <span>The call card, the email, and the Slack note are drafted from the HubSpot record. You choose what goes out.</span>
+            <span>The call card, the email, and the Slack note are drafted from the company record. You choose what goes out.</span>
           </li>
         </ul>
       </section>
@@ -163,6 +164,7 @@ function shell(state: RunState): string {
             <strong>Atlas</strong>
             <span class="role">Head agent</span>
             <span class="job">Routes the team. Reads the shared board and hands the job to one specialist at a time.</span>
+            <span class="state">Waiting</span>
           </article>
           <div class="org-stem" aria-hidden="true"></div>
           <ul class="org-team">
@@ -172,6 +174,7 @@ function shell(state: RunState): string {
               <strong>${esc(agent.name)}</strong>
               <span class="role">${esc(agent.role)}</span>
               <span class="job">${esc(agent.job)}</span>
+              <span class="state">Waiting</span>
             </li>`,
               )
               .join("")}
@@ -195,7 +198,7 @@ function shell(state: RunState): string {
         </div>
         <p class="keys">Space plays and pauses. Right arrow steps. Click a block to read why it moved.</p>
         <ol class="rail" id="rail"></ol>
-        <p class="note">The supervisor is the only router. Specialists share one blackboard and do not call each other. A rejection is a handoff back to the planner.</p>
+        <p class="note">The chart above is this run. Press play and the agent Atlas has called lights up. Specialists do not call each other. A rejection comes back to Atlas, then the planner tries again.</p>
         <div id="board"></div>
         <div class="split" id="split">
           <div>
@@ -361,8 +364,17 @@ function frame(): void {
   syncPlayButton();
   byId("count").textContent = `${cursor} / ${war.trace.length}`;
   byId("rail").innerHTML = rail(active);
+  const seen = new Set<string>(revealed.map((event) => event.agent));
   document.querySelectorAll<HTMLElement>("[data-agent]").forEach((node) => {
-    node.classList.toggle("is-on", node.dataset.agent === active?.agent);
+    const id = node.dataset.agent ?? "";
+    const working = id === active?.agent && revealed.length > 0;
+    node.classList.toggle("is-on", working);
+    const state = node.querySelector(".state");
+    if (!state) return;
+    if (revealed.length === 0) state.textContent = "Waiting";
+    else if (working) state.textContent = "Working";
+    else if (seen.has(id)) state.textContent = "Done";
+    else state.textContent = "Waiting";
   });
   byId("trace").innerHTML =
     revealed.length === 0
@@ -583,40 +595,54 @@ function renderBrief(state: RunState): void {
 
 const CAL_START = 8 * 60;
 const CAL_END = 18 * 60;
-const HOUR_PX = 64;
+const HOUR_PX = 76;
 
 function scheduleHtml(blocks: BlockView[]): string {
   const lanes = Math.max(1, ...blocks.map((block) => block.lane + 1));
   const height = ((CAL_END - CAL_START) / 60) * HOUR_PX;
   const hours = Array.from({ length: (CAL_END - CAL_START) / 60 }, (_, index) => CAL_START + index * 60);
+  const header = demoDay();
   return `
-    <div class="gcal" style="height:${height}px">
-      <div class="g-gutter" aria-hidden="true">
-        ${hours
-          .map(
-            (minute) =>
-              `<div class="g-hour" style="height:${HOUR_PX}px"><span>${minute === CAL_START ? "" : esc(hourLabel(minute))}</span></div>`,
-          )
-          .join("")}
+    <div class="gcal-frame">
+      <div class="gcal-date">
+        <span>${esc(header.weekday)}</span>
+        <strong>${esc(header.date)}</strong>
       </div>
-      <div class="g-day">
-        ${hours.map(() => `<div class="g-line" style="height:${HOUR_PX}px"></div>`).join("")}
-        ${blocks
-          .map((block) => {
-            const top = ((block.start - CAL_START) / 60) * HOUR_PX;
-            const eventHeight = Math.max(((block.end - block.start) / 60) * HOUR_PX - 3, 18);
-            const width = 100 / lanes;
-            const left = block.lane * width;
-            const name = SHORT[block.title] ?? block.title;
-            const selected = pickedBlock === block.id ? " is-selected" : "";
-            const clash = block.clash ? " is-clash" : "";
-            const when = `${gClock(block.start)} – ${gClock(block.end)}`;
-            return `<button type="button" class="g-event ${esc(kindOf(block))}${selected}${clash}" data-block="${esc(block.id)}" style="top:${top + 1}px;height:${eventHeight}px;left:calc(${left}% + 2px);width:calc(${width}% - 6px)" title="${esc(block.title)}" aria-label="${esc(block.title)}, ${esc(when)}"><span class="g-title">${esc(name)}</span>${eventHeight > 36 ? `<span class="g-when">${esc(when)}</span>` : ""}</button>`;
-          })
-          .join("")}
+      <div class="gcal">
+        <div class="g-gutter" style="height:${height}px" aria-hidden="true">
+          ${hours
+            .map(
+              (minute) =>
+                `<div class="g-hour" style="height:${HOUR_PX}px"><span>${esc(hourLabel(minute))}</span></div>`,
+            )
+            .join("")}
+        </div>
+        <div class="g-day" style="height:${height}px">
+          ${hours.map(() => `<div class="g-line" style="height:${HOUR_PX}px"></div>`).join("")}
+          ${blocks
+            .map((block) => {
+              const top = ((block.start - CAL_START) / 60) * HOUR_PX;
+              const eventHeight = Math.max(((block.end - block.start) / 60) * HOUR_PX - 4, 20);
+              const width = 100 / lanes;
+              const left = block.lane * width;
+              const name = SHORT[block.title] ?? block.title;
+              const selected = pickedBlock === block.id ? " is-selected" : "";
+              const clash = block.clash ? " is-clash" : "";
+              const when = `${gClock(block.start)} – ${gClock(block.end)}`;
+              return `<button type="button" class="g-event ${esc(kindOf(block))}${selected}${clash}" data-block="${esc(block.id)}" style="top:${top + 2}px;height:${eventHeight}px;left:calc(${left}% + 4px);width:calc(${width}% - 10px)" title="${esc(block.title)}" aria-label="${esc(block.title)}, ${esc(when)}"><span class="g-title">${esc(name)}</span>${eventHeight > 34 ? `<span class="g-when">${esc(when)}</span>` : ""}</button>`;
+            })
+            .join("")}
+        </div>
       </div>
     </div>
   `;
+}
+
+function demoDay(): { weekday: string; date: string } {
+  const match = DAY.dateLabel.match(/^(\w+),\s+\w+\s+(\d+)/);
+  const weekday = match?.[1]?.slice(0, 3) ?? "Tue";
+  const date = match?.[2] ?? "10";
+  return { weekday, date };
 }
 
 function hourLabel(minutes: number): string {
@@ -692,6 +718,7 @@ function strategyLabel(strategy: string): string {
 }
 
 function label(agent: string): string {
+  if (agent === "supervisor") return "Atlas";
   if (agent === "researcher") return "Research";
   return agent.slice(0, 1).toUpperCase() + agent.slice(1);
 }
