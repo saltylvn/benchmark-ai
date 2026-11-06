@@ -1,140 +1,126 @@
 import type { Account, CalendarEvent, Demand, Email } from "../types.js";
 
 /**
- * A fictional Tuesday for Jordan Hale, a client support analyst who is also
- * building a small internal tool (CaseFlow) and protecting a short wellness block.
- * Nothing here is a real client, payer, or calendar.
+ * A fictional Thursday for Maria Alvarez, project manager at Summit Ridge Builders.
+ * The Rivera kitchen is invented. No real homeowner, subcontractor, or county.
  */
 export const DAY = {
-  dateLabel: "Tuesday, November 10, 2026",
-  persona: "Jordan Hale",
-  role: "Client support analyst",
+  dateLabel: "Thursday, March 12, 2026",
+  persona: "Maria Alvarez",
+  role: "Project manager",
   now: 8 * 60 + 47,
 } as const;
 
 export const PRIORITIES = [
-  "Keep a real morning focus block for the CaseFlow denial queue. Ninety minutes is the floor.",
-  "A strategic escalation outranks internal reviews and non-urgent client meetings.",
-  "The wellness walk stays on the day. It can slide. It cannot disappear.",
-  "The 1:1 with Samira does not move.",
-  "Halcyon's analyst is only free at 15:30. That window is locked.",
+  "Keep 90 minutes to price job J-1042 before leaving for the site.",
+  "A homeowner who needs a quote today outranks a movable sub check-in.",
+  "The site walk stays on the day. It can slide. It cannot disappear.",
+  "The check-in with Dave does not move.",
+  "The Pinecrest inspection window at 15:30 is locked.",
 ];
 
 export const ACCOUNTS: Account[] = [
   {
     id: "meridian",
-    name: "Meridian Medical Group",
+    name: "Rivera Kitchen",
     tier: "strategic",
-    owner: "Dana Okonkwo",
-    ownerRole: "Director of Revenue Cycle",
-    ownerEmail: "dana.okonkwo@meridian.example",
-    slackChannel: "#accounts-meridian",
-    goLive: "Friday, November 13",
-    lastTouch: "Wednesday, November 4",
-    lastTouchNote: "Working session on the payer-id crosswalk. No written follow-up was sent.",
-    summary:
-      "42-provider group going live Friday. Remit files started rejecting after a payer-id mapping change.",
+    owner: "Sam Rivera (FAKE)",
+    ownerRole: "Homeowner",
+    ownerEmail: "sam.rivera@example.com",
+    slackChannel: "#job-j1042",
+    goLive: "Demo Friday, March 13",
+    lastTouch: "Never. This is a new lead.",
+    lastTouchNote: "Inbound email only. No site visit yet.",
+    summary: "Kitchen remodel at 123 Example Ln. Fictional draft total is $38,450. Two lines are flagged.",
     cases: [
       {
-        id: "CS-10442",
-        title: "140 claims stuck in pending remit after payer-id mismatch",
+        id: "J-1042",
+        title: "Kitchen remodel request, cabinets and counters",
         priority: "P0",
-        status: "Open since Monday",
-      },
-      {
-        id: "CS-10418",
-        title: "Enrollment roster delta, 12 providers",
-        priority: "P2",
-        status: "Waiting on client",
-      },
-      {
-        id: "CS-10390",
-        title: "Training office-hours no-show",
-        priority: "P3",
-        status: "Nudge scheduled",
+        status: "Lead since 8:47",
       },
     ],
     facts: [
-      "Go-live is Friday, November 13. Their CFO reviews status today at 13:00.",
-      "The likely trigger is a payer-id mapping change touched on November 4. It has not been confirmed in production.",
-      "140 claims are the number Dana used. The case file has not been re-counted this morning.",
-      "Last live conversation was six days ago, and it ended without a written status.",
+      "Sam wants a quote today. The $38,450 total is a draft until Maria approves it.",
+      "Quartz waterfall edge has no price-list match, so that line is flagged.",
+      "Rain is forecast for Friday. Demo and the dumpster are weather-sensitive.",
+      "Bright Spark Electric's insurance certificate is expired.",
     ],
     openQuestions: [
-      "Did the November 4 payer-id change reach production, or only the test roster?",
-      "Are all 140 claims inside CS-10442, or is that a count across batches?",
-      "If remits are not clearing today, does Friday's go-live slip, or only this payer?",
+      "Is the budget a ceiling or a starting hope?",
+      "Are we replacing uppers and lowers, or lowers only?",
+      "Does under-cabinet lighting stay out of this quote?",
     ],
     doNotPromise: [
-      "Do not say Friday's go-live is safe.",
-      "Do not name a root cause before the mapping diff is on the screen.",
-      "Do not fold the enrollment roster (CS-10418) into this call unless Dana raises it.",
+      "Do not promise $38,450. Maria has not approved the quote.",
+      "Do not promise a start date. Friday's demo may move for rain.",
+      "Do not say the electrician is confirmed. The certificate is expired.",
     ],
   },
   {
     id: "northwind",
-    name: "Northwind Health",
+    name: "Bright Spark Electric (FAKE)",
     tier: "enterprise",
-    owner: "Luis Ortega",
-    ownerRole: "VP of Patient Financial Services",
-    ownerEmail: "luis.ortega@northwind.example",
-    slackChannel: "#accounts-northwind",
-    lastTouch: "Thursday, October 29",
-    lastTouchNote: "Quarterly review pre-read sent. They want the narrative, not another dashboard tour.",
-    summary: "Steady enterprise account. Quarterly review is about expansion, not an incident.",
+    owner: "Luis Ortega (FAKE)",
+    ownerRole: "Electrician",
+    ownerEmail: "luis.ortega@example.com",
+    slackChannel: "#subs-brightspark",
+    lastTouch: "Last month",
+    lastTouchNote: "Certificate of insurance expired. They are not cleared to start.",
+    summary: "Preferred electrician. The date check is routine. The certificate is not.",
     cases: [
       {
-        id: "CS-10102",
-        title: "Quarterly value review, denial rate down 1.8 points",
+        id: "COI-1042",
+        title: "Insurance certificate expired",
         priority: "P2",
-        status: "Deck half-drafted",
+        status: "Renewal not received",
       },
     ],
     facts: [
-      "No open incident. The meeting is a quarterly narrative review.",
-      "A teammate already pulled the numbers. What's missing is the story around them.",
-      "Moving this call is cheap. Moving it onto the focus block is how today broke.",
+      "No emergency. The meeting is a date check that landed on the estimate block.",
+      "The certificate is expired, so Bright Spark is not assigned to J-1042.",
+      "Moving this call is cheap. Leaving it on the estimate block is how the morning broke.",
     ],
     openQuestions: [
-      "Which denial category do they want to expand on: eligibility, or coding?",
-      "Is the expansion conversation this quarter or next?",
+      "When will the renewed certificate arrive?",
+      "If it does not arrive this week, who is the backup electrician?",
     ],
     doNotPromise: [
-      "Do not preview unreleased CaseFlow work as if it were their roadmap.",
+      "Do not tell the homeowner Bright Spark is confirmed.",
     ],
   },
   {
     id: "halcyon",
-    name: "Halcyon Benefits",
+    name: "Pinecrest County Inspections",
     tier: "standard",
-    owner: "Priya Raman",
-    ownerRole: "Payer analyst (external)",
-    ownerEmail: "priya.raman@halcyon.example",
-    slackChannel: "#payer-halcyon",
-    lastTouch: "Monday, November 9",
-    lastTouchNote: "Batch 441 parked on a missing rendering-provider NPI.",
-    summary: "Operational follow-up. The analyst's calendar only has 15:30 open.",
+    owner: "Priya Raman (FAKE)",
+    ownerRole: "Building inspector",
+    ownerEmail: "inspections@pinecrest.example",
+    slackChannel: "#job-j1042",
+    lastTouch: "Monday, March 9",
+    lastTouchNote: "Rough-in window held for Thursday at 15:30.",
+    summary: "County inspection window. The inspector is only free at 15:30.",
     cases: [
       {
-        id: "CS-10455",
-        title: "Batch 441 held for rendering-provider NPI",
+        id: "INSP-1042",
+        title: "Rough-in inspection window",
         priority: "P1",
         status: "Waiting on today's window",
       },
     ],
     facts: [
-      "The 15:30–16:00 window is the analyst's only opening. Treat it as fixed.",
-      "The question is narrow: which NPI should batch 441 carry, and who confirms it.",
+      "The 15:30–16:00 window is the inspector's only opening. Treat it as fixed.",
+      "The question is narrow: is the rough-in ready, and who meets the inspector.",
     ],
-    openQuestions: ["Who on our side owns the NPI correction after the call?"],
-    doNotPromise: ["Do not promise the batch releases today if the NPI is still unverified."],
+    openQuestions: ["Who on the crew meets the inspector?"],
+    doNotPromise: ["Do not promise the inspection will pass."],
   },
 ];
 
 export const EVENTS: CalendarEvent[] = [
   {
     id: "standup",
-    title: "Team standup",
+    title: "Morning huddle",
     kind: "standup",
     start: 8 * 60 + 30,
     end: 8 * 60 + 45,
@@ -148,7 +134,7 @@ export const EVENTS: CalendarEvent[] = [
   },
   {
     id: "focus",
-    title: "Focus · CaseFlow denial queue",
+    title: "Estimate block · J-1042",
     kind: "focus",
     start: 9 * 60,
     end: 11 * 60,
@@ -163,7 +149,7 @@ export const EVENTS: CalendarEvent[] = [
   },
   {
     id: "northwind",
-    title: "Northwind Health · quarterly review",
+    title: "Bright Spark · date check",
     kind: "client",
     start: 10 * 60 + 30,
     end: 11 * 60 + 15,
@@ -175,11 +161,11 @@ export const EVENTS: CalendarEvent[] = [
     earliest: 8 * 60 + 45,
     latest: 17 * 60,
     accountId: "northwind",
-    notes: "Already overlapping the focus block. Not an incident.",
+    notes: "Already overlapping the estimate block. Not an emergency.",
   },
   {
     id: "one-on-one",
-    title: "1:1 with Samira",
+    title: "Check-in with Dave",
     kind: "internal",
     start: 11 * 60 + 30,
     end: 12 * 60,
@@ -190,7 +176,7 @@ export const EVENTS: CalendarEvent[] = [
     needsPrepMinutes: 0,
     earliest: 11 * 60 + 30,
     latest: 12 * 60,
-    notes: "Manager 1:1 with Samira Shah. Do not move.",
+    notes: "Owner check-in with Dave. Do not move.",
   },
   {
     id: "lunch",
@@ -208,7 +194,7 @@ export const EVENTS: CalendarEvent[] = [
   },
   {
     id: "wellness",
-    title: "Wellness walk",
+    title: "Site walk · 123 Example Ln",
     kind: "personal",
     start: 13 * 60,
     end: 13 * 60 + 30,
@@ -223,7 +209,7 @@ export const EVENTS: CalendarEvent[] = [
   },
   {
     id: "caseflow",
-    title: "CaseFlow design review",
+    title: "Crew schedule review",
     kind: "internal",
     start: 14 * 60,
     end: 15 * 60,
@@ -237,7 +223,7 @@ export const EVENTS: CalendarEvent[] = [
   },
   {
     id: "halcyon",
-    title: "Halcyon Benefits · batch 441",
+    title: "Pinecrest · rough-in window",
     kind: "client",
     start: 15 * 60 + 30,
     end: 16 * 60,
@@ -249,11 +235,11 @@ export const EVENTS: CalendarEvent[] = [
     earliest: 15 * 60 + 30,
     latest: 16 * 60,
     accountId: "halcyon",
-    notes: "Payer analyst is only free in this window.",
+    notes: "The county set this window. Do not move it.",
   },
   {
     id: "wrap",
-    title: "Wrap · ticket hygiene",
+    title: "Daily closeout",
     kind: "admin",
     start: 16 * 60 + 30,
     end: 17 * 60,
@@ -270,26 +256,24 @@ export const EVENTS: CalendarEvent[] = [
 export const ESCALATION: Email = {
   id: "mail-meridian-0847",
   at: "08:47",
-  from: "Dana Okonkwo",
-  fromRole: "Director of Revenue Cycle, Meridian Medical Group",
-  to: "Jordan Hale",
-  subject: "URGENT — Go-live Friday, 140 claims stuck in pending remit",
+  from: "Sam Rivera (FAKE)",
+  fromRole: "Homeowner",
+  to: "Maria Alvarez",
+  subject: "Kitchen remodel at 123 Example Ln",
   urgent: true,
   accountId: "meridian",
   body: [
-    "Jordan,",
+    "Hi Maria,",
     "",
-    "We go live Friday and I have a CFO review at 1:00 today. About 140 claims are sitting in pending remit since the payer-id change last week. I need a call this morning, not a ticket update.",
+    "We want a quote for our kitchen at 123 Example Ln. Cabinets, counters, and maybe new lighting. We are hoping to start soon. Can you call this morning?",
     "",
-    "If you can't make this morning, tell me before 9:30 so I can reset the CFO.",
-    "",
-    "Dana",
+    "Sam Rivera",
   ].join("\n"),
 };
 
 export const MERIDIAN_DEMAND: Demand = {
   id: "meridian",
-  title: "Meridian Medical · escalation",
+  title: "Rivera kitchen · scope call",
   accountId: "meridian",
   duration: 40,
   prepMinutes: 15,
@@ -297,7 +281,7 @@ export const MERIDIAN_DEMAND: Demand = {
   latest: 13 * 60,
   priority: 5,
   statusDeadline: 12 * 60 + 15,
-  reason: "Dana asked for a morning call before the 13:00 CFO review. Written status by 12:15.",
+  reason: "Sam asked for a morning call so the quote can be drafted today. Written note by 12:15.",
 };
 
 export function accountById(id: string): Account | undefined {

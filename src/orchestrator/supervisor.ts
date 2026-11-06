@@ -71,8 +71,8 @@ function createState(workflow: RunState["workflow"], modelName: string): RunStat
     runId: warRoom ? "tuesday-war-room" : "tuesday-morning",
     workflow,
     goal: warRoom
-      ? "An escalation landed at 08:47. Give Meridian a morning call before the 13:00 review, keep a real focus block, and do not delete the walk or move the 1:1."
-      : "Plan Tuesday before the day starts. The calendar is already double-booked. Protect focus, keep the walk, and move only what is movable.",
+      ? "Sam Rivera's kitchen email landed at 08:47. Make room for a morning call, keep the estimate block, and do not drop the site walk or move Dave."
+      : "Plan Thursday before anyone leaves for a site. The calendar is already double-booked. Protect the estimate block, keep the site walk, and move only what is movable.",
     dateLabel: DAY.dateLabel,
     persona: DAY.persona,
     role: DAY.role,

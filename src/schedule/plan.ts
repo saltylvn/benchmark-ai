@@ -295,7 +295,7 @@ function reasonFor(strategy: Strategy, item: Placeable, placed: Placement): stri
   if (item.kind === "break" || item.kind === "personal") {
     return "Protected block, kept as close as possible to its original time.";
   }
-  return "Nearest open time that still respects the fixed payer window and the lead-in before it.";
+  return "Nearest open time that still respects the fixed county window and the lead-in before it.";
 }
 
 export function describeConflicts(events: CalendarEvent[]): string[] {

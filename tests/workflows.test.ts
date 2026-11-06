@@ -31,11 +31,11 @@ describe("war room", () => {
     assert.ok(email && email.type === "email.draft");
     assert.equal(email.status, "draft");
     assert.match(email.body, /12:15/);
-    assert.match(email.body, /CS-10442/);
+    assert.match(email.body, /J-1042/);
     assert.ok(slack && slack.type === "slack.draft");
-    assert.equal(slack.channel, "#accounts-meridian");
+    assert.equal(slack.channel, "#job-j1042");
     assert.match(slack.text, /Nothing has been sent/);
-    assert.equal(state.brief?.callCard?.account, "Meridian Medical Group");
+    assert.equal(state.brief?.callCard?.account, "Rivera Kitchen");
     assert.ok(state.trace.some((event) => event.handoff?.to === "planner"));
     for (const event of state.trace) {
       const seconds = Number(event.at.slice(-2));
@@ -53,7 +53,7 @@ describe("morning", () => {
     assert.equal(state.actions.some((action) => action.type === "email.draft"), false);
     const focus = state.plan?.blocks.find((block) => block.id === "focus");
     assert.equal(focus && range(focus.start, focus.end), "09:00–11:00");
-    assert.match(state.brief?.headline ?? "", /Focus stays 09:00–11:00/);
+    assert.match(state.brief?.headline ?? "", /09:00–11:00/);
     assert.ok(state.actions.some((action) => action.type === "calendar.update" && action.id === "northwind"));
   });
 });
@@ -65,7 +65,7 @@ describe("cli", () => {
       env: { ...process.env, NO_COLOR: "1", ATLAS_PROVIDER: "mock" },
     });
     assert.equal(result.status, 0, result.stderr);
-    assert.match(result.stdout, /Meridian/);
+    assert.match(result.stdout, /Rivera/);
     assert.match(result.stdout, /protect-focus/);
     assert.match(result.stdout, /nothing sent/i);
     assert.doesNotMatch(result.stdout, /sk-[a-zA-Z0-9]{8,}/);

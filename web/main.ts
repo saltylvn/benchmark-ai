@@ -20,18 +20,18 @@ const PIPELINE = ["intake", "researcher", "planner", "critic", "executor", "brie
 const THEME_KEY = "atlas-theme";
 
 const SHORT: Record<string, string> = {
-  "Team standup": "Standup",
-  "Focus · CaseFlow denial queue": "Focus",
-  "Northwind Health · quarterly review": "Northwind",
-  "1:1 with Samira": "1:1",
+  "Morning huddle": "Huddle",
+  "Estimate block · J-1042": "Estimate",
+  "Bright Spark · date check": "Bright Spark",
+  "Check-in with Dave": "Dave",
   Lunch: "Lunch",
-  "Wellness walk": "Walk",
-  "CaseFlow design review": "CaseFlow",
-  "Halcyon Benefits · batch 441": "Halcyon",
-  "Wrap · ticket hygiene": "Wrap",
-  "Prep · Meridian Medical": "Prep",
-  "Meridian Medical · escalation": "Meridian",
-  "Prep · Northwind Health": "Prep",
+  "Site walk · 123 Example Ln": "Site walk",
+  "Crew schedule review": "Crew",
+  "Pinecrest · rough-in window": "Pinecrest",
+  "Daily closeout": "Closeout",
+  "Prep · Rivera kitchen": "Prep",
+  "Rivera kitchen · scope call": "Rivera",
+  "Prep · Bright Spark": "Prep",
 };
 
 const mock = {
@@ -68,40 +68,37 @@ function team(): { id: string; name: string; role: string; job: string }[] {
     {
       id: "intake",
       name: "Intake",
-      role: "Reader",
-      job: "Reads the calendar and the inbox, and flags conflicts.",
+      role: "Intake and estimating",
+      job: "Turns the request into a job and drafts the quote.",
     },
     {
-      id: "researcher",
-      name: "Research",
-      role: "Account specialist",
-      job: "Pulls the HubSpot company record.",
+      id: "scheduling",
+      name: "Scheduling",
+      role: "Scheduling and subs",
+      job: "Builds the timeline and coordinates the subcontractors.",
     },
     {
-      id: "planner",
-      name: "Planner",
-      role: "Scheduler",
-      job: "Proposes the day on Google Calendar.",
+      id: "compliance",
+      name: "Compliance",
+      role: "Compliance and billing",
+      job: "Tracks permits, insurance certificates, lien waivers, and invoices.",
     },
     {
-      id: "critic",
-      name: "Critic",
-      role: "Reviewer",
-      job: "Scores the plan and sends a failure back to Atlas, or approves it.",
-    },
-    {
-      id: "executor",
-      name: "Executor",
-      role: "Drafter",
-      job: "Writes the calendar, email, and Slack drafts, and does not send them.",
-    },
-    {
-      id: "brief",
-      name: "Brief",
-      role: "Writer",
-      job: "Turns the approved plan into three outcomes and the call card.",
+      id: "briefing",
+      name: "Briefing",
+      role: "PM briefing",
+      job: "Gives the project manager the morning read: today, risks, and decisions.",
     },
   ];
+}
+
+function diagramId(agent?: string): string {
+  if (agent === "supervisor" || agent === "critic") return "supervisor";
+  if (agent === "intake" || agent === "researcher") return "intake";
+  if (agent === "planner") return "scheduling";
+  if (agent === "executor") return "compliance";
+  if (agent === "brief") return "briefing";
+  return agent ?? "";
 }
 
 function connectorIcons(): string {
@@ -118,7 +115,7 @@ function shell(state: RunState): string {
     <header class="top">
       <div class="wrap top-inner">
         <div class="brand">
-          <strong>Atlas</strong>
+          <strong>Benchmark</strong>
           ${connectorIcons()}
         </div>
         <nav class="tabs" aria-label="Demos">
@@ -137,33 +134,47 @@ function shell(state: RunState): string {
     </header>
     <main class="wrap">
       <section class="about">
-        <p class="kicker">Context</p>
-        <h2>How a support analyst keeps the morning.</h2>
-        <p>This is one Tuesday for Jordan Hale, a client-support analyst who also holds time to build CaseFlow and to take a short walk. Atlas is the head agent. Research reads the company in HubSpot, the planner rewrites the day on the calendar, and the executor drafts the Slack note. Nothing is sent. The war room below is the hard morning, an escalation at 8:47. Day plan and Brief are that same morning before the email.</p>
+        <p class="kicker">Benchmark</p>
+        <h2>A team of AI agents for construction project managers.</h2>
+        <p>Benchmark takes care of the repetitive admin that eats up a PM's day, like turning requests into quotes, keeping schedules and subcontractors in sync, tracking permits and paperwork, and sending invoices. The PM steps in only for the decisions that actually need them.</p>
+        <p>Every job runs from the first inquiry to final payment in one organized place, so nothing slips and the PM always knows where things stand.</p>
         <ul class="benefits">
           <li>
-            <strong>The morning stays usable.</strong>
-            <span>Focus time and the wellness walk survive a calendar that was already double-booked.</span>
+            <strong>Intake and quoting.</strong>
+            <span>Emails, forms, and call notes become organized jobs automatically, and draft quotes are ready for review instead of being built from scratch.</span>
           </li>
           <li>
-            <strong>A bad plan gets rejected.</strong>
-            <span>The first schedule clears every client call and loses the morning. The critic sends it back.</span>
+            <strong>Scheduling and subs.</strong>
+            <span>Timelines are built and updated on their own, subcontractors get their assignments and reminders, and when a delay or bad weather hits, the schedule is reshuffled without a pile of phone calls.</span>
           </li>
           <li>
-            <strong>You walk in prepared.</strong>
-            <span>The call card, the email, and the Slack note are drafted from the company record. You choose what goes out.</span>
+            <strong>Permits and compliance.</strong>
+            <span>Permit deadlines, inspections, insurance certificates, and lien waivers are tracked automatically, so nothing expires or gets missed.</span>
+          </li>
+          <li>
+            <strong>Billing.</strong>
+            <span>Invoices go out when milestones are hit, change orders are logged, and late payments are followed up, so cash keeps coming in without manual chasing.</span>
+          </li>
+          <li>
+            <strong>Daily clarity.</strong>
+            <span>Each morning the PM gets a briefing covering what's happening today, which jobs are at risk, and what needs a decision. That replaces digging through texts, emails, and spreadsheets.</span>
+          </li>
+          <li>
+            <strong>Control and trust.</strong>
+            <span>Every agent action is visible and can be undone. The PM approves the key moments, so the automation never runs unchecked.</span>
           </li>
         </ul>
+        <p class="about-close">Less time on admin and follow-ups, fewer dropped balls, faster quotes and payments, and more of the PM's time spent on the jobs themselves.</p>
       </section>
-      <section class="org" id="org" aria-label="Agents reporting to Atlas">
+      <section class="org" id="org" aria-label="The Benchmark team">
         <p class="kicker">Orchestration</p>
-        <h2>These agents report to Atlas.</h2>
-        <p class="org-lead">Atlas is the head agent. It does not do the specialist work. It decides who goes next, and a rejection comes back to Atlas before the planner tries again.</p>
+        <h2>Four agents. Benchmark decides who goes next.</h2>
+        <p class="org-lead">Benchmark does not price the job or text the subs. It hands the work to one specialist at a time. If a plan breaks Maria's rules, it comes back before Scheduling tries again.</p>
         <div class="org-chart">
           <article class="org-head" data-agent="supervisor">
-            <strong>Atlas</strong>
-            <span class="role">Head agent</span>
-            <span class="job">Routes the team and hands the job to one specialist at a time.</span>
+            <strong>Benchmark</strong>
+            <span class="role">The team</span>
+            <span class="job">Routes the work. Maria approves money, dates, and anything a client would see.</span>
             <span class="state">Waiting</span>
           </article>
           <div class="org-stem" aria-hidden="true"></div>
@@ -182,19 +193,17 @@ function shell(state: RunState): string {
         </div>
         <ol class="org-flow" aria-label="How a run moves">
           <li>Intake</li>
-          <li>Research</li>
-          <li>Planner</li>
-          <li>Critic</li>
-          <li>Executor</li>
-          <li>Brief</li>
+          <li>Scheduling</li>
+          <li>Compliance</li>
+          <li>Briefing</li>
         </ol>
-        <p class="org-return">If the critic rejects the plan, it goes back to Atlas, and Atlas sends the planner again.</p>
+        <p class="org-return">A rejected schedule comes back to Benchmark, and Scheduling tries again. Nothing goes to the homeowner or the crew until Maria approves it.</p>
       </section>
       <section id="view-war">
         <div class="lede">
           <div>
-            <h1>An escalation at 8:47.</h1>
-            <p>${esc(state.dateLabel)}. ${esc(state.persona)} already has a double-booked morning. HubSpot holds the company record, the day is on Google Calendar, and the note is ready for Slack. Press play and the swarm rewrites the day.</p>
+            <h1>A kitchen request at 8:47.</h1>
+            <p>${esc(state.dateLabel)}. ${esc(state.persona)} already has a double-booked morning. Sam Rivera wants a quote for 123 Example Ln. Press play. Benchmark makes room for the call, keeps the estimate block, and drafts the note. Nothing is sent.</p>
           </div>
           <div class="controls">
             <button type="button" class="primary" id="play">Play</button>
@@ -207,7 +216,7 @@ function shell(state: RunState): string {
         </div>
         <p class="keys">Space plays and pauses. Right arrow steps. Click a block to read why it moved.</p>
         <ol class="rail" id="rail"></ol>
-        <p class="note">The chart above is this run. Press play and the agent Atlas has called lights up. Specialists do not call each other. A rejection comes back to Atlas, then the planner tries again.</p>
+        <p class="note">The chart above is this run. Press play and the agent Benchmark has called lights up. Specialists do not call each other. A rejection comes back to Benchmark, then Scheduling tries again.</p>
         <div id="board"></div>
         <div class="split" id="split">
           <div>
@@ -226,7 +235,7 @@ function shell(state: RunState): string {
       <section id="view-brief" hidden></section>
       <footer class="foot">
         Same engine as <code>npm run demo</code>. Fixture accounts are fictional. Drafts stay in the browser.
-        <a href="https://github.com/saltylvn/agentic-workflows">Source</a>
+        <a href="https://github.com/saltylvn/benchmark-ai">Source</a>
       </footer>
     </main>
   `;
@@ -373,10 +382,11 @@ function frame(): void {
   syncPlayButton();
   byId("count").textContent = `${cursor} / ${war.trace.length}`;
   byId("rail").innerHTML = rail(active);
-  const seen = new Set<string>(revealed.map((event) => event.agent));
+  const seen = new Set<string>(revealed.map((event) => diagramId(event.agent)));
+  const workingId = diagramId(active?.agent);
   document.querySelectorAll<HTMLElement>("[data-agent]").forEach((node) => {
     const id = node.dataset.agent ?? "";
-    const working = id === active?.agent && revealed.length > 0;
+    const working = id === workingId && revealed.length > 0;
     node.classList.toggle("is-on", working);
     const state = node.querySelector(".state");
     if (!state) return;
@@ -405,14 +415,15 @@ function frame(): void {
 }
 
 function rail(active: TraceEvent | undefined): string {
+  const current = diagramId(active?.agent);
   const bad = active?.agent === "critic" && /rejected/i.test(active.title);
   const good = active?.agent === "critic" && /approved/i.test(active.title);
-  return PIPELINE.map((agent) => {
-    const on = active?.agent === agent;
+  return [{ id: "supervisor", name: "Benchmark" }, ...team()].map((agent) => {
+    const on = agent.id === current;
     const cls = ["", on ? "is-on" : "", on && bad ? "is-bad" : "", on && good ? "is-good" : ""]
       .filter(Boolean)
       .join(" ");
-    return `<li class="${cls}"><span class="dot"></span>${esc(label(agent))}</li>`;
+    return `<li class="${cls}"><span class="dot"></span>${esc(agent.name)}</li>`;
   }).join("");
 }
 
@@ -439,8 +450,8 @@ function boardHtml(blocks: BlockView[], approved: boolean, rejected: boolean): s
   return `
     <article class="card board">
       <p class="kicker">${approved ? "After" : "Before"}</p>
-      <h2>${approved ? "The rewrite" : "Tuesday as it stands"}</h2>
-      <p class="caption">${approved ? "Critic approved. Focus stays in the morning." : "Northwind is sitting on the focus block."}</p>
+      <h2>${approved ? "The rewrite" : "The day as it stands"}</h2>
+      <p class="caption">${approved ? "Approved. The estimate block stays in the morning." : "Bright Spark is sitting on the estimate block."}</p>
       ${scheduleHtml(blocks)}
       ${
         rejected && !approved && failure
@@ -524,7 +535,7 @@ function renderPlan(state: RunState): void {
   const northwind = state.plan?.blocks.find((block) => block.id === "northwind");
   const proposed =
     focusBlock && northwind
-      ? `Focus stays ${range(focusBlock.start, focusBlock.end)}. Northwind moves to ${range(northwind.start, northwind.end)}.`
+      ? `Estimate block stays ${range(focusBlock.start, focusBlock.end)}. Bright Spark moves to ${range(northwind.start, northwind.end)}.`
       : "Proposed day";
   byId("view-plan").innerHTML = `
     <div class="lede">
@@ -727,8 +738,11 @@ function strategyLabel(strategy: string): string {
 }
 
 function label(agent: string): string {
-  if (agent === "supervisor") return "Atlas";
-  if (agent === "researcher") return "Research";
+  if (agent === "supervisor" || agent === "critic") return "Benchmark";
+  if (agent === "intake" || agent === "researcher") return "Intake";
+  if (agent === "planner") return "Scheduling";
+  if (agent === "executor") return "Compliance";
+  if (agent === "brief") return "Briefing";
   return agent.slice(0, 1).toUpperCase() + agent.slice(1);
 }
 

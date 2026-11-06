@@ -63,14 +63,14 @@ function emailDraft(persona: string, account: Account, meeting: PlanBlock, deadl
   const body = [
     `${first},`,
     "",
-    `I can talk at ${when} today, before your 1:00 review.`,
+    `I can talk at ${when} today.`,
     "",
-    `${caseLine} The payer-id change from November 4 is the likely trigger, and it is not confirmed in production. I will not name a root cause on the call. I will send a written status by ${hm(deadline)} either way.`,
+    `${caseLine} I will not give you a price or a start date on the call. I will send a written note by ${hm(deadline)}, and the quote waits for approval before it goes out.`,
     "",
     `If ${when} does not work, reply before 9:30 and I will move a flexible block.`,
     "",
     persona,
-    "Client support",
+    "Project manager",
   ].join("\n");
 
   return {
@@ -87,10 +87,10 @@ function emailDraft(persona: string, account: Account, meeting: PlanBlock, deadl
 function slackDraft(account: Account, plan: Plan, meeting: PlanBlock, deadline: number): Action {
   const focus = plan.blocks.find((block) => block.kind === "focus");
   const northwind = plan.blocks.find((block) => block.id === "northwind");
-  const focusLine = focus ? `Focus stays ${range(focus.start, focus.end)} for the CaseFlow denial queue.` : "";
-  const moveLine = northwind ? `Northwind moves to ${hm(northwind.start)}.` : "";
+  const focusLine = focus ? `Estimate block stays ${range(focus.start, focus.end)}.` : "";
+  const moveLine = northwind ? `Bright Spark moves to ${hm(northwind.start)}.` : "";
   const text = [
-    `Escalation from ${account.owner} is drafted onto the calendar at ${range(meeting.start, meeting.end)}.`,
+    `${account.owner} is drafted onto the calendar at ${range(meeting.start, meeting.end)}.`,
     focusLine,
     moveLine,
     `Status note to ${account.owner.split(" ")[0] ?? account.owner} is staged for ${hm(deadline)}.`,

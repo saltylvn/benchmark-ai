@@ -1,8 +1,8 @@
 {
-  "name": "atlas",
+  "name": "benchmark",
   "version": "1.0.0",
   "private": true,
-  "description": "A runnable showcase of agentic workflows: day planning, multi-agent orchestration, and a five-minute war-room demo in the terminal and the browser.",
+  "description": "A team of AI agents for construction project managers. The demo runs in mock mode and sends nothing.",
   "type": "module",
   "engines": {
     "node": ">=20"

@@ -157,7 +157,7 @@ function banner(state: RunState, options: RenderOptions, title: string): string 
   const rule = "─".repeat(WIDTH);
   return [
     paint(options, "2", rule),
-    `${paint(options, "1", "ATLAS")}  ${title}`,
+    `${paint(options, "1", "BENCHMARK")}  ${title}`,
     `${state.dateLabel}  ·  ${state.persona}, ${state.role}`,
     paint(options, "2", `mode ${state.modelName}  ·  status ${state.status}  ·  nothing is sent from this demo`),
     paint(options, "2", rule),
@@ -313,18 +313,18 @@ function wrap(text: string, width: number, hanging: number): string {
 const COLUMN = 36;
 
 const COLUMN_TITLES: Record<string, string> = {
-  "Team standup": "Standup",
-  "Focus · CaseFlow denial queue": "Focus · CaseFlow",
-  "Northwind Health · quarterly review": "Northwind review",
-  "1:1 with Samira": "1:1 with Samira",
+  "Morning huddle": "Huddle",
+  "Estimate block · J-1042": "Estimate · J-1042",
+  "Bright Spark · date check": "Bright Spark",
+  "Check-in with Dave": "Dave",
   Lunch: "Lunch",
-  "Wellness walk": "Wellness walk",
-  "CaseFlow design review": "CaseFlow review",
-  "Halcyon Benefits · batch 441": "Halcyon batch 441",
-  "Wrap · ticket hygiene": "Wrap",
-  "Prep · Meridian Medical": "Prep · Meridian",
-  "Meridian Medical · escalation": "Meridian escalation",
-  "Prep · Northwind Health": "Prep · Northwind",
+  "Site walk · 123 Example Ln": "Site walk",
+  "Crew schedule review": "Crew review",
+  "Pinecrest · rough-in window": "Pinecrest",
+  "Daily closeout": "Closeout",
+  "Prep · Rivera kitchen": "Prep · Rivera",
+  "Rivera kitchen · scope call": "Rivera kitchen",
+  "Prep · Bright Spark": "Prep · Bright Spark",
 };
 
 function columnTitle(title: string): string {
