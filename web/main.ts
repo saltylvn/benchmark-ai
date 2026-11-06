@@ -114,6 +114,7 @@ function shell(state: RunState): string {
         <div id="board"></div>
         <div class="split" id="split">
           <div>
+            <p class="column-label">The email and the swarm</p>
             <article class="card ask">
               <p class="kicker">${mail ? esc(mail.at) + " · " + esc(mail.from) : "Inbox"}</p>
               <h2>${mail ? esc(mail.subject) : "No escalation"}</h2>
@@ -369,8 +370,10 @@ function briefCard(headline: string, outcomes: string[], callCard: CallCard | un
         card
           ? `<h3>Call card · ${esc(card.when)}</h3>
              <p>${esc(card.whyNow)}</p>
-             <p><strong>Ask.</strong> ${card.questions.map(esc).join(" ")}</p>
-             <p><strong>Do not promise.</strong> ${card.doNotPromise.map(esc).join(" ")}</p>
+             <h3>Ask</h3>
+             <ul class="plain">${card.questions.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>
+             <h3>Do not promise</h3>
+             <ul class="plain">${card.doNotPromise.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>
              <p class="caption">Leave with ${esc(card.success)}.</p>`
           : ""
       }

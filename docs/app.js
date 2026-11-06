@@ -54,6 +54,7 @@ ${p}`,handoff:b("researcher",i.length>0?"An escalation needs account context bef
         <div id="board"></div>
         <div class="split" id="split">
           <div>
+            <p class="column-label">The email and the swarm</p>
             <article class="card ask">
               <p class="kicker">${n?c(n.at)+" \xB7 "+c(n.from):"Inbox"}</p>
               <h2>${n?c(n.subject):"No escalation"}</h2>
@@ -105,8 +106,10 @@ ${p}`,handoff:b("researcher",i.length>0?"An escalation needs account context bef
       <ol class="outcomes">${n.map(a=>`<li>${c(a)}</li>`).join("")}</ol>
       ${r?`<h3>Call card \xB7 ${c(r.when)}</h3>
              <p>${c(r.whyNow)}</p>
-             <p><strong>Ask.</strong> ${r.questions.map(c).join(" ")}</p>
-             <p><strong>Do not promise.</strong> ${r.doNotPromise.map(c).join(" ")}</p>
+             <h3>Ask</h3>
+             <ul class="plain">${r.questions.map(a=>`<li>${c(a)}</li>`).join("")}</ul>
+             <h3>Do not promise</h3>
+             <ul class="plain">${r.doNotPromise.map(a=>`<li>${c(a)}</li>`).join("")}</ul>
              <p class="caption">Leave with ${c(r.success)}.</p>`:""}
     </article>
   `}function kt(e){let n=e.actions.filter(t=>t.type==="email.draft"||t.type==="slack.draft").map(t=>t.type==="email.draft"?`<article class="draft"><span class="tag">Email draft \xB7 staged ${c(t.sendAt)} \xB7 not sent</span><strong>${c(t.subject)}</strong><p>${c(t.body)}</p></article>`:`<article class="draft"><span class="tag">${c(t.channel)} \xB7 Slack draft \xB7 not sent</span><p>${c(t.text)}</p></article>`).join("");return n?`<article class="card drafts">${n}</article>`:""}function $t(e,n){let t=f.events.find(a=>a.id===e.id),r="Already on the book.";return n&&t&&(t.start!==e.start||t.end!==e.end)?r=`Moved from ${d(t.start,t.end)}.`:n&&!t?r="Added for the escalation.":n&&t&&(r="Held."),`
