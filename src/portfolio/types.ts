@@ -96,6 +96,8 @@ export type RiskKind =
 
 export interface Risk {
   id: string;
+  /** Stable across days: the same issue on the same job or sub keeps its key, so a later sweep can say what changed. */
+  key: string;
   kind: RiskKind;
   level: "blocked" | "watch";
   jobId?: string;

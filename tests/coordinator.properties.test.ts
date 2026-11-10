@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
+import { diffSweeps } from "../src/agents/changes.js";
 import { daysBetween, sweepPortfolio } from "../src/agents/coordinator.js";
 import type { Booking, Job, Milestone, Portfolio, Stage, Sub } from "../src/portfolio/types.js";
 
@@ -164,5 +165,23 @@ describe("coordinator invariants over 300 random portfolios", () => {
       const digest = sweepPortfolio(p).digest;
       for (const j of p.jobs) assert.ok(digest.includes(j.id), `${j.id} missing`);
     });
+  });
+  it("gives every risk a unique key within a sweep", () => {
+    eachSeed((p) => {
+      const keys = sweepPortfolio(p).risks.map((r) => r.key);
+      assert.equal(new Set(keys).size, keys.length, keys.join(" "));
+    });
+  });
+
+  it("diffs both ways: what is new one way is cleared the other way", () => {
+    for (const seed of SEEDS.slice(0, 150)) {
+      const a = sweepPortfolio(randomPortfolio(seed));
+      const b = sweepPortfolio(randomPortfolio(seed + 1000));
+      assert.deepEqual(diffSweeps(a, a).items, [], `seed ${seed}`);
+      const fwd = diffSweeps(a, b).items;
+      const back = diffSweeps(b, a).items;
+      assert.equal(fwd.filter((c) => c.kind === "risk-new").length, back.filter((c) => c.kind === "risk-cleared").length, `seed ${seed}`);
+      assert.equal(fwd.filter((c) => c.kind === "job-new").length, back.filter((c) => c.kind === "job-gone").length, `seed ${seed}`);
+    }
   });
 });

@@ -42,6 +42,15 @@ def build_brief(snapshot: dict[str, Any], assumptions: dict[str, Any], person: s
         else "Nothing is waiting on you this morning.",
         "",
     ]
+    since = t["since"]
+    moved = [i for g in since["groups"] if g["tone"] != "news" for i in g["items"] if person in (None, i.get("owner"))]
+    if moved:
+        lines.append(f"*Since yesterday* ({since['counts']['worse']} slipped, {since['counts']['better']} moved forward)" if not person else "*Since yesterday*")
+        for i in moved[:MAX_ITEMS]:
+            lines.append(f"{i['mark']} {i['title']}")
+        if len(moved) > MAX_ITEMS:
+            lines.append(f"• …and {len(moved) - MAX_ITEMS} more in Today")
+        lines.append("")
     if queue:
         lines.append("*Needs you first*")
         for i in queue[:MAX_ITEMS]:

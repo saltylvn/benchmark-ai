@@ -75,6 +75,16 @@ def create_app(
             session["csrf"] = secrets.token_urlsafe(24)
         return session["csrf"]
 
+    def asset(filename: str) -> str:
+        """Static URL stamped with the file's mtime, so a phone never keeps a stale stylesheet."""
+        try:
+            stamp = int(Path(app.static_folder, filename).stat().st_mtime)
+        except OSError:
+            stamp = 0
+        return url_for("static", filename=filename, v=stamp)
+
+    app.jinja_env.globals["asset"] = asset
+
     @app.after_request
     def security_headers(response):
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
