@@ -42,6 +42,16 @@ function shortDate(iso: string): string {
   return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
 }
 
+/** Never tell a client a planned date that has already passed. */
+function nextLine(status: JobStatus, today: string): string {
+  const next = status.nextMilestone;
+  if (!next) return "";
+  if (daysBetween(next.planned, today) > 0) {
+    return `Next up is ${next.name.toLowerCase()}. It is running behind the original plan, and I will confirm a new date with you this week.`;
+  }
+  return `Next up is ${next.name.toLowerCase()}, planned for ${shortDate(next.planned)}.`;
+}
+
 export function jobStatus(job: Job, today: string, risks: Risk[]): JobStatus {
   const milestones = job.milestones.map((m) => {
     const late = m.done === null && daysBetween(m.planned, today) > 0 ? daysBetween(m.planned, today) : 0;
@@ -222,7 +232,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
     draft({
       kind: "email", riskId: r.id, owner: j.pm, to: j.clientEmail, jobId: j.id, task: "clientUpdate",
       subject: `${j.name} update`,
-      body: `Hi ${j.client.split(" ")[0]},\n\nQuick update on ${j.name}: ${done.length ? `${done.join(", ")} ${done.length === 1 ? "is" : "are"} done` : "work is underway"}, and we are ${status.percent}% through the project. ${status.nextMilestone ? `Next up is ${status.nextMilestone.name.toLowerCase()}, planned for ${shortDate(status.nextMilestone.planned)}.` : ""}\n\nI will send the next update when that is complete.\n\n${person(j.pm).name}`,
+      body: `Hi ${j.client.split(" ")[0]},\n\nQuick update on ${j.name}: ${done.length ? `${done.join(", ")} ${done.length === 1 ? "is" : "are"} done` : "work is underway"}, and we are ${status.percent}% through the project. ${nextLine(status, p.today)}\n\nI will send the next update when that is complete.\n\n${person(j.pm).name}`,
     });
   }
   steps.push({ agent: "coordinator", check: "Clients waiting on an update", looked: p.jobs.length, found });
@@ -239,7 +249,9 @@ export function sweepPortfolio(p: Portfolio): Sweep {
     found += 1;
     const sub = p.subs.find((s) => s.id === key.split("|")[0])!;
     const [a, b] = [job(list[0]!.jobId), job(list[1]!.jobId)];
-    const later = daysBetween(a.milestones.find((m) => !m.done)!.planned, b.milestones.find((m) => !m.done)!.planned) < 0 ? a : b;
+    // The job whose next open milestone comes first keeps the crew. A job with nothing open sorts last.
+    const nextOpen = (j: Job) => j.milestones.find((m) => !m.done)?.planned ?? "9999-12-31";
+    const later = nextOpen(b) < nextOpen(a) ? a : nextOpen(a) < nextOpen(b) ? b : b;
     const keep = later === a ? b : a;
     const r = add({
       kind: "double-booking", level: "blocked", jobId: later.id, owner: later.pm,

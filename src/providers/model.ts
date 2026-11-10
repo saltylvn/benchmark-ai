@@ -1,4 +1,5 @@
 import type { ProseModel } from "../types.js";
+import { guarded } from "./guard.js";
 
 const MOCK: ProseModel = {
   name: "mock",
@@ -69,5 +70,6 @@ export function resolveModel(live: boolean): ProseModel {
   const provider = process.env.BENCHMARK_PROVIDER ?? "mock";
   if (provider !== "openai") return MOCK;
   if (!process.env.OPENAI_API_KEY) return MOCK;
-  return openAIModel();
+  // Every live rewrite passes the fact guard; a rewrite that changes a fact is dropped.
+  return guarded(openAIModel());
 }
