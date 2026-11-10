@@ -276,6 +276,26 @@ class SignInTest(unittest.TestCase):
         self.assertEqual(slack.audit[0]["approvedBy"], "Maria Alvarez (maria@summitridge.example)")
 
 
+class SiteBuildTest(unittest.TestCase):
+    def test_site_is_installable(self):
+        import tempfile
+        from pathlib import Path
+
+        from dashboard.static_export import build_site
+
+        with tempfile.TemporaryDirectory() as tmp:
+            out = build_site(Path(tmp) / "site")
+            names = {p.name for p in out.iterdir()}
+            self.assertTrue({"index.html", "manifest.webmanifest", "sw.js", "apple-touch-icon.png", "icon-512.png", "icon.svg"} <= names)
+            manifest = json.loads((out / "manifest.webmanifest").read_text())
+            self.assertEqual((manifest["display"], manifest["start_url"]), ("standalone", "./"))
+            html = (out / "index.html").read_text()
+            self.assertIn('rel="apple-touch-icon" href="apple-touch-icon.png"', html)
+            self.assertIn("Add to Home Screen", html)
+            self.assertNotIn('href="/', html)
+            self.assertIn("benchmark-", (out / "sw.js").read_text())
+
+
 class StaticExportTest(unittest.TestCase):
     def test_static_copy_is_self_contained(self):
         from dashboard.static_export import render_static
