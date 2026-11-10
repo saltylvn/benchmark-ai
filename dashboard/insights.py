@@ -8,6 +8,7 @@ that are not agent output are the manual-time assumptions in
 
 from __future__ import annotations
 
+import copy
 import json
 import re
 from dataclasses import dataclass
@@ -34,9 +35,52 @@ AGENT_LABELS = {
 }
 
 
+_CACHE: dict[str, tuple[tuple[int, int], Any]] = {}
+
+
 def load_json(path: Path) -> dict[str, Any]:
-    with Path(path).open(encoding="utf-8") as handle:
-        return json.load(handle)
+    """Read JSON once per file change. Returns a private copy, so callers may mutate it."""
+    path = Path(path)
+    stat = path.stat()
+    key, stamp = str(path.resolve()), (stat.st_mtime_ns, stat.st_size)
+    hit = _CACHE.get(key)
+    if hit is None or hit[0] != stamp:
+        with path.open(encoding="utf-8") as handle:
+            hit = (stamp, json.load(handle))
+        _CACHE[key] = hit
+    return copy.deepcopy(hit[1])
+
+
+class SnapshotError(RuntimeError):
+    pass
+
+
+SNAPSHOT_SCHEMA = 1
+_REQUIRED = {
+    "runs.thursday": ("calendarBefore", "attempts", "critiques", "actions", "trace", "accounts", "research"),
+    "portfolio.data": ("company", "today", "people", "jobs", "subs", "bookings", "lienWaivers"),
+    "portfolio.sweep": ("statuses", "risks", "drafts", "workload", "steps", "digest"),
+}
+
+
+def load_snapshot(path: Path = DEFAULT_SNAPSHOT) -> dict[str, Any]:
+    """Load the agents' snapshot and check the contract the dashboard depends on."""
+    try:
+        data = load_json(path)
+    except FileNotFoundError as error:
+        raise SnapshotError(f"{path} is missing. Run `npm run export:dashboard`.") from error
+    if data.get("schema") != SNAPSHOT_SCHEMA:
+        raise SnapshotError(f"Snapshot schema {data.get('schema')!r}, expected {SNAPSHOT_SCHEMA}. Run `npm run export:dashboard`.")
+    for where, keys in _REQUIRED.items():
+        node: Any = data
+        for part in where.split("."):
+            node = node.get(part) if isinstance(node, dict) else None
+        if not isinstance(node, dict):
+            raise SnapshotError(f"Snapshot is missing `{where}`. Run `npm run export:dashboard`.")
+        missing = [k for k in keys if k not in node]
+        if missing:
+            raise SnapshotError(f"Snapshot `{where}` is missing {', '.join(missing)}. Run `npm run export:dashboard`.")
+    return data
 
 
 def hm(minutes: int) -> str:
@@ -57,7 +101,7 @@ def schedule_lanes(run: dict[str, Any]) -> list[dict[str, Any]]:
             "blocks": [_block(e, overlap=_overlaps_any(e, run["calendarBefore"])) for e in run["calendarBefore"]],
         }
     ]
-    for attempt, critique in zip(run["attempts"], run["critiques"]):
+    for attempt, critique in zip(run["attempts"], run["critiques"], strict=False):
         lanes.append(
             {
                 "label": f"Revision {critique['revision']}",
@@ -258,8 +302,8 @@ def time_ledger(run: dict[str, Any], assumptions: dict[str, Any]) -> dict[str, A
     team_week = per_week * assumptions["pmsOnTeam"]
     return {
         "lines": [
-            {"task": l.task, "agent": l.agent, "count": l.count, "minutesEach": l.minutes_each, "minutes": l.minutes}
-            for l in lines
+            {"task": ln.task, "agent": ln.agent, "count": ln.count, "minutesEach": ln.minutes_each, "minutes": ln.minutes}
+            for ln in lines
         ],
         "manualMinutes": manual_total,
         "reviewMinutes": review,

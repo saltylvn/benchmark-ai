@@ -15,11 +15,13 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 
 API = "https://slack.com/api"
 TIMEOUT_SECONDS = 8
@@ -39,7 +41,7 @@ class SlackConfig:
     send_enabled: bool = False
 
     @classmethod
-    def from_env(cls, env: dict[str, str] | None = None) -> "SlackConfig":
+    def from_env(cls, env: dict[str, str] | None = None) -> SlackConfig:
         env = dict(os.environ if env is None else env)
         return cls(
             bot_token=env.get("SLACK_BOT_TOKEN", "").strip(),
@@ -62,10 +64,28 @@ class SlackConnector:
     config: SlackConfig
     opener: Opener = _default_opener
     audit: list[dict[str, Any]] = field(default_factory=list)
+    on_record: Callable[[dict[str, Any]], None] | None = None
+    #: Seconds to reuse a Slack status check, so page loads don't each call auth.test.
+    status_ttl: float = 60.0
+    clock: Callable[[], float] = time.monotonic
+    _status_cache: tuple[float, dict[str, Any]] | None = field(default=None, repr=False)
+
+    def _log(self, record: dict[str, Any]) -> None:
+        self.audit.append(record)
+        if self.on_record:
+            self.on_record(record)
 
     # -- status ------------------------------------------------------------
 
     def status(self) -> dict[str, Any]:
+        now = self.clock()
+        if self._status_cache and now - self._status_cache[0] < self.status_ttl:
+            return dict(self._status_cache[1])
+        result = self._status()
+        self._status_cache = (now, result)
+        return dict(result)
+
+    def _status(self) -> dict[str, Any]:
         cfg = self.config
         base = {
             "mode": cfg.mode,
@@ -119,7 +139,7 @@ class SlackConnector:
             "result": "dry-run",
             "detail": "Demo preview. Sign in with a company account to send.",
         }
-        self.audit.append(record)
+        self._log(record)
         return record
 
     def send(self, text: str, *, context: str, approved_by: str) -> dict[str, Any]:
@@ -134,7 +154,7 @@ class SlackConnector:
         if self.config.mode == "none" or not self.config.send_enabled:
             reason = "Slack is not connected" if self.config.mode == "none" else "SLACK_SEND_ENABLED is not 1"
             record.update(result="dry-run", detail=f"Dry run: {reason}. This is the exact payload Slack would receive.")
-            self.audit.append(record)
+            self._log(record)
             return record
         try:
             if self.config.mode == "bot":
@@ -147,7 +167,7 @@ class SlackConnector:
                 record.update(result="sent", detail="Posted through the incoming webhook.")
         except SlackError as error:
             record.update(result="error", detail=str(error))
-        self.audit.append(record)
+        self._log(record)
         return record
 
     # -- transport ---------------------------------------------------------

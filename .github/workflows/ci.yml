@@ -23,14 +23,18 @@ jobs:
       - run: npm test
 
   dashboard:
-    name: PM dashboard (Python)
+    name: PM dashboard (Python ${{ matrix.python }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.12"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python }}
           cache: pip
-          cache-dependency-path: dashboard/requirements.txt
-      - run: pip install -r dashboard/requirements.txt
+          cache-dependency-path: dashboard/requirements-dev.txt
+      - run: pip install -r dashboard/requirements-dev.txt
+      - run: ruff check dashboard
       - run: python -m unittest discover -s dashboard/tests -t . -v

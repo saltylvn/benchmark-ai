@@ -22,7 +22,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 
 TIMEOUT_SECONDS = 8
 Opener = Callable[[urllib.request.Request], Any]

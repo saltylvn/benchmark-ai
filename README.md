@@ -214,6 +214,18 @@ SLACK_SEND_ENABLED=1          # without this, Approve & send is a dry run
 - **Time savings are counted, then priced.** Counts (calendar moves, drafts, revisions, accounts researched) come from the run. Minutes per task are the team's own assumption, kept in one file. Change them and reload.
 - **Approval is the product.** The PM sees every draft, approves with their name, and gets an audit trail. That is what lets a construction team trust automation with homeowners and subs.
 
+## Engineering notes
+
+How the pieces are kept honest, for anyone extending Benchmark.
+
+- **Contract between the agents and the dashboard.** TypeScript writes `dashboard/data/snapshot.json` (`schema: 1`). Python loads it through `load_snapshot`, which checks the keys it depends on and answers with a 503 page that says to run `npm run export:dashboard` instead of crashing. `tests/snapshot.test.ts` fails when the committed file drifts from the agents.
+- **Model guardrail.** A live model may only restyle prose. `src/providers/guard.ts` extracts every time, dollar amount, job or case id, date, percent, channel and email from the deterministic draft, and rejects a rewrite that drops one, changes one, adds one, or grows past 1.6× in length. The draft then stands. `resolveModel` wraps every live model in it.
+- **Agent evaluation.** `tests/coordinator.properties.test.ts` runs the Coordinator on 300 seeded random portfolios. It checks that the Coordinator only drafts, that every draft answers a risk, and that it never bills past the contract. Status must match late milestones. Client emails must never mention subs, insurance or lien details, and must never quote a date that has passed. Each double booking is flagged once, and every hour and job is counted. It found two real bugs on its first run.
+- **State.** Approvals and the Slack log persist to `dashboard/var/state.json` (gitignored; `DASHBOARD_STATE_DIR` to move it). Writes are atomic under a lock, and a damaged file is set aside rather than crashing the server.
+- **Security.** OAuth with `state`, a per-session CSRF token on `/api/approve`, `HttpOnly` / `SameSite=Lax` cookies (`Secure` behind https), CSP with `frame-ancestors 'none'`, `nosniff`, and `X-Frame-Options: DENY`. Demo sessions can never post.
+- **Performance.** JSON loads are cached per file change, and the Slack status check is cached for 60 seconds, so page loads don't call Slack.
+- **CI.** Typecheck plus Node tests, then ruff and the Python tests on 3.10 and 3.12.
+
 ## Run it
 
 Node 20 or newer, and Python 3.10+ for the dashboard.

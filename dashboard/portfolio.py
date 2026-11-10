@@ -381,10 +381,10 @@ def team_ledger(p: dict[str, Any], assumptions: dict[str, Any]) -> dict[str, Any
     lines.append({"task": "Write the team status update", "count": 1, "minutesEach": m["statusDigest"]})
     for line in lines:
         line["minutes"] = line["count"] * line["minutesEach"]
-    top = max(l["minutes"] for l in lines) or 1
+    top = max(ln["minutes"] for ln in lines) or 1
     for line in lines:
         line["bar"] = round(line["minutes"] / top * 100, 1)
-    manual = sum(l["minutes"] for l in lines)
+    manual = sum(ln["minutes"] for ln in lines)
     review = (len(drafts) + 1) * assumptions["teamReviewMinutesPerDraft"]
     net = manual - review
     week = net * assumptions["workDaysPerWeek"]

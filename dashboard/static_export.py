@@ -15,10 +15,10 @@ from pathlib import Path
 
 from flask import render_template
 
-from .app import RUNS, create_app, provider_cards
+from .app import create_app, provider_cards
 from .brief import with_brief
 from .portfolio import build_team_view
-from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, HERE, build_view, load_json
+from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, HERE, build_view, load_json, load_snapshot
 
 STATIC_SLACK = {
     "connected": False,
@@ -35,7 +35,7 @@ def render_static(
     template: str = "static.html",
 ) -> str:
     app = create_app(snapshot_path, assumptions_path, env={})
-    snapshot, assumptions = load_json(snapshot_path), load_json(assumptions_path)
+    snapshot, assumptions = load_snapshot(snapshot_path), load_json(assumptions_path)
     with app.test_request_context("/"):
         app_html = render_template(
             "_app.html",
@@ -43,7 +43,6 @@ def render_static(
             v=build_view(snapshot, assumptions, "thursday"),
             t=with_brief(build_team_view(snapshot, assumptions), snapshot, assumptions),
             brief_at="08:00",
-            runs=RUNS,
             user=None,
             slack=STATIC_SLACK,
             audit=[],

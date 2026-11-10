@@ -25,6 +25,13 @@ def assumptions():
     return load_json(DEFAULT_ASSUMPTIONS)
 
 
+def csrf(client):
+    """The page hands each session its own token; read it the way the page's script would."""
+    client.get("/")
+    with client.session_transaction() as sess:
+        return sess["csrf"]
+
+
 class FakeResponse(io.BytesIO):
     def __enter__(self):
         return self
@@ -69,7 +76,7 @@ class InsightsTest(unittest.TestCase):
         ledger = time_ledger(run, a)
         self.assertEqual(ledger["reviewMinutes"], len(run["actions"]) * a["reviewMinutesPerDraft"])
         self.assertAlmostEqual(ledger["netMinutes"], ledger["manualMinutes"] - ledger["reviewMinutes"])
-        calendar = next(l for l in ledger["lines"] if l["task"].startswith("Move or create"))
+        calendar = next(ln for ln in ledger["lines"] if ln["task"].startswith("Move or create"))
         self.assertEqual(calendar["count"], 6)
         self.assertEqual((ledger["manualMinutes"], ledger["netMinutes"]), (76, 68))
 
@@ -92,7 +99,7 @@ class InsightsTest(unittest.TestCase):
         self.assertEqual(lanes[0]["status"], "conflict")
         overlapping = {b["id"] for b in lanes[0]["blocks"] if b["overlap"]}
         self.assertEqual(overlapping, {"focus", "brightspark"})
-        self.assertEqual([l["status"] for l in lanes[1:]], ["rejected", "approved"])
+        self.assertEqual([lane["status"] for lane in lanes[1:]], ["rejected", "approved"])
 
 
 class SlackTest(unittest.TestCase):
@@ -143,6 +150,17 @@ class SlackTest(unittest.TestCase):
         result = SlackConnector(cfg, opener=RecordingOpener()).send("x", context="c", approved_by="m")
         self.assertEqual(result["result"], "error")
 
+    def test_status_is_cached_between_page_loads(self):
+        clock = {"t": 0.0}
+        opener = RecordingOpener(*[json.dumps({"ok": True, "team": "S", "user": "b"})] * 2)
+        slack = SlackConnector(SlackConfig(bot_token="xoxb", channel="C1"), opener=opener, clock=lambda: clock["t"])
+        slack.status()
+        slack.status()
+        self.assertEqual(len(opener.requests), 1)
+        clock["t"] = 61
+        slack.status()
+        self.assertEqual(len(opener.requests), 2)
+
     def test_send_flag_must_be_exactly_one(self):
         self.assertFalse(SlackConfig.from_env({"SLACK_SEND_ENABLED": "true"}).send_enabled)
         self.assertTrue(SlackConfig.from_env({"SLACK_SEND_ENABLED": "1"}).send_enabled)
@@ -174,11 +192,8 @@ class AppTest(unittest.TestCase):
         self.assertIn(b"View the demo", self.client.get("/").data)
 
     def approve(self, item_id, act="approve", token=None, client=None):
-        return (client or self.client).post(
-            "/api/approve",
-            json={"id": item_id, "act": act},
-            headers={"X-Form-Token": token or self.app.config["FORM_TOKEN"]},
-        )
+        client = client or self.client
+        return client.post("/api/approve", json={"id": item_id, "act": act}, headers={"X-Form-Token": token or csrf(client)})
 
     def test_app_renders_all_tabs(self):
         page = self.client.get("/").data
@@ -225,6 +240,63 @@ class AppTest(unittest.TestCase):
             self.assertNotIn(internal, page)
         self.assertEqual(self.client.get("/jobs/J-9999/client").status_code, 404)
         self.assertEqual(self.app.test_client().get("/jobs/J-1038/client").status_code, 302)
+
+    def test_security_headers(self):
+        headers = self.client.get("/").headers
+        self.assertEqual(headers["X-Frame-Options"], "DENY")
+        self.assertIn("frame-ancestors 'none'", headers["Content-Security-Policy"])
+        self.assertEqual(headers["X-Content-Type-Options"], "nosniff")
+
+    def test_csrf_token_is_per_session(self):
+        other = self.app.test_client()
+        other.get("/demo")
+        self.assertEqual(self.approve("D1", token=csrf(other)).status_code, 400)
+
+    def test_demo_approvals_stay_with_that_visitor(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            app = create_app(env={}, state_dir=tmp, slack=SlackConnector(SlackConfig()))
+            first, second = app.test_client(), app.test_client()
+            first.get("/demo")
+            second.get("/demo")
+            self.approve("D1", client=first)
+            self.assertIn(b'"D1": {', first.get("/").data)
+            self.assertNotIn(b'"D1": {', second.get("/").data)
+            self.assertEqual(app.extensions["store"].get("approvals", {}), {})
+
+    def test_signed_in_approvals_and_slack_log_survive_a_restart(self):
+        import tempfile
+
+        env = {"GOOGLE_CLIENT_ID": "cid", "GOOGLE_CLIENT_SECRET": "s", "DASHBOARD_SECRET": "x" * 32}
+        with tempfile.TemporaryDirectory() as tmp:
+            opener = RecordingOpener(json.dumps({"access_token": "at"}), json.dumps({"email": "maria@summitridge.example", "name": "Maria Alvarez"}))
+            first = create_app(env=env, state_dir=tmp, auth_opener=opener, slack=SlackConnector(SlackConfig()))
+            c1 = first.test_client()
+            location = c1.get("/login/google").headers["Location"]
+            state = urllib.parse.parse_qs(urllib.parse.urlsplit(location).query)["state"][0]
+            c1.get(f"/auth/google/callback?code=abc&state={state}")
+            self.approve("D1", client=c1)
+            second = create_app(env=env, state_dir=tmp, slack=SlackConnector(SlackConfig()))
+            with second.test_client() as c2:
+                with c2.session_transaction() as sess:
+                    sess["user"] = {"name": "Jordan Pike", "email": "j@summitridge.example", "provider": "google", "providerLabel": "Google"}
+                self.assertIn(b'"D1": {', c2.get("/").data)
+            self.assertEqual(second.extensions["slack"].audit[0]["approvedBy"], "Maria Alvarez (maria@summitridge.example)")
+
+    def test_missing_or_stale_snapshot_explains_the_fix(self):
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmp:
+            bad = Path(tmp) / "snapshot.json"
+            bad.write_text(json.dumps({"schema": 0}))
+            app = create_app(snapshot_path=bad, env={}, slack=SlackConnector(SlackConfig()))
+            client = app.test_client()
+            client.get("/demo")
+            response = client.get("/")
+            self.assertEqual(response.status_code, 503)
+            self.assertIn(b"npm run export:dashboard", response.data)
 
     def test_approvals_survive_a_reload(self):
         self.approve("D5")
@@ -281,22 +353,22 @@ class SignInTest(unittest.TestCase):
         self.assertIn(b"allowed company domain", response.data)
 
     def test_demo_never_posts_even_when_sending_is_on(self):
-        slack_opener = RecordingOpener()
+        slack_opener = RecordingOpener(json.dumps({"ok": True, "team": "Summit", "user": "benchmark"}))
         slack = SlackConnector(SlackConfig(bot_token="xoxb", channel="C1", send_enabled=True), opener=slack_opener)
         app, client = self.make(RecordingOpener(), slack=slack)
         client.get("/demo")
-        client.post("/api/approve", json={"id": "digest", "act": "approve"}, headers={"X-Form-Token": app.config["FORM_TOKEN"]})
+        client.post("/api/approve", json={"id": "digest", "act": "approve"}, headers={"X-Form-Token": csrf(client)})
         self.assertEqual(slack.audit[0]["mode"], "demo")
-        self.assertEqual(slack_opener.requests, [])
+        self.assertEqual([r.full_url.rsplit("/", 1)[-1] for r in slack_opener.requests], ["auth.test"])
 
     def test_signed_in_user_is_the_approver(self):
         auth_opener = RecordingOpener(json.dumps({"access_token": "at"}), json.dumps({"email": "maria@summitridge.example", "name": "Maria Alvarez"}))
-        slack_opener = RecordingOpener(json.dumps({"ok": True, "channel": "C1", "ts": "1.2"}))
+        slack_opener = RecordingOpener(json.dumps({"ok": True, "team": "Summit", "user": "benchmark"}), json.dumps({"ok": True, "channel": "C1", "ts": "1.2"}))
         slack = SlackConnector(SlackConfig(bot_token="xoxb", channel="C1", send_enabled=True), opener=slack_opener)
         app, client = self.make(auth_opener, slack=slack)
         state = self.start(client)
         client.get(f"/auth/google/callback?code=abc&state={state}")
-        rec = client.post("/api/approve", json={"id": "D1", "act": "approve"}, headers={"X-Form-Token": app.config["FORM_TOKEN"]}).get_json()
+        rec = client.post("/api/approve", json={"id": "D1", "act": "approve"}, headers={"X-Form-Token": csrf(client)}).get_json()
         self.assertEqual(rec["detail"], "Posted to Slack")
         self.assertEqual(slack.audit[0]["result"], "sent")
         self.assertEqual(slack.audit[0]["approvedBy"], "Maria Alvarez (maria@summitridge.example)")
@@ -311,7 +383,7 @@ class TeamViewTest(unittest.TestCase):
     def test_today_queue_puts_blockers_first(self):
         q = self.view()["queue"]
         levels = [i["level"] for i in q]
-        self.assertEqual(levels, sorted(levels, key=lambda l: l != "blocked"))
+        self.assertEqual(levels, sorted(levels, key=lambda level: level != "blocked"))
         self.assertEqual(q[0]["id"], "day-maria")
 
     def test_lookahead_flags_conflicts_on_the_right_day(self):
