@@ -131,10 +131,14 @@
 
   function applyFilter() {
     var visible = 0;
-    document.querySelectorAll('.qcard').forEach(function (card) {
-      var mine = owner === 'all' || card.dataset.owner === owner || card.dataset.owner === 'all';
-      card.hidden = !mine;
-      if (mine && !approvals[card.dataset.id] && card.closest('[data-list="open"]')) visible += 1;
+    document.querySelectorAll('[data-owner]').forEach(function (el) {
+      var mine = owner === 'all' || el.dataset.owner === owner || el.dataset.owner === 'all';
+      el.hidden = !mine;
+      if (mine && el.classList.contains('qcard') && !approvals[el.dataset.id] && el.closest('[data-list="open"]')) visible += 1;
+    });
+    // Hide look-ahead days that have nothing left for this person.
+    document.querySelectorAll('[data-day]').forEach(function (day) {
+      day.hidden = !day.querySelector('.ev:not([hidden])');
     });
     var empty = document.querySelector('[data-empty]');
     if (empty) empty.hidden = visible > 0;

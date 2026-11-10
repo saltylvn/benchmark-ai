@@ -292,6 +292,37 @@ class SignInTest(unittest.TestCase):
         self.assertEqual(slack.audit[0]["approvedBy"], "Maria Alvarez (maria@summitridge.example)")
 
 
+class TeamViewTest(unittest.TestCase):
+    def view(self):
+        from dashboard.portfolio import build_team_view
+
+        return build_team_view(snapshot(), assumptions())
+
+    def test_today_queue_puts_blockers_first(self):
+        q = self.view()["queue"]
+        levels = [i["level"] for i in q]
+        self.assertEqual(levels, sorted(levels, key=lambda l: l != "blocked"))
+        self.assertEqual(q[0]["id"], "day-maria")
+
+    def test_lookahead_flags_conflicts_on_the_right_day(self):
+        days = {d["label"]: d for d in self.view()["lookahead"]}
+        crews = [e for e in days["Tomorrow"]["events"] if e["kind"] == "Crew"]
+        self.assertEqual({e["jobId"] for e in crews}, {"J-1036", "J-1019"})
+        self.assertTrue(all(e["flag"] == "blocked" for e in crews))
+        tile = [e for e in days["Tue, Mar 24"]["events"] if e["jobId"] == "J-1045"][0]
+        self.assertIn("insurance lapses first", tile["note"])
+
+    def test_timeline_orders_worst_first_and_marks_late(self):
+        rows = self.view()["timeline"]["rows"]
+        self.assertEqual(rows[0]["jobId"], "J-1019")
+        self.assertIn("late", [m["state"] for m in rows[0]["points"]])
+
+    def test_team_ledger_counts_drafts(self):
+        ledger = self.view()["ledger"]
+        self.assertEqual(ledger["reviewMinutes"], 9)  # 8 drafts + the brief
+        self.assertEqual(ledger["netMinutes"], ledger["manualMinutes"] - 9)
+
+
 class BriefTest(unittest.TestCase):
     def test_team_brief_leads_with_blockers_and_lists_every_job(self):
         from dashboard.brief import build_brief

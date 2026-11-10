@@ -94,6 +94,34 @@
 
 <!-- JOBS ------------------------------------------------------------------>
 <div class="tab" id="tab-jobs" data-panel="jobs" hidden>
+  <div class="filters" role="group" aria-label="Show jobs for">
+    <button type="button" class="on" data-owner-filter="all">Everyone</button>
+    {% for o in t.owners %}<button type="button" data-owner-filter="{{ o.id }}">{{ o.first }}</button>{% endfor %}
+  </div>
+
+  <section>
+    <div class="section-head">
+      <h2>Next two weeks</h2>
+      <div class="legend"><span class="pill blocked">conflict</span> needs a fix before the day</div>
+    </div>
+    <p class="lede">Every milestone, crew, inspection and quote across the team, so nobody is surprised.</p>
+    <ol class="days">
+      {% for d in t.lookahead %}
+        <li class="day {{ 'weekend' if d.weekend }}" data-day>
+          <h3>{{ d.label }}</h3>
+          <ul>
+            {% for e in d.events %}
+              <li class="ev {{ e.flag or '' }}" data-owner="{{ e.owner }}">
+                <span class="ev-kind">{{ e.kind }}</span>
+                <span class="ev-main"><b>{{ e.title }}</b> <span class="muted">· {{ e.jobId }} {{ e.job }} · {{ e.ownerName.split(' ')[0] }}</span>{% if e.note %}<br><small class="{{ 'warn-text' if e.flag else 'muted' }}">{{ e.note }}</small>{% endif %}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+    </ol>
+  </section>
+
   <section>
     <div class="section-head">
       <h2>Where every job stands</h2>
@@ -105,7 +133,7 @@
         <div class="col">
           <h3>{{ col.label }} <span class="muted">{{ col.jobs|length }}</span></h3>
           {% for j in col.jobs %}
-            <article class="jcard {{ j.status }}">
+            <article class="jcard {{ j.status }}" data-owner="{{ j.pm }}">
               <div class="jtop"><span class="mono">{{ j.jobId }}</span><span class="pill {{ j.status }}">{{ j.statusLabel }}</span></div>
               <b>{{ j.name }}</b>
               <span class="muted small">{{ j.pmName }} · {{ j.client }}</span>
@@ -113,6 +141,13 @@
               <span class="small"><b>{{ j.percent }}%</b> · {{ j.nextLabel }}</span>
               {% if j.status != 'on-track' %}<p class="reason">{{ j.reason }}</p>{% endif %}
               {% if j.risks %}<div class="chips">{% for r in j.risks %}<span class="pill {{ r.level }}" title="{{ r.title }}">{{ r.label }}</span>{% endfor %}</div>{% endif %}
+              <details class="jmore">
+                <summary>Milestones and contacts</summary>
+                <ol class="mlist">
+                  {% for m in j.milestones %}<li class="{{ m.state }}"><span class="m-dot {{ m.state }}"></span>{{ m.name }} <span class="muted">· {{ m.planned }}{% if m.done %} · done {{ m.done }}{% elif m.state == 'late' %} · {{ m.daysLate }} days late{% endif %}</span></li>{% endfor %}
+                </ol>
+                <p class="small muted">{{ j.address }} · ${{ '{:,.0f}'.format(j.contract) }} · <span class="mono">{{ j.channel }}</span></p>
+              </details>
             </article>
           {% else %}
             <p class="muted small">No jobs.</p>
@@ -132,7 +167,7 @@
     <div class="scroll-x"><div class="tl">
       <div class="tl-axis">{% for w in t.timeline.weeks %}<span style="left:{{ w.left }}%">{{ w.label }}</span>{% endfor %}</div>
       {% for r in t.timeline.rows %}
-        <div class="tl-row">
+        <div class="tl-row" data-owner="{{ r.pm }}">
           <div class="tl-label"><span class="s-dot s-{{ r.status }}"></span><b>{{ r.name }}</b><span class="muted small">{{ r.jobId }} · {{ r.percent }}%</span></div>
           <div class="tl-track">
             {% for w in t.timeline.weeks %}<i class="tl-grid" style="left:{{ w.left }}%"></i>{% endfor %}

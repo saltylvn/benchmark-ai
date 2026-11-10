@@ -228,6 +228,52 @@ def timeline(p: dict[str, Any]) -> dict[str, Any]:
     return {"weeks": weeks, "today": x(today), "todayLabel": short(p["sweep"]["today"]), "rows": rows}
 
 
+def lookahead(p: dict[str, Any], days: int = 14) -> list[dict[str, Any]]:
+    """Everything on the team's calendar for the next two weeks, by day."""
+    data = p["data"]
+    today = _d(p["sweep"]["today"])
+    jobs = {j["id"]: j for j in data["jobs"]}
+    subs = {s["id"]: s for s in data["subs"]}
+    who = people(p)
+    clash = {}
+    for b in data["bookings"]:
+        clash[(b["subId"], b["date"])] = clash.get((b["subId"], b["date"]), 0) + 1
+    events: list[dict[str, Any]] = []
+
+    def add(day: str, kind: str, title: str, job_id: str, note: str = "", flag: str | None = None) -> None:
+        d = _d(day)
+        if 0 <= (d - today).days <= days:
+            j = jobs[job_id]
+            events.append({"date": day, "kind": kind, "title": title, "jobId": job_id, "job": j["name"], "owner": j["pm"], "ownerName": who[j["pm"]]["name"], "note": note, "flag": flag})
+
+    for j in data["jobs"]:
+        for m in j["milestones"]:
+            if not m.get("done"):
+                add(m["planned"], "Milestone", m["name"], j["id"])
+        if j.get("inspection"):
+            add(j["inspection"]["date"], "Inspection", j["inspection"]["name"], j["id"], j["inspection"].get("who") or "Nobody assigned yet", None if j["inspection"].get("who") else "watch")
+        if j.get("quoteDue"):
+            add(j["quoteDue"], "Quote due", f"Quote to {j['client']}", j["id"])
+    for b in data["bookings"]:
+        sub = subs[b["subId"]]
+        flag = None
+        note = sub["name"]
+        if clash[(b["subId"], b["date"])] > 1:
+            flag, note = "blocked", f"{sub['name']} is booked on two jobs"
+        elif _d(sub["coiExpires"]) < _d(b["date"]):
+            flag, note = "blocked", f"{sub['name']} insurance {'expired' if _d(sub['coiExpires']) < today else 'lapses first'}"
+        add(b["date"], "Crew", b["task"], b["jobId"], note, flag)
+
+    out = []
+    for i in range(days + 1):
+        d = today + timedelta(days=i)
+        todays = sorted((e for e in events if e["date"] == d.isoformat()), key=lambda e: (e["flag"] is None, e["kind"]))
+        if todays:
+            label = "Today" if i == 0 else "Tomorrow" if i == 1 else short(d.isoformat())
+            out.append({"date": d.isoformat(), "label": label, "weekend": d.weekday() >= 5, "events": todays})
+    return out
+
+
 def status_counts(p: dict[str, Any]) -> dict[str, int]:
     out = {"on-track": 0, "at-risk": 0, "behind": 0}
     for s in p["sweep"]["statuses"]:
@@ -362,6 +408,7 @@ def build_team_view(snapshot: dict[str, Any], assumptions: dict[str, Any]) -> di
         "blockedCount": sum(1 for i in queue if i["level"] == "blocked"),
         "owners": [{"id": x["id"], "name": x["name"], "first": first(x["name"])} for x in p["data"]["people"] if x["role"] == "Project manager"],
         "board": board(p),
+        "lookahead": lookahead(p),
         "timeline": timeline(p),
         "counts": status_counts(p),
         "jobsTotal": len(p["sweep"]["statuses"]),

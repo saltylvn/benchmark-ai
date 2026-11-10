@@ -42,6 +42,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: 120px; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--sans); -webkit-tap-highlight-color: transparent; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--header); }
@@ -402,3 +403,24 @@ details summary { cursor: pointer; font-weight: 600; margin: 6px 0; min-height: 
 [data-list="open"] .qcard.is-done { display: none; }
 .kpi b span { font: inherit; color: inherit; }
 @media (max-width: 760px) { .kpi.status-kpi { grid-column: 1 / -1; } }
+
+/* Look-ahead + job details */
+.days { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+.day { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.day h3 { font: 600 14px var(--sans); margin: 2px 0 0; }
+.day.weekend h3 { color: var(--muted); }
+.day ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.ev { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; font-size: 14px; padding: 6px 10px; border-radius: 8px; }
+.ev.blocked { background: var(--bad-bg); }
+.ev.watch { background: var(--warn-bg); }
+.ev-kind { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding-top: 3px; }
+.warn-text { color: var(--bad); font-weight: 600; }
+.ev.watch .warn-text { color: var(--warn); }
+.jmore summary { font-size: 12.5px; color: var(--accent); cursor: pointer; padding-top: 4px; }
+.mlist { list-style: none; padding: 0; margin: 6px 0; display: grid; gap: 3px; font-size: 12.5px; }
+.mlist .m-dot { margin-right: 6px; }
+.mlist li.late { color: var(--bad); }
+@media (max-width: 760px) {
+  .day { grid-template-columns: 1fr; gap: 6px; }
+  .ev { grid-template-columns: 1fr; gap: 2px; }
+}
