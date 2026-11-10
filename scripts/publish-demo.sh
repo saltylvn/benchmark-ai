@@ -13,8 +13,14 @@ if ! gh repo view "$dest_repo" >/dev/null 2>&1; then
   exit 1
 fi
 
-gh repo clone "$dest_repo" "$work/site" -- --branch main
-rsync -a --delete --exclude '.git' "$root/docs/" "$work/site/"
+docs_dir="${DOCS_DIR:-$root/docs}"
+if ! gh repo clone "$dest_repo" "$work/site" -- --branch main; then
+  mkdir -p "$work/site"
+  git -C "$work/site" init -b main
+  git -C "$work/site" remote add origin "https://github.com/${dest_repo}.git"
+fi
+mkdir -p "$work/site"
+tar -C "$docs_dir" --exclude='*.md' -cf - . | tar -C "$work/site" -xf -
 
 cat > "$work/site/README.md" << 'EOF'
 # Benchmark
