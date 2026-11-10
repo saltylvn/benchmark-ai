@@ -1,0 +1,16 @@
+{
+  "_note": "Manual minutes a project manager spends doing each task by hand. These are starting estimates, not measurements. Replace them with your team's own numbers; the dashboard recomputes on reload.",
+  "manualMinutes": {
+    "triage": 10,
+    "researchPerAccount": 8,
+    "replanPerRevision": 15,
+    "calendarChange": 3,
+    "emailDraft": 12,
+    "slackDraft": 4,
+    "brief": 15
+  },
+  "reviewMinutesPerDraft": 1,
+  "requestsPerPmPerWeek": 8,
+  "pmsOnTeam": 6,
+  "workWeeksPerYear": 48
+}

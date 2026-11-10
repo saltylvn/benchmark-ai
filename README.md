@@ -105,7 +105,55 @@ The same morning, before Sam's email, is the Day plan tab. The calendar is alrea
 
 TypeScript on Node 20 or newer. No agent framework. The tests use `node:test`, run through `tsx`. The page is `web/main.ts` bundled by esbuild into `docs/app.js`, with plain HTML and CSS beside it. The page and the CLI call the same `runWorkflow` function. Optional prose polish is one OpenAI chat call. Schedule decisions, quote totals, and dates stay in code.
 
+## PM dashboard (Python)
+
+The Thursday demo shows the argument. The dashboard shows a project manager **what the agent team did, why, and what it is waiting on them for**, on one page.
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r dashboard/requirements.txt
+npm run dashboard        # exports the latest agent run, then serves http://127.0.0.1:5050
+```
+
+What is on it, top to bottom:
+
+| Panel | What a PM learns |
+| --- | --- |
+| **Insights** | Computed from the run, not written by hand: the plan the critic rejected and what it would have cost, which compliance item blocks a sub, how many fixed commitments moved (none), how many drafts wait for approval. |
+| **How the team worked** | Each specialist's role card, step count, and the full handoff log. The critic's send-back to the planner is highlighted. |
+| **The day, before and after** | A Gantt of the original calendar (double-booking hatched), every rejected revision, and the approved plan, plus a moved / added / held diff. |
+| **Critic scorecard** | Every named rule, pass or fail, per revision. |
+| **Compliance and job risk** | Insurance certificates, inspections, and jobs ranked blocked → watch → ok, plus the do-not-promise list for the call. |
+| **Time ledger** | Manual tasks the run replaced, counted from the run's own output, minus the PM's review time. Minutes per task live in `dashboard/assumptions.json` as editable estimates. |
+| **Approval queue · Slack** | The executor's Slack draft and the morning brief, each with **Approve & send**. Every press is written to an audit log with the approver's name and the exact payload. |
+| **Under the hood** | The full trace and JSON endpoints: `/api/runs/thursday`, `/api/snapshot`, `/api/slack/status`, `/api/slack/audit`. |
+
+### Slack
+
+The dashboard talks to the Slack Web API directly (`dashboard/slack.py`, standard library only).
+
+```bash
+# .env (gitignored)
+SLACK_BOT_TOKEN=xoxb-...      # a Slack app with chat:write, invited to the channel
+SLACK_CHANNEL=C0123456789     # the channel id
+SLACK_SEND_ENABLED=1          # without this, Approve & send is a dry run
+# or: SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+```
+
+- Status is a real `auth.test` call, shown as the Slack chip in the header.
+- Sends use `chat.postMessage` (or the webhook) with Block Kit and an "approved by" footer.
+- Two locks: nothing posts unless `SLACK_SEND_ENABLED=1` **and** a person presses the button. The agents never call Slack.
+- With no token the page still works and shows the exact payload it would have sent.
+
+### Why the dashboard is built this way
+
+- **The TypeScript team decides, Python only reads.** `npm run export:dashboard` writes `dashboard/data/snapshot.json`. A test fails if that file drifts from what the agents produce, so the page cannot show a day the agents did not plan.
+- **Time savings are counted, then priced.** Counts (calendar moves, drafts, revisions, accounts researched) come from the run. Minutes per task are the team's own assumption, kept in one file. Change them and reload.
+- **Approval is the product.** The PM sees every draft, approves with their name, and gets an audit trail. That is what lets a construction team trust automation with homeowners and subs.
+
 ## Run it
+
+Node 20 or newer, and Python 3.10+ for the dashboard.
 
 ```bash
 npm install
@@ -128,6 +176,9 @@ npm run preview
 | `npm run demo:all` | Plan, brief, then Thursday. |
 | `npm run demo:live` | Thursday, with optional prose polish. |
 | `npm run build:web` | Rebuild `docs/app.js`. |
+| `npm run export:dashboard` | Write the agent run to `dashboard/data/snapshot.json`. |
+| `npm run dashboard` | Export, then serve the PM dashboard on port 5050. |
+| `npm run test:dashboard` | Python dashboard and Slack connector tests. |
 
 ![Thursday in the terminal](docs/images/cli-thursday.png)
 
@@ -156,8 +207,10 @@ src/
   providers/         mock model, optional OpenAI prose polish
   fixtures/          Thursday for Maria Alvarez
   render/            terminal layout
+  export/            snapshot for the Python dashboard
   cli.ts             thursday | plan | brief | trace | all
 web/main.ts          browser shell around the same team
+dashboard/           Python PM dashboard, insights, Slack connector
 docs/                static demo: index.html, styles.css, app.js, images/
 tests/               node:test, via tsx
 ```

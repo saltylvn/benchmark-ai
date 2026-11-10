@@ -1,0 +1,250 @@
+{% set run = v.run %}
+{% set final = run.critiques[-1] if run.critiques else none %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Benchmark · PM Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="mark">B</span>
+    <div>
+      <strong>Benchmark</strong>
+      <span class="muted">Agent team for construction PMs · under the hood</span>
+    </div>
+  </div>
+  <nav class="runs" aria-label="Run">
+    {% for key, label in runs.items() %}
+      <a href="{{ url_for('index', run=key) }}" class="{{ 'on' if key == v.runKey }}">{{ label }}</a>
+    {% endfor %}
+  </nav>
+  <div class="integrations" aria-label="Connections">
+    <a href="#slack" class="chip {{ 'ok' if slack.connected else 'off' }}" title="{{ slack.detail }}">
+      <span class="dot"></span>Slack · {{ 'live' if slack.connected and slack.sendEnabled else ('connected, sends off' if slack.connected else 'not connected') }}
+    </a>
+    <span class="chip draft" title="Calendar changes are staged as drafts"><span class="dot"></span>Calendar · drafts</span>
+    <span class="chip draft" title="Emails are staged as drafts"><span class="dot"></span>Email · drafts</span>
+  </div>
+</header>
+
+<main>
+  {% with flashes = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in flashes %}<div class="flash {{ cat }}" role="status">{{ msg }}</div>{% endfor %}
+  {% endwith %}
+
+  <section class="hero">
+    <div>
+      <p class="eyebrow">{{ run.dateLabel }} · {{ run.persona }}, {{ run.role }}</p>
+      <h1>{{ run.brief.headline if run.brief else run.goal }}</h1>
+      <p class="goal">{{ run.goal }}</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>{{ v.agents|length }}</b><span>agents on the run</span></div>
+      <div class="kpi"><b>{{ v.handoffs|length }}</b><span>handoffs</span></div>
+      <div class="kpi"><b>{% for c in run.critiques %}{{ c.score }}{% if not loop.last %}→{% endif %}{% endfor %}</b><span>critic score by revision</span></div>
+      <div class="kpi"><b>{{ v.guardrails.drafts }}</b><span>drafts awaiting you · {{ v.guardrails.sent }} sent</span></div>
+      <div class="kpi accent"><b>~{{ v.ledger.netMinutes|round|int }} min</b><span>PM time back on this request (est.)</span></div>
+    </div>
+  </section>
+
+  <section id="insights">
+    <h2>Insights</h2>
+    <div class="insights">
+      {% for i in v.insights %}
+        <article class="insight {{ i.tone }}">
+          <span class="tag">{{ {'catch':'Critic catch','ok':'Guardrail','risk':'Compliance risk','info':'Schedule','time':'Time'}[i.tone] }}</span>
+          <h3>{{ i.title }}</h3>
+          <p>{{ i.body }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section id="flow">
+    <h2>How the team worked this request</h2>
+    <p class="lede">One supervisor routes. Specialists write to a shared board and never call each other. The critic is allowed to say no.</p>
+    <ol class="pipeline">
+      {% for a in v.agents %}
+        <li class="agent {{ a.id }}">
+          <b>{{ a.label }}</b>
+          <span>{{ a.steps }} step{{ 's' if a.steps != 1 }}</span>
+          {% if v.roles.get(a.id) %}<p>{{ v.roles[a.id] }}</p>{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+    <details class="handoffs" open>
+      <summary>Handoff log ({{ v.handoffs|length }})</summary>
+      <table>
+        <thead><tr><th>Time</th><th>From</th><th></th><th>To</th><th>Why</th></tr></thead>
+        <tbody>
+        {% for h in v.handoffs %}
+          <tr class="{{ 'loop' if h.loop }}">
+            <td class="mono">{{ h.at }}</td><td>{{ h.from }}</td><td>{{ '↩' if h.loop else '→' }}</td><td>{{ h.to }}</td><td>{{ h.reason }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </details>
+  </section>
+
+  <section id="schedule">
+    <h2>The day, before and after</h2>
+    <p class="lede">Every plan the planner proposed, including the one the critic threw out. Hatched blocks were double-booked.</p>
+    <div class="gantt">
+      <div class="axis">
+        {% for t in v.ticks %}<span style="left:{{ t.left }}%">{{ t.label }}</span>{% endfor %}
+      </div>
+      {% for lane in v.lanes %}
+        <div class="lane {{ lane.status }}">
+          <div class="lane-label"><b>{{ lane.label }}</b><span>{{ lane.sub }}</span><em>{{ lane.status }}</em></div>
+          <div class="track">
+            {% for t in v.ticks %}<i class="grid" style="left:{{ t.left }}%"></i>{% endfor %}
+            {% for b in lane.blocks %}
+              <div class="blk k-{{ b.kind }} {{ 'overlap' if b.overlap }}" style="left:{{ b.left }}%;width:{{ b.width }}%" title="{{ b.title }} · {{ b.when }}">
+                <span>{{ b.title }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="changes">
+      <div><h3>Moved ({{ v.changes.moved|length }})</h3><ul>
+        {% for m in v.changes.moved %}<li><b>{{ m.title }}</b> <span class="mono">{{ m.from }} → {{ m.when }}</span></li>{% else %}<li class="muted">Nothing moved.</li>{% endfor %}
+      </ul></div>
+      <div><h3>Added ({{ v.changes.added|length }})</h3><ul>
+        {% for m in v.changes.added %}<li><b>{{ m.title }}</b> <span class="mono">{{ m.when }}</span></li>{% else %}<li class="muted">Nothing added.</li>{% endfor %}
+      </ul></div>
+      <div><h3>Held ({{ v.changes.held|length }})</h3><ul>
+        {% for m in v.changes.held %}<li>{{ m.title }} <span class="mono">{{ m.when }}</span></li>{% endfor %}
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="critic">
+    <h2>Critic scorecard</h2>
+    <div class="scorecards">
+      {% for c in run.critiques %}
+        <article class="score {{ 'approved' if c.approved else 'rejected' }}">
+          <header>
+            <span>Revision {{ c.revision }} · {{ c.strategy }}</span>
+            <b>{{ c.score }}/100</b>
+          </header>
+          <div class="bar"><i style="width:{{ c.score }}%"></i></div>
+          <ul>
+            {% for f in c.failures %}<li class="fail"><b>✕ {{ f.code }}</b> (−{{ f.weight }}) {{ f.detail }}</li>{% endfor %}
+            {% for p in c.passed %}<li class="pass">✓ {{ p }}</li>{% endfor %}
+          </ul>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="two">
+    <section id="compliance">
+      <h2>Compliance and job risk</h2>
+      <table class="board">
+        <thead><tr><th>Item</th><th>Party</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        {% for c in v.compliance %}
+          <tr>
+            <td><span class="mono">{{ c.id }}</span><br><small class="muted">{{ c.kind }}</small></td>
+            <td>{{ c.party }}</td>
+            <td>{{ c.title }}<br><small class="muted">{{ c.status }} · {{ c.priority }}</small></td>
+            <td><span class="pill {{ c.level }}">{{ c.level }}</span></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <h3>Do not promise</h3>
+      <ul class="dnp">{% for d in v.guardrails.doNotPromise %}<li>{{ d }}</li>{% endfor %}</ul>
+    </section>
+
+    <section id="time">
+      <h2>Time ledger <small class="muted">estimates</small></h2>
+      <table class="ledger">
+        <thead><tr><th>Manual task replaced</th><th>Agent</th><th class="num">×</th><th class="num">min</th></tr></thead>
+        <tbody>
+        {% for l in v.ledger.lines %}
+          <tr><td>{{ l.task }}</td><td>{{ l.agent }}</td><td class="num">{{ l.count }}</td><td class="num">{{ l.minutes|round|int }}</td></tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr><td colspan="3">Manual admin replaced</td><td class="num">{{ v.ledger.manualMinutes|round|int }}</td></tr>
+          <tr><td colspan="3">PM review of {{ v.guardrails.drafts }} drafts</td><td class="num">−{{ v.ledger.reviewMinutes|round|int }}</td></tr>
+          <tr class="total"><td colspan="3">Net minutes back</td><td class="num">{{ v.ledger.netMinutes|round|int }}</td></tr>
+        </tfoot>
+      </table>
+      <div class="projection">
+        <div><b>{{ v.ledger.perPmWeekHours }} h</b><span>per PM per week at {{ v.ledger.assumptions.requestsPerPmPerWeek }} requests</span></div>
+        <div><b>{{ v.ledger.teamYearHours }} h</b><span>per year for {{ v.ledger.assumptions.pmsOnTeam }} PMs</span></div>
+      </div>
+      <p class="muted small">Counts come from the run. Minutes per task are starting estimates in <code>dashboard/assumptions.json</code>; replace them with your team's numbers and reload.</p>
+    </section>
+  </div>
+
+  <section id="slack">
+    <h2>Approval queue · Slack</h2>
+    <div class="slack-status {{ 'ok' if slack.connected else 'off' }}">
+      <b>Slack {{ 'connected' if slack.connected else 'not connected' }}</b>
+      <span>mode: {{ slack.mode }}{% if slack.channel %} · channel {{ slack.channel }}{% endif %} · sends {{ 'ON' if slack.sendEnabled else 'off (dry run)' }}</span>
+      <p>{{ slack.detail }}</p>
+    </div>
+    <div class="queue">
+      {% for m in messages %}
+        <form class="msg" method="post" action="{{ url_for('slack_send') }}">
+          <header><b>{{ m.label }}</b><span class="pill draft">draft</span></header>
+          <pre>{{ m.text }}</pre>
+          <input type="hidden" name="token" value="{{ form_token }}">
+          <input type="hidden" name="run" value="{{ v.runKey }}">
+          <input type="hidden" name="message" value="{{ m.id }}">
+          <label>Approved by <input name="approved_by" value="{{ run.persona }}" maxlength="60"></label>
+          <button type="submit">{{ 'Approve & send to Slack' if slack.connected and slack.sendEnabled else 'Approve & preview payload' }}</button>
+        </form>
+      {% endfor %}
+      {% for a in run.actions if a.type == 'email.draft' %}
+        <div class="msg">
+          <header><b>Email to {{ a.to }}</b><span class="pill draft">draft · send at {{ a.sendAt }}</span></header>
+          <p class="subject">{{ a.subject }}</p>
+          <pre>{{ a.body }}</pre>
+          <p class="muted small">Email stays a draft in this demo. Calendar and email connectors are the next integration.</p>
+        </div>
+      {% endfor %}
+    </div>
+    {% if audit %}
+      <h3>Slack audit log</h3>
+      <table class="audit">
+        <thead><tr><th>When (UTC)</th><th>What</th><th>By</th><th>Result</th></tr></thead>
+        <tbody>
+        {% for r in audit %}
+          <tr><td class="mono">{{ r.at }}</td><td>{{ r.context }}</td><td>{{ r.approvedBy }}</td><td><span class="pill {{ r.result }}">{{ r.result }}</span> {{ r.detail }}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% set last = audit[0] %}
+      <details><summary>Last payload sent to Slack's API</summary><pre class="json">{{ last.payload | tojson(indent=2) }}</pre></details>
+    {% endif %}
+  </section>
+
+  <section id="hood">
+    <h2>Under the hood · full trace</h2>
+    <ol class="trace">
+      {% for e in run.trace %}
+        <li class="agent-{{ e.agent }}">
+          <span class="mono">{{ e.at }}</span>
+          <b>{{ e.agent }}</b>
+          <div><strong>{{ e.title }}</strong><pre>{{ e.detail }}</pre>
+            {% if e.handoff %}<small>→ {{ e.handoff.to }}: {{ e.handoff.reason }}</small>{% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
+    <p class="muted small">JSON: <a href="{{ url_for('api_run', run_key=v.runKey) }}">/api/runs/{{ v.runKey }}</a> · <a href="{{ url_for('api_snapshot') }}">/api/snapshot</a> · <a href="{{ url_for('api_slack_status') }}">/api/slack/status</a> · model: {{ run.model }} · data from <code>npm run export:dashboard</code></p>
+  </section>
+</main>
+</body>
+</html>
