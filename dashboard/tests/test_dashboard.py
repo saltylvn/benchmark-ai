@@ -70,6 +70,7 @@ class InsightsTest(unittest.TestCase):
         self.assertAlmostEqual(ledger["netMinutes"], ledger["manualMinutes"] - ledger["reviewMinutes"])
         calendar = next(l for l in ledger["lines"] if l["task"].startswith("Move or create"))
         self.assertEqual(calendar["count"], 6)
+        self.assertEqual((ledger["manualMinutes"], ledger["netMinutes"]), (76, 68))
 
     def test_ledger_follows_edited_assumptions(self):
         run = snapshot()["runs"]["warRoom"]

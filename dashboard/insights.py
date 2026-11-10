@@ -242,7 +242,8 @@ def time_ledger(run: dict[str, Any], assumptions: dict[str, Any]) -> dict[str, A
     lines = [
         LedgerLine("Triage inbox and spot calendar conflicts", "intake", 1, manual["triage"]),
         LedgerLine("Pull job file, sub insurance, inspection status", "researcher", len(run["research"]), manual["researchPerAccount"]),
-        LedgerLine("Reshuffle the day by hand and re-check the rules", "planner + critic", len(run["critiques"]), manual["replanPerRevision"]),
+        # A person untangles the day once; the rejected revision is agent-only work.
+        LedgerLine("Untangle the double-booking and re-check the rules", "planner + critic", 1 if run["critiques"] else 0, manual["replan"]),
         LedgerLine("Move or create calendar entries", "executor", calendar_moves, manual["calendarChange"]),
         LedgerLine("Write the homeowner email", "executor", count("email.draft"), manual["emailDraft"]),
         LedgerLine("Write the crew Slack update", "executor", count("slack.draft"), manual["slackDraft"]),
