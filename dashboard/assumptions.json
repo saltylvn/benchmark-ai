@@ -1,0 +1,16 @@
+{
+  "_note": "Single source of truth for time-saved estimates (see docs/PLAN.md). Manual minutes a project manager spends doing each task by hand. Starting estimates, not measurements; aligned with the A1-A4 rows Cursor drafted in docs/TIME_SAVED.md. Replace with your team's numbers; the dashboard recomputes on reload.",
+  "manualMinutes": {
+    "triage": 10,
+    "researchPerAccount": 5,
+    "replan": 15,
+    "calendarChange": 1,
+    "emailDraft": 11,
+    "slackDraft": 4,
+    "brief": 15
+  },
+  "reviewMinutesPerDraft": 1,
+  "requestsPerPmPerWeek": 4,
+  "pmsOnTeam": 6,
+  "workWeeksPerYear": 48
+}

@@ -1,0 +1,2056 @@
+{
+  "schema": 1,
+  "generatedBy": "src/export/snapshot.ts",
+  "roles": {
+    "intake": "Read the calendar and the inbox. Put conflicts, deadlines, and protected blocks on the board. Do not propose a schedule.",
+    "researcher": "Look up only the jobs this day will touch. Separate what we know, what we must ask, and what we must not promise.",
+    "planner": "Propose one schedule. First try may clear calls early. If the critic rejects the estimate block, reserve the morning before non-critical meetings.",
+    "critic": "Score the plan against Maria's rules. Do not quietly fix it. Name the failure and hand it back, or approve it.",
+    "executor": "Turn an approved plan into calendar, email, and Slack drafts. Never send.",
+    "brief": "Write the morning brief from the approved plan and the job notes. Three outcomes, one call card, no new commitments."
+  },
+  "runs": {
+    "thursday": {
+      "runId": "thursday-request",
+      "workflow": "thursday",
+      "status": "approved",
+      "model": "mock",
+      "goal": "Sam Rivera's kitchen email landed at 08:47. Make room for a morning call, keep the estimate block, and do not drop the site walk or move Dave.",
+      "dateLabel": "Thursday, March 12, 2026",
+      "persona": "Maria Alvarez",
+      "role": "Project manager",
+      "priorities": [
+        "Keep 90 minutes to price job J-1042 before leaving for the site.",
+        "A homeowner who needs a quote today outranks a movable sub check-in.",
+        "The site walk stays on the day. It can slide. It cannot disappear.",
+        "The check-in with Dave does not move.",
+        "The Pinecrest inspection window at 15:30 is locked."
+      ],
+      "calendarBefore": [
+        {
+          "id": "standup",
+          "title": "Morning huddle",
+          "kind": "standup",
+          "start": 510,
+          "end": 525,
+          "flexibility": "fixed",
+          "priority": 3,
+          "protected": false,
+          "minDuration": 15,
+          "needsPrepMinutes": 0,
+          "earliest": 510,
+          "latest": 525,
+          "when": "08:30–08:45"
+        },
+        {
+          "id": "focus",
+          "title": "Estimate block · J-1042",
+          "kind": "focus",
+          "start": 540,
+          "end": 660,
+          "flexibility": "movable",
+          "priority": 5,
+          "protected": true,
+          "minDuration": 90,
+          "needsPrepMinutes": 0,
+          "earliest": 525,
+          "latest": 1050,
+          "notes": "Build time. Floor is 90 minutes. The original block is two hours.",
+          "when": "09:00–11:00"
+        },
+        {
+          "id": "brightspark",
+          "title": "Bright Spark · date check",
+          "kind": "client",
+          "start": 630,
+          "end": 675,
+          "flexibility": "movable",
+          "priority": 3,
+          "protected": false,
+          "minDuration": 45,
+          "needsPrepMinutes": 15,
+          "earliest": 525,
+          "latest": 1020,
+          "accountId": "brightspark",
+          "notes": "Already overlapping the estimate block. Not an emergency.",
+          "when": "10:30–11:15"
+        },
+        {
+          "id": "one-on-one",
+          "title": "Check-in with Dave",
+          "kind": "internal",
+          "start": 690,
+          "end": 720,
+          "flexibility": "fixed",
+          "priority": 5,
+          "protected": true,
+          "minDuration": 30,
+          "needsPrepMinutes": 0,
+          "earliest": 690,
+          "latest": 720,
+          "notes": "Owner check-in with Dave. Do not move.",
+          "when": "11:30–12:00"
+        },
+        {
+          "id": "lunch",
+          "title": "Lunch",
+          "kind": "break",
+          "start": 720,
+          "end": 765,
+          "flexibility": "movable",
+          "priority": 4,
+          "protected": true,
+          "minDuration": 30,
+          "needsPrepMinutes": 0,
+          "earliest": 690,
+          "latest": 840,
+          "when": "12:00–12:45"
+        },
+        {
+          "id": "walk",
+          "title": "Site walk · 123 Example Ln",
+          "kind": "personal",
+          "start": 780,
+          "end": 810,
+          "flexibility": "movable",
+          "priority": 4,
+          "protected": true,
+          "minDuration": 30,
+          "needsPrepMinutes": 0,
+          "earliest": 720,
+          "latest": 960,
+          "notes": "May slide within the afternoon. May not be deleted.",
+          "when": "13:00–13:30"
+        },
+        {
+          "id": "crew",
+          "title": "Crew schedule review",
+          "kind": "internal",
+          "start": 840,
+          "end": 900,
+          "flexibility": "movable",
+          "priority": 2,
+          "protected": false,
+          "minDuration": 45,
+          "needsPrepMinutes": 0,
+          "earliest": 780,
+          "latest": 1050,
+          "when": "14:00–15:00"
+        },
+        {
+          "id": "pinecrest",
+          "title": "Pinecrest · rough-in window",
+          "kind": "client",
+          "start": 930,
+          "end": 960,
+          "flexibility": "fixed",
+          "priority": 4,
+          "protected": false,
+          "minDuration": 30,
+          "needsPrepMinutes": 0,
+          "earliest": 930,
+          "latest": 960,
+          "accountId": "pinecrest",
+          "notes": "The county set this window. Do not move it.",
+          "when": "15:30–16:00"
+        },
+        {
+          "id": "wrap",
+          "title": "Daily closeout",
+          "kind": "admin",
+          "start": 990,
+          "end": 1020,
+          "flexibility": "movable",
+          "priority": 1,
+          "protected": false,
+          "minDuration": 30,
+          "needsPrepMinutes": 0,
+          "earliest": 960,
+          "latest": 1050,
+          "when": "16:30–17:00"
+        }
+      ],
+      "demands": [
+        {
+          "id": "rivera",
+          "title": "Rivera kitchen · scope call",
+          "accountId": "rivera",
+          "duration": 40,
+          "prepMinutes": 15,
+          "earliest": 525,
+          "latest": 780,
+          "priority": 5,
+          "statusDeadline": 735,
+          "reason": "Sam asked for a morning call so the quote can be drafted today. Written note by 12:15."
+        }
+      ],
+      "inbox": [
+        {
+          "id": "mail-rivera-0847",
+          "at": "08:47",
+          "from": "Sam Rivera (FAKE)",
+          "fromRole": "Homeowner",
+          "to": "Maria Alvarez",
+          "subject": "Kitchen remodel at 123 Example Ln",
+          "urgent": true,
+          "accountId": "rivera",
+          "body": "Hi Maria,\n\nWe want a quote for our kitchen at 123 Example Ln. Cabinets, counters, and maybe new lighting. We are hoping to start soon. Can you call this morning?\n\nSam Rivera"
+        }
+      ],
+      "accounts": [
+        {
+          "id": "rivera",
+          "name": "Rivera Kitchen",
+          "tier": "strategic",
+          "owner": "Sam Rivera (FAKE)",
+          "ownerRole": "Homeowner",
+          "ownerEmail": "sam.rivera@example.com",
+          "slackChannel": "#job-j1042",
+          "milestone": "Demo Friday, March 13",
+          "lastTouch": "Never. This is a new lead.",
+          "lastTouchNote": "Inbound email only. No site visit yet.",
+          "summary": "Kitchen remodel at 123 Example Ln. Fictional draft total is $38,450. Two lines are flagged.",
+          "cases": [
+            {
+              "id": "J-1042",
+              "title": "Kitchen remodel request, cabinets and counters",
+              "priority": "P0",
+              "status": "Lead since 8:47"
+            }
+          ],
+          "facts": [
+            "Sam wants a quote today. The $38,450 total is a draft until Maria approves it.",
+            "Quartz waterfall edge has no price-list match, so that line is flagged.",
+            "Rain is forecast for Friday. Demo and the dumpster are weather-sensitive.",
+            "Bright Spark Electric's insurance certificate is expired."
+          ],
+          "openQuestions": [
+            "Is the budget a ceiling or a starting hope?",
+            "Are we replacing uppers and lowers, or lowers only?",
+            "Does under-cabinet lighting stay out of this quote?"
+          ],
+          "doNotPromise": [
+            "Do not promise $38,450. Maria has not approved the quote.",
+            "Do not promise a start date. Friday's demo may move for rain.",
+            "Do not say the electrician is confirmed. The certificate is expired."
+          ]
+        },
+        {
+          "id": "brightspark",
+          "name": "Bright Spark Electric (FAKE)",
+          "tier": "enterprise",
+          "owner": "Luis Ortega (FAKE)",
+          "ownerRole": "Electrician",
+          "ownerEmail": "luis.ortega@example.com",
+          "slackChannel": "#subs-brightspark",
+          "lastTouch": "Last month",
+          "lastTouchNote": "Certificate of insurance expired. They are not cleared to start.",
+          "summary": "Preferred electrician. The date check is routine. The certificate is not.",
+          "cases": [
+            {
+              "id": "COI-1042",
+              "title": "Insurance certificate expired",
+              "priority": "P2",
+              "status": "Renewal not received"
+            }
+          ],
+          "facts": [
+            "No emergency. The meeting is a date check that landed on the estimate block.",
+            "The certificate is expired, so Bright Spark is not assigned to J-1042.",
+            "Moving this call is cheap. Leaving it on the estimate block is how the morning broke."
+          ],
+          "openQuestions": [
+            "When will the renewed certificate arrive?",
+            "If it does not arrive this week, who is the backup electrician?"
+          ],
+          "doNotPromise": [
+            "Do not tell the homeowner Bright Spark is confirmed."
+          ]
+        },
+        {
+          "id": "pinecrest",
+          "name": "Pinecrest County Inspections",
+          "tier": "standard",
+          "owner": "Priya Raman (FAKE)",
+          "ownerRole": "Building inspector",
+          "ownerEmail": "inspections@pinecrest.example",
+          "slackChannel": "#job-j1042",
+          "lastTouch": "Monday, March 9",
+          "lastTouchNote": "Rough-in window held for Thursday at 15:30.",
+          "summary": "County inspection window. The inspector is only free at 15:30.",
+          "cases": [
+            {
+              "id": "INSP-1042",
+              "title": "Rough-in inspection window",
+              "priority": "P1",
+              "status": "Waiting on today's window"
+            }
+          ],
+          "facts": [
+            "The 15:30–16:00 window is the inspector's only opening. Treat it as fixed.",
+            "The question is narrow: is the rough-in ready, and who meets the inspector."
+          ],
+          "openQuestions": [
+            "Who on the crew meets the inspector?"
+          ],
+          "doNotPromise": [
+            "Do not promise the inspection will pass."
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "source": "intake",
+          "level": "critical",
+          "code": "OVERLAP",
+          "summary": "Estimate block · J-1042 (09:00–11:00) overlaps Bright Spark · date check (10:30–11:15).",
+          "id": "OVERLAP-1"
+        },
+        {
+          "source": "intake",
+          "level": "critical",
+          "code": "URGENT_MAIL",
+          "summary": "08:47 Sam Rivera (FAKE): Kitchen remodel at 123 Example Ln",
+          "id": "URGENT_MAIL-2"
+        },
+        {
+          "source": "intake",
+          "level": "info",
+          "code": "PROTECTED",
+          "summary": "Protected: Estimate block · J-1042, Check-in with Dave, Lunch, Site walk · 123 Example Ln.",
+          "id": "PROTECTED-3"
+        },
+        {
+          "source": "researcher",
+          "level": "critical",
+          "code": "ACCOUNT",
+          "summary": "Rivera Kitchen · quote needed today · Demo Friday, March 13",
+          "id": "ACCOUNT-4"
+        },
+        {
+          "source": "researcher",
+          "level": "info",
+          "code": "ACCOUNT",
+          "summary": "Pinecrest County Inspections · last touch Monday, March 9",
+          "id": "ACCOUNT-5"
+        },
+        {
+          "source": "researcher",
+          "level": "info",
+          "code": "ACCOUNT",
+          "summary": "Bright Spark Electric (FAKE) · last touch Last month",
+          "id": "ACCOUNT-6"
+        }
+      ],
+      "research": [
+        {
+          "accountId": "rivera",
+          "name": "Rivera Kitchen",
+          "headline": "Rivera Kitchen · quote needed today · Demo Friday, March 13",
+          "summary": "Kitchen remodel at 123 Example Ln. Fictional draft total is $38,450. Two lines are flagged.",
+          "bullets": [
+            "P0 J-1042: Kitchen remodel request, cabinets and counters (Lead since 8:47).",
+            "Last touch Never. This is a new lead.. Inbound email only. No site visit yet.",
+            "Sam wants a quote today. The $38,450 total is a draft until Maria approves it.",
+            "Quartz waterfall edge has no price-list match, so that line is flagged.",
+            "Rain is forecast for Friday. Demo and the dumpster are weather-sensitive."
+          ],
+          "questions": [
+            "Is the budget a ceiling or a starting hope?",
+            "Are we replacing uppers and lowers, or lowers only?",
+            "Does under-cabinet lighting stay out of this quote?"
+          ],
+          "doNotPromise": [
+            "Do not promise $38,450. Maria has not approved the quote.",
+            "Do not promise a start date. Friday's demo may move for rain.",
+            "Do not say the electrician is confirmed. The certificate is expired."
+          ]
+        },
+        {
+          "accountId": "pinecrest",
+          "name": "Pinecrest County Inspections",
+          "headline": "Pinecrest County Inspections · last touch Monday, March 9",
+          "summary": "County inspection window. The inspector is only free at 15:30.",
+          "bullets": [
+            "P1 INSP-1042: Rough-in inspection window (Waiting on today's window).",
+            "Last touch Monday, March 9. Rough-in window held for Thursday at 15:30.",
+            "The 15:30–16:00 window is the inspector's only opening. Treat it as fixed."
+          ],
+          "questions": [
+            "Who on the crew meets the inspector?"
+          ],
+          "doNotPromise": [
+            "Do not promise the inspection will pass."
+          ]
+        },
+        {
+          "accountId": "brightspark",
+          "name": "Bright Spark Electric (FAKE)",
+          "headline": "Bright Spark Electric (FAKE) · last touch Last month",
+          "summary": "Preferred electrician. The date check is routine. The certificate is not.",
+          "bullets": [
+            "P2 COI-1042: Insurance certificate expired (Renewal not received).",
+            "Last touch Last month. Certificate of insurance expired. They are not cleared to start.",
+            "No emergency. The meeting is a date check that landed on the estimate block."
+          ],
+          "questions": [
+            "When will the renewed certificate arrive?"
+          ],
+          "doNotPromise": [
+            "Do not tell the homeowner Bright Spark is confirmed."
+          ]
+        }
+      ],
+      "attempts": [
+        {
+          "strategy": "client-first",
+          "notes": [
+            "Rivera kitchen · scope call: Earliest opening that ends before the deadline (09:00–09:40).",
+            "Bright Spark · date check: Stacked as early as the fixed meetings allow.",
+            "Lunch: Protected block, kept as close as possible to its original time.",
+            "Site walk · 123 Example Ln: Protected block, kept as close as possible to its original time.",
+            "Estimate block · J-1042: Calls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 90-minute alternative. The biggest hole is not a morning.",
+            "Crew schedule review: Nearest open time that still respects the fixed county window and the lead-in before it.",
+            "Daily closeout: Nearest open time that still respects the fixed county window and the lead-in before it."
+          ],
+          "unplaced": [],
+          "blocks": [
+            {
+              "id": "standup",
+              "title": "Morning huddle",
+              "kind": "standup",
+              "start": 510,
+              "end": 525,
+              "reason": "Morning huddle stays. It was marked fixed.",
+              "anchor": true,
+              "when": "08:30–08:45"
+            },
+            {
+              "id": "prep:rivera",
+              "title": "Prep · Rivera kitchen",
+              "kind": "prep",
+              "start": 525,
+              "end": 540,
+              "reason": "Buffer immediately before Rivera kitchen · scope call.",
+              "accountId": "rivera",
+              "prepFor": "rivera",
+              "anchor": false,
+              "when": "08:45–09:00"
+            },
+            {
+              "id": "rivera",
+              "title": "Rivera kitchen · scope call",
+              "kind": "client",
+              "start": 540,
+              "end": 580,
+              "reason": "Earliest opening that ends before the deadline (09:00–09:40).",
+              "accountId": "rivera",
+              "anchor": false,
+              "when": "09:00–09:40"
+            },
+            {
+              "id": "prep:brightspark",
+              "title": "Prep · Bright Spark",
+              "kind": "prep",
+              "start": 580,
+              "end": 595,
+              "reason": "Buffer immediately before Bright Spark · date check.",
+              "accountId": "brightspark",
+              "prepFor": "brightspark",
+              "anchor": false,
+              "when": "09:40–09:55"
+            },
+            {
+              "id": "brightspark",
+              "title": "Bright Spark · date check",
+              "kind": "client",
+              "start": 595,
+              "end": 640,
+              "reason": "Stacked as early as the fixed meetings allow.",
+              "accountId": "brightspark",
+              "anchor": false,
+              "when": "09:55–10:40"
+            },
+            {
+              "id": "one-on-one",
+              "title": "Check-in with Dave",
+              "kind": "internal",
+              "start": 690,
+              "end": 720,
+              "reason": "Check-in with Dave stays. It was marked fixed.",
+              "anchor": true,
+              "when": "11:30–12:00"
+            },
+            {
+              "id": "lunch",
+              "title": "Lunch",
+              "kind": "break",
+              "start": 720,
+              "end": 765,
+              "reason": "Protected block, kept as close as possible to its original time.",
+              "anchor": false,
+              "when": "12:00–12:45"
+            },
+            {
+              "id": "walk",
+              "title": "Site walk · 123 Example Ln",
+              "kind": "personal",
+              "start": 780,
+              "end": 810,
+              "reason": "Protected block, kept as close as possible to its original time.",
+              "anchor": false,
+              "when": "13:00–13:30"
+            },
+            {
+              "id": "focus",
+              "title": "Estimate block · J-1042",
+              "kind": "focus",
+              "start": 810,
+              "end": 920,
+              "reason": "Calls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 90-minute alternative. The biggest hole is not a morning.",
+              "anchor": false,
+              "when": "13:30–15:20"
+            },
+            {
+              "id": "pinecrest",
+              "title": "Pinecrest · rough-in window",
+              "kind": "client",
+              "start": 930,
+              "end": 960,
+              "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
+              "accountId": "pinecrest",
+              "anchor": true,
+              "when": "15:30–16:00"
+            },
+            {
+              "id": "crew",
+              "title": "Crew schedule review",
+              "kind": "internal",
+              "start": 960,
+              "end": 1020,
+              "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+              "anchor": false,
+              "when": "16:00–17:00"
+            },
+            {
+              "id": "wrap",
+              "title": "Daily closeout",
+              "kind": "admin",
+              "start": 1020,
+              "end": 1050,
+              "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+              "anchor": false,
+              "when": "17:00–17:30"
+            }
+          ]
+        },
+        {
+          "strategy": "protect-focus",
+          "notes": [
+            "Rivera kitchen · scope call: Earliest opening that ends before the deadline (09:00–09:40).",
+            "Estimate block · J-1042: Reserved before non-critical meetings. 100 minutes, starting at the best morning fit.",
+            "Lunch: Protected block, kept as close as possible to its original time.",
+            "Site walk · 123 Example Ln: Protected block, kept as close as possible to its original time.",
+            "Bright Spark · date check: Moved to the nearest open slot after focus, lunch, and the walk were held.",
+            "Crew schedule review: Nearest open time that still respects the fixed county window and the lead-in before it.",
+            "Daily closeout: Nearest open time that still respects the fixed county window and the lead-in before it."
+          ],
+          "unplaced": [],
+          "blocks": [
+            {
+              "id": "standup",
+              "title": "Morning huddle",
+              "kind": "standup",
+              "start": 510,
+              "end": 525,
+              "reason": "Morning huddle stays. It was marked fixed.",
+              "anchor": true,
+              "when": "08:30–08:45"
+            },
+            {
+              "id": "prep:rivera",
+              "title": "Prep · Rivera kitchen",
+              "kind": "prep",
+              "start": 525,
+              "end": 540,
+              "reason": "Buffer immediately before Rivera kitchen · scope call.",
+              "accountId": "rivera",
+              "prepFor": "rivera",
+              "anchor": false,
+              "when": "08:45–09:00"
+            },
+            {
+              "id": "rivera",
+              "title": "Rivera kitchen · scope call",
+              "kind": "client",
+              "start": 540,
+              "end": 580,
+              "reason": "Earliest opening that ends before the deadline (09:00–09:40).",
+              "accountId": "rivera",
+              "anchor": false,
+              "when": "09:00–09:40"
+            },
+            {
+              "id": "focus",
+              "title": "Estimate block · J-1042",
+              "kind": "focus",
+              "start": 580,
+              "end": 680,
+              "reason": "Reserved before non-critical meetings. 100 minutes, starting at the best morning fit.",
+              "anchor": false,
+              "when": "09:40–11:20"
+            },
+            {
+              "id": "one-on-one",
+              "title": "Check-in with Dave",
+              "kind": "internal",
+              "start": 690,
+              "end": 720,
+              "reason": "Check-in with Dave stays. It was marked fixed.",
+              "anchor": true,
+              "when": "11:30–12:00"
+            },
+            {
+              "id": "lunch",
+              "title": "Lunch",
+              "kind": "break",
+              "start": 720,
+              "end": 765,
+              "reason": "Protected block, kept as close as possible to its original time.",
+              "anchor": false,
+              "when": "12:00–12:45"
+            },
+            {
+              "id": "walk",
+              "title": "Site walk · 123 Example Ln",
+              "kind": "personal",
+              "start": 780,
+              "end": 810,
+              "reason": "Protected block, kept as close as possible to its original time.",
+              "anchor": false,
+              "when": "13:00–13:30"
+            },
+            {
+              "id": "prep:brightspark",
+              "title": "Prep · Bright Spark",
+              "kind": "prep",
+              "start": 810,
+              "end": 825,
+              "reason": "Buffer immediately before Bright Spark · date check.",
+              "accountId": "brightspark",
+              "prepFor": "brightspark",
+              "anchor": false,
+              "when": "13:30–13:45"
+            },
+            {
+              "id": "brightspark",
+              "title": "Bright Spark · date check",
+              "kind": "client",
+              "start": 825,
+              "end": 870,
+              "reason": "Moved to the nearest open slot after focus, lunch, and the walk were held.",
+              "accountId": "brightspark",
+              "anchor": false,
+              "when": "13:45–14:30"
+            },
+            {
+              "id": "crew",
+              "title": "Crew schedule review",
+              "kind": "internal",
+              "start": 870,
+              "end": 920,
+              "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+              "anchor": false,
+              "when": "14:30–15:20"
+            },
+            {
+              "id": "pinecrest",
+              "title": "Pinecrest · rough-in window",
+              "kind": "client",
+              "start": 930,
+              "end": 960,
+              "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
+              "accountId": "pinecrest",
+              "anchor": true,
+              "when": "15:30–16:00"
+            },
+            {
+              "id": "wrap",
+              "title": "Daily closeout",
+              "kind": "admin",
+              "start": 990,
+              "end": 1020,
+              "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+              "anchor": false,
+              "when": "16:30–17:00"
+            }
+          ]
+        }
+      ],
+      "critiques": [
+        {
+          "revision": 1,
+          "strategy": "client-first",
+          "approved": false,
+          "score": 75,
+          "failures": [
+            {
+              "code": "FOCUS_BLOCK",
+              "weight": 25,
+              "detail": "Focus landed at 13:30–15:20. The request is allowed to shift it, not to push it out of the morning. The largest open gap was the wrong gap."
+            }
+          ],
+          "passed": [
+            "Every block found a home",
+            "No two blocks overlap",
+            "Fixed meetings stayed put",
+            "The day stays inside 08:30–17:30",
+            "Lunch still lands around noon",
+            "The walk is still on the day",
+            "The request ends before its deadline",
+            "Calls have a prep buffer",
+            "Fixed meetings keep a 10-minute lead-in"
+          ]
+        },
+        {
+          "revision": 2,
+          "strategy": "protect-focus",
+          "approved": true,
+          "score": 100,
+          "failures": [],
+          "passed": [
+            "Every block found a home",
+            "No two blocks overlap",
+            "Fixed meetings stayed put",
+            "The day stays inside 08:30–17:30",
+            "Morning focus survived",
+            "Lunch still lands around noon",
+            "The walk is still on the day",
+            "The request ends before its deadline",
+            "Calls have a prep buffer",
+            "Fixed meetings keep a 10-minute lead-in"
+          ]
+        }
+      ],
+      "approvedPlan": {
+        "strategy": "protect-focus",
+        "notes": [
+          "Rivera kitchen · scope call: Earliest opening that ends before the deadline (09:00–09:40).",
+          "Estimate block · J-1042: Reserved before non-critical meetings. 100 minutes, starting at the best morning fit.",
+          "Lunch: Protected block, kept as close as possible to its original time.",
+          "Site walk · 123 Example Ln: Protected block, kept as close as possible to its original time.",
+          "Bright Spark · date check: Moved to the nearest open slot after focus, lunch, and the walk were held.",
+          "Crew schedule review: Nearest open time that still respects the fixed county window and the lead-in before it.",
+          "Daily closeout: Nearest open time that still respects the fixed county window and the lead-in before it."
+        ],
+        "unplaced": [],
+        "blocks": [
+          {
+            "id": "standup",
+            "title": "Morning huddle",
+            "kind": "standup",
+            "start": 510,
+            "end": 525,
+            "reason": "Morning huddle stays. It was marked fixed.",
+            "anchor": true,
+            "when": "08:30–08:45"
+          },
+          {
+            "id": "prep:rivera",
+            "title": "Prep · Rivera kitchen",
+            "kind": "prep",
+            "start": 525,
+            "end": 540,
+            "reason": "Buffer immediately before Rivera kitchen · scope call.",
+            "accountId": "rivera",
+            "prepFor": "rivera",
+            "anchor": false,
+            "when": "08:45–09:00"
+          },
+          {
+            "id": "rivera",
+            "title": "Rivera kitchen · scope call",
+            "kind": "client",
+            "start": 540,
+            "end": 580,
+            "reason": "Earliest opening that ends before the deadline (09:00–09:40).",
+            "accountId": "rivera",
+            "anchor": false,
+            "when": "09:00–09:40"
+          },
+          {
+            "id": "focus",
+            "title": "Estimate block · J-1042",
+            "kind": "focus",
+            "start": 580,
+            "end": 680,
+            "reason": "Reserved before non-critical meetings. 100 minutes, starting at the best morning fit.",
+            "anchor": false,
+            "when": "09:40–11:20"
+          },
+          {
+            "id": "one-on-one",
+            "title": "Check-in with Dave",
+            "kind": "internal",
+            "start": 690,
+            "end": 720,
+            "reason": "Check-in with Dave stays. It was marked fixed.",
+            "anchor": true,
+            "when": "11:30–12:00"
+          },
+          {
+            "id": "lunch",
+            "title": "Lunch",
+            "kind": "break",
+            "start": 720,
+            "end": 765,
+            "reason": "Protected block, kept as close as possible to its original time.",
+            "anchor": false,
+            "when": "12:00–12:45"
+          },
+          {
+            "id": "walk",
+            "title": "Site walk · 123 Example Ln",
+            "kind": "personal",
+            "start": 780,
+            "end": 810,
+            "reason": "Protected block, kept as close as possible to its original time.",
+            "anchor": false,
+            "when": "13:00–13:30"
+          },
+          {
+            "id": "prep:brightspark",
+            "title": "Prep · Bright Spark",
+            "kind": "prep",
+            "start": 810,
+            "end": 825,
+            "reason": "Buffer immediately before Bright Spark · date check.",
+            "accountId": "brightspark",
+            "prepFor": "brightspark",
+            "anchor": false,
+            "when": "13:30–13:45"
+          },
+          {
+            "id": "brightspark",
+            "title": "Bright Spark · date check",
+            "kind": "client",
+            "start": 825,
+            "end": 870,
+            "reason": "Moved to the nearest open slot after focus, lunch, and the walk were held.",
+            "accountId": "brightspark",
+            "anchor": false,
+            "when": "13:45–14:30"
+          },
+          {
+            "id": "crew",
+            "title": "Crew schedule review",
+            "kind": "internal",
+            "start": 870,
+            "end": 920,
+            "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+            "anchor": false,
+            "when": "14:30–15:20"
+          },
+          {
+            "id": "pinecrest",
+            "title": "Pinecrest · rough-in window",
+            "kind": "client",
+            "start": 930,
+            "end": 960,
+            "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
+            "accountId": "pinecrest",
+            "anchor": true,
+            "when": "15:30–16:00"
+          },
+          {
+            "id": "wrap",
+            "title": "Daily closeout",
+            "kind": "admin",
+            "start": 990,
+            "end": 1020,
+            "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+            "anchor": false,
+            "when": "16:30–17:00"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "calendar.create",
+          "id": "prep:rivera",
+          "title": "Prep · Rivera kitchen",
+          "to": "08:45–09:00",
+          "reason": "Buffer immediately before Rivera kitchen · scope call.",
+          "status": "draft"
+        },
+        {
+          "type": "calendar.create",
+          "id": "rivera",
+          "title": "Rivera kitchen · scope call",
+          "to": "09:00–09:40",
+          "reason": "Earliest opening that ends before the deadline (09:00–09:40).",
+          "status": "draft"
+        },
+        {
+          "type": "calendar.update",
+          "id": "focus",
+          "title": "Estimate block · J-1042",
+          "from": "09:00–11:00",
+          "to": "09:40–11:20",
+          "reason": "Reserved before non-critical meetings. 100 minutes, starting at the best morning fit.",
+          "status": "draft"
+        },
+        {
+          "type": "calendar.create",
+          "id": "prep:brightspark",
+          "title": "Prep · Bright Spark",
+          "to": "13:30–13:45",
+          "reason": "Buffer immediately before Bright Spark · date check.",
+          "status": "draft"
+        },
+        {
+          "type": "calendar.update",
+          "id": "brightspark",
+          "title": "Bright Spark · date check",
+          "from": "10:30–11:15",
+          "to": "13:45–14:30",
+          "reason": "Moved to the nearest open slot after focus, lunch, and the walk were held.",
+          "status": "draft"
+        },
+        {
+          "type": "calendar.update",
+          "id": "crew",
+          "title": "Crew schedule review",
+          "from": "14:00–15:00",
+          "to": "14:30–15:20",
+          "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+          "status": "draft"
+        },
+        {
+          "type": "email.draft",
+          "to": "sam.rivera@example.com",
+          "subject": "Re: Rivera Kitchen — morning call at 09:00",
+          "body": "Sam,\n\nI can talk at 09:00–09:40 today.\n\nI have J-1042 open — Kitchen remodel request, cabinets and counters. I will not give you a price or a start date on the call. I will send a written note by 12:15, and the quote waits for approval before it goes out.\n\nIf 09:00–09:40 does not work, reply before 9:30 and I will move a flexible block.\n\nMaria Alvarez\nProject manager",
+          "accountId": "rivera",
+          "sendAt": "12:15",
+          "status": "draft"
+        },
+        {
+          "type": "slack.draft",
+          "channel": "#job-j1042",
+          "text": "Sam Rivera (FAKE) is drafted onto the calendar at 09:00–09:40. Estimate block stays 09:40–11:20. Bright Spark moves to 13:45. Status note to Sam is staged for 12:15. Nothing has been sent.",
+          "status": "draft"
+        }
+      ],
+      "brief": {
+        "headline": "Sam gets 09:00. The estimate block still happens.",
+        "outcomes": [
+          "Call Sam at 09:00–09:40 and send the note by 12:15.",
+          "Keep 09:40–11:20 to price J-1042. That block stayed in the morning.",
+          "Move Bright Spark to 13:45–14:30. Their certificate is expired, and the check-in was sitting on the estimate block."
+        ],
+        "watchouts": [
+          "The site walk stays at 13:00–13:30.",
+          "The check-in with Dave did not move.",
+          "The Pinecrest window at 15:30 was not touched."
+        ],
+        "schedule": [
+          {
+            "time": "08:30–08:45",
+            "title": "Morning huddle",
+            "note": "held"
+          },
+          {
+            "time": "08:45–09:00",
+            "title": "Prep · Rivera kitchen",
+            "note": "new"
+          },
+          {
+            "time": "09:00–09:40",
+            "title": "Rivera kitchen · scope call",
+            "note": "new"
+          },
+          {
+            "time": "09:40–11:20",
+            "title": "Estimate block · J-1042",
+            "note": "was 09:00–11:00"
+          },
+          {
+            "time": "11:30–12:00",
+            "title": "Check-in with Dave",
+            "note": "held"
+          },
+          {
+            "time": "12:00–12:45",
+            "title": "Lunch",
+            "note": "held"
+          },
+          {
+            "time": "13:00–13:30",
+            "title": "Site walk · 123 Example Ln",
+            "note": "held"
+          },
+          {
+            "time": "13:30–13:45",
+            "title": "Prep · Bright Spark",
+            "note": "new"
+          },
+          {
+            "time": "13:45–14:30",
+            "title": "Bright Spark · date check",
+            "note": "was 10:30–11:15"
+          },
+          {
+            "time": "14:30–15:20",
+            "title": "Crew schedule review",
+            "note": "was 14:00–15:00"
+          },
+          {
+            "time": "15:30–16:00",
+            "title": "Pinecrest · rough-in window",
+            "note": "held"
+          },
+          {
+            "time": "16:30–17:00",
+            "title": "Daily closeout",
+            "note": "held"
+          }
+        ],
+        "callCard": {
+          "account": "Rivera Kitchen",
+          "when": "09:00–09:40",
+          "whyNow": "Kitchen remodel at 123 Example Ln. Fictional draft total is $38,450. Two lines are flagged.",
+          "knows": [
+            "P0 J-1042: Kitchen remodel request, cabinets and counters (Lead since 8:47).",
+            "Last touch Never. This is a new lead.. Inbound email only. No site visit yet.",
+            "Sam wants a quote today. The $38,450 total is a draft until Maria approves it.",
+            "Quartz waterfall edge has no price-list match, so that line is flagged.",
+            "Rain is forecast for Friday. Demo and the dumpster are weather-sensitive."
+          ],
+          "questions": [
+            "Is the budget a ceiling or a starting hope?",
+            "Are we replacing uppers and lowers, or lowers only?",
+            "Does under-cabinet lighting stay out of this quote?"
+          ],
+          "doNotPromise": [
+            "Do not promise $38,450. Maria has not approved the quote.",
+            "Do not promise a start date. Friday's demo may move for rain.",
+            "Do not say the electrician is confirmed. The certificate is expired."
+          ],
+          "success": "an owner, the next update time, and an honest read on whether Friday still holds"
+        }
+      },
+      "trace": [
+        {
+          "at": "08:47:02",
+          "agent": "supervisor",
+          "title": "Thursday is open",
+          "detail": "Sam Rivera's kitchen email landed at 08:47. Make room for a morning call, keep the estimate block, and do not drop the site walk or move Dave.",
+          "handoff": {
+            "to": "intake",
+            "reason": "Start from the calendar and the inbox, not from a hunch."
+          }
+        },
+        {
+          "at": "08:47:10",
+          "agent": "intake",
+          "title": "Read the day",
+          "detail": "Estimate block · J-1042 (09:00–11:00) overlaps Bright Spark · date check (10:30–11:15).\nSam Rivera (FAKE) wrote at 08:47: Kitchen remodel at 123 Example Ln",
+          "handoff": {
+            "to": "researcher",
+            "reason": "The kitchen request needs the job file before anyone moves a meeting."
+          }
+        },
+        {
+          "at": "08:47:18",
+          "agent": "researcher",
+          "title": "Rivera Kitchen · quote needed today · Demo Friday, March 13",
+          "detail": "· P0 J-1042: Kitchen remodel request, cabinets and counters (Lead since 8:47).\n· Last touch Never. This is a new lead.. Inbound email only. No site visit yet.\n· Sam wants a quote today. The $38,450 total is a draft until Maria approves it.\n· Quartz waterfall edge has no price-list match, so that line is flagged.\n· Rain is forecast for Friday. Demo and the dumpster are weather-sensitive.\nAsk first: Is the budget a ceiling or a starting hope?\nAlso today: Pinecrest County Inspections (fixed window), Bright Spark Electric (FAKE) (movable).",
+          "handoff": {
+            "to": "planner",
+            "reason": "The board has the constraints and the job facts. Propose a day."
+          }
+        },
+        {
+          "at": "08:47:26",
+          "agent": "planner",
+          "title": "Revision 1 · client-first",
+          "detail": "Focus at 13:30–15:20.\nCalls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 90-minute alternative. The biggest hole is not a morning.\nNew blocks: Prep · Rivera kitchen 08:45–09:00; Rivera kitchen · scope call 09:00–09:40; Prep · Bright Spark 09:40–09:55.",
+          "handoff": {
+            "to": "critic",
+            "reason": "Score this proposal. Do not soften it on the way."
+          }
+        },
+        {
+          "at": "08:47:34",
+          "agent": "critic",
+          "title": "75/100 · rejected",
+          "detail": "FOCUS_BLOCK. Focus landed at 13:30–15:20. The request is allowed to shift it, not to push it out of the morning. The largest open gap was the wrong gap.\nStill held: Every block found a home; No two blocks overlap; Fixed meetings stayed put; The day stays inside 08:30–17:30.",
+          "handoff": {
+            "to": "planner",
+            "reason": "Switch to protect-focus. Reserve the morning before you place non-critical meetings."
+          }
+        },
+        {
+          "at": "08:47:42",
+          "agent": "planner",
+          "title": "Revision 2 · protect-focus",
+          "detail": "Focus at 09:40–11:20.\nReserved before non-critical meetings. 100 minutes, starting at the best morning fit.\nNew blocks: Prep · Rivera kitchen 08:45–09:00; Rivera kitchen · scope call 09:00–09:40; Prep · Bright Spark 13:30–13:45.",
+          "handoff": {
+            "to": "critic",
+            "reason": "Score this proposal. Do not soften it on the way."
+          }
+        },
+        {
+          "at": "08:47:50",
+          "agent": "critic",
+          "title": "100/100 · approved",
+          "detail": "Focus, the walk, lunch, the fixed meetings, and the deadline all hold.",
+          "handoff": {
+            "to": "executor",
+            "reason": "Materialize drafts. Do not send them."
+          }
+        },
+        {
+          "at": "08:47:58",
+          "agent": "executor",
+          "title": "8 drafts · nothing sent",
+          "detail": "6 calendar changes, 2 message drafts. Every deadline that needed a written status has a draft. The draft sink is in memory. There is no live calendar, Slack, or mail call on this path.",
+          "handoff": {
+            "to": "brief",
+            "reason": "Write the morning brief off the approved plan."
+          }
+        },
+        {
+          "at": "08:48:06",
+          "agent": "brief",
+          "title": "Sam gets 09:00. The estimate block still happens.",
+          "detail": "1. Call Sam at 09:00–09:40 and send the note by 12:15.\n2. Keep 09:40–11:20 to price J-1042. That block stayed in the morning.\n3. Move Bright Spark to 13:45–14:30. Their certificate is expired, and the check-in was sitting on the estimate block."
+        },
+        {
+          "at": "08:48:10",
+          "agent": "supervisor",
+          "title": "Closed",
+          "detail": "Approved plan, drafts in memory, brief written. Nothing was sent."
+        }
+      ]
+    },
+    "morning": {
+      "runId": "thursday-morning",
+      "workflow": "morning",
+      "status": "approved",
+      "model": "mock",
+      "goal": "Plan Thursday before anyone leaves for a site. The calendar is already double-booked. Protect the estimate block, keep the site walk, and move only what is movable.",
+      "dateLabel": "Thursday, March 12, 2026",
+      "persona": "Maria Alvarez",
+      "role": "Project manager",
+      "priorities": [
+        "Keep 90 minutes to price job J-1042 before leaving for the site.",
+        "A homeowner who needs a quote today outranks a movable sub check-in.",
+        "The site walk stays on the day. It can slide. It cannot disappear.",
+        "The check-in with Dave does not move.",
+        "The Pinecrest inspection window at 15:30 is locked."
+      ],
+      "calendarBefore": [
+        {
+          "id": "standup",
+          "title": "Morning huddle",
+          "kind": "standup",
+          "start": 510,
+          "end": 525,
+          "flexibility": "fixed",
+          "priority": 3,
+          "protected": false,
+          "minDuration": 15,
+          "needsPrepMinutes": 0,
+          "earliest": 510,
+          "latest": 525,
+          "when": "08:30–08:45"
+        },
+        {
+          "id": "focus",
+          "title": "Estimate block · J-1042",
+          "kind": "focus",
+          "start": 540,
+          "end": 660,
+          "flexibility": "movable",
+          "priority": 5,
+          "protected": true,
+          "minDuration": 90,
+          "needsPrepMinutes": 0,
+          "earliest": 525,
+          "latest": 1050,
+          "notes": "Build time. Floor is 90 minutes. The original block is two hours.",
+          "when": "09:00–11:00"
+        },
+        {
+          "id": "brightspark",
+          "title": "Bright Spark · date check",
+          "kind": "client",
+          "start": 630,
+          "end": 675,
+          "flexibility": "movable",
+          "priority": 3,
+          "protected": false,
+          "minDuration": 45,
+          "needsPrepMinutes": 15,
+          "earliest": 525,
+          "latest": 1020,
+          "accountId": "brightspark",
+          "notes": "Already overlapping the estimate block. Not an emergency.",
+          "when": "10:30–11:15"
+        },
+        {
+          "id": "one-on-one",
+          "title": "Check-in with Dave",
+          "kind": "internal",
+          "start": 690,
+          "end": 720,
+          "flexibility": "fixed",
+          "priority": 5,
+          "protected": true,
+          "minDuration": 30,
+          "needsPrepMinutes": 0,
+          "earliest": 690,
+          "latest": 720,
+          "notes": "Owner check-in with Dave. Do not move.",
+          "when": "11:30–12:00"
+        },
+        {
+          "id": "lunch",
+          "title": "Lunch",
+          "kind": "break",
+          "start": 720,
+          "end": 765,
+          "flexibility": "movable",
+          "priority": 4,
+          "protected": true,
+          "minDuration": 30,
+          "needsPrepMinutes": 0,
+          "earliest": 690,
+          "latest": 840,
+          "when": "12:00–12:45"
+        },
+        {
+          "id": "walk",
+          "title": "Site walk · 123 Example Ln",
+          "kind": "personal",
+          "start": 780,
+          "end": 810,
+          "flexibility": "movable",
+          "priority": 4,
+          "protected": true,
+          "minDuration": 30,
+          "needsPrepMinutes": 0,
+          "earliest": 720,
+          "latest": 960,
+          "notes": "May slide within the afternoon. May not be deleted.",
+          "when": "13:00–13:30"
+        },
+        {
+          "id": "crew",
+          "title": "Crew schedule review",
+          "kind": "internal",
+          "start": 840,
+          "end": 900,
+          "flexibility": "movable",
+          "priority": 2,
+          "protected": false,
+          "minDuration": 45,
+          "needsPrepMinutes": 0,
+          "earliest": 780,
+          "latest": 1050,
+          "when": "14:00–15:00"
+        },
+        {
+          "id": "pinecrest",
+          "title": "Pinecrest · rough-in window",
+          "kind": "client",
+          "start": 930,
+          "end": 960,
+          "flexibility": "fixed",
+          "priority": 4,
+          "protected": false,
+          "minDuration": 30,
+          "needsPrepMinutes": 0,
+          "earliest": 930,
+          "latest": 960,
+          "accountId": "pinecrest",
+          "notes": "The county set this window. Do not move it.",
+          "when": "15:30–16:00"
+        },
+        {
+          "id": "wrap",
+          "title": "Daily closeout",
+          "kind": "admin",
+          "start": 990,
+          "end": 1020,
+          "flexibility": "movable",
+          "priority": 1,
+          "protected": false,
+          "minDuration": 30,
+          "needsPrepMinutes": 0,
+          "earliest": 960,
+          "latest": 1050,
+          "when": "16:30–17:00"
+        }
+      ],
+      "demands": [],
+      "inbox": [],
+      "accounts": [
+        {
+          "id": "rivera",
+          "name": "Rivera Kitchen",
+          "tier": "strategic",
+          "owner": "Sam Rivera (FAKE)",
+          "ownerRole": "Homeowner",
+          "ownerEmail": "sam.rivera@example.com",
+          "slackChannel": "#job-j1042",
+          "milestone": "Demo Friday, March 13",
+          "lastTouch": "Never. This is a new lead.",
+          "lastTouchNote": "Inbound email only. No site visit yet.",
+          "summary": "Kitchen remodel at 123 Example Ln. Fictional draft total is $38,450. Two lines are flagged.",
+          "cases": [
+            {
+              "id": "J-1042",
+              "title": "Kitchen remodel request, cabinets and counters",
+              "priority": "P0",
+              "status": "Lead since 8:47"
+            }
+          ],
+          "facts": [
+            "Sam wants a quote today. The $38,450 total is a draft until Maria approves it.",
+            "Quartz waterfall edge has no price-list match, so that line is flagged.",
+            "Rain is forecast for Friday. Demo and the dumpster are weather-sensitive.",
+            "Bright Spark Electric's insurance certificate is expired."
+          ],
+          "openQuestions": [
+            "Is the budget a ceiling or a starting hope?",
+            "Are we replacing uppers and lowers, or lowers only?",
+            "Does under-cabinet lighting stay out of this quote?"
+          ],
+          "doNotPromise": [
+            "Do not promise $38,450. Maria has not approved the quote.",
+            "Do not promise a start date. Friday's demo may move for rain.",
+            "Do not say the electrician is confirmed. The certificate is expired."
+          ]
+        },
+        {
+          "id": "brightspark",
+          "name": "Bright Spark Electric (FAKE)",
+          "tier": "enterprise",
+          "owner": "Luis Ortega (FAKE)",
+          "ownerRole": "Electrician",
+          "ownerEmail": "luis.ortega@example.com",
+          "slackChannel": "#subs-brightspark",
+          "lastTouch": "Last month",
+          "lastTouchNote": "Certificate of insurance expired. They are not cleared to start.",
+          "summary": "Preferred electrician. The date check is routine. The certificate is not.",
+          "cases": [
+            {
+              "id": "COI-1042",
+              "title": "Insurance certificate expired",
+              "priority": "P2",
+              "status": "Renewal not received"
+            }
+          ],
+          "facts": [
+            "No emergency. The meeting is a date check that landed on the estimate block.",
+            "The certificate is expired, so Bright Spark is not assigned to J-1042.",
+            "Moving this call is cheap. Leaving it on the estimate block is how the morning broke."
+          ],
+          "openQuestions": [
+            "When will the renewed certificate arrive?",
+            "If it does not arrive this week, who is the backup electrician?"
+          ],
+          "doNotPromise": [
+            "Do not tell the homeowner Bright Spark is confirmed."
+          ]
+        },
+        {
+          "id": "pinecrest",
+          "name": "Pinecrest County Inspections",
+          "tier": "standard",
+          "owner": "Priya Raman (FAKE)",
+          "ownerRole": "Building inspector",
+          "ownerEmail": "inspections@pinecrest.example",
+          "slackChannel": "#job-j1042",
+          "lastTouch": "Monday, March 9",
+          "lastTouchNote": "Rough-in window held for Thursday at 15:30.",
+          "summary": "County inspection window. The inspector is only free at 15:30.",
+          "cases": [
+            {
+              "id": "INSP-1042",
+              "title": "Rough-in inspection window",
+              "priority": "P1",
+              "status": "Waiting on today's window"
+            }
+          ],
+          "facts": [
+            "The 15:30–16:00 window is the inspector's only opening. Treat it as fixed.",
+            "The question is narrow: is the rough-in ready, and who meets the inspector."
+          ],
+          "openQuestions": [
+            "Who on the crew meets the inspector?"
+          ],
+          "doNotPromise": [
+            "Do not promise the inspection will pass."
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "source": "intake",
+          "level": "critical",
+          "code": "OVERLAP",
+          "summary": "Estimate block · J-1042 (09:00–11:00) overlaps Bright Spark · date check (10:30–11:15).",
+          "id": "OVERLAP-1"
+        },
+        {
+          "source": "intake",
+          "level": "info",
+          "code": "PROTECTED",
+          "summary": "Protected: Estimate block · J-1042, Check-in with Dave, Lunch, Site walk · 123 Example Ln.",
+          "id": "PROTECTED-2"
+        },
+        {
+          "source": "researcher",
+          "level": "info",
+          "code": "ACCOUNT",
+          "summary": "Pinecrest County Inspections · last touch Monday, March 9",
+          "id": "ACCOUNT-3"
+        },
+        {
+          "source": "researcher",
+          "level": "info",
+          "code": "ACCOUNT",
+          "summary": "Bright Spark Electric (FAKE) · last touch Last month",
+          "id": "ACCOUNT-4"
+        }
+      ],
+      "research": [
+        {
+          "accountId": "pinecrest",
+          "name": "Pinecrest County Inspections",
+          "headline": "Pinecrest County Inspections · last touch Monday, March 9",
+          "summary": "County inspection window. The inspector is only free at 15:30.",
+          "bullets": [
+            "P1 INSP-1042: Rough-in inspection window (Waiting on today's window).",
+            "Last touch Monday, March 9. Rough-in window held for Thursday at 15:30.",
+            "The 15:30–16:00 window is the inspector's only opening. Treat it as fixed."
+          ],
+          "questions": [
+            "Who on the crew meets the inspector?"
+          ],
+          "doNotPromise": [
+            "Do not promise the inspection will pass."
+          ]
+        },
+        {
+          "accountId": "brightspark",
+          "name": "Bright Spark Electric (FAKE)",
+          "headline": "Bright Spark Electric (FAKE) · last touch Last month",
+          "summary": "Preferred electrician. The date check is routine. The certificate is not.",
+          "bullets": [
+            "P2 COI-1042: Insurance certificate expired (Renewal not received).",
+            "Last touch Last month. Certificate of insurance expired. They are not cleared to start.",
+            "No emergency. The meeting is a date check that landed on the estimate block."
+          ],
+          "questions": [
+            "When will the renewed certificate arrive?"
+          ],
+          "doNotPromise": [
+            "Do not tell the homeowner Bright Spark is confirmed."
+          ]
+        }
+      ],
+      "attempts": [
+        {
+          "strategy": "client-first",
+          "notes": [
+            "Bright Spark · date check: Stacked as early as the fixed meetings allow.",
+            "Lunch: Protected block, kept as close as possible to its original time.",
+            "Site walk · 123 Example Ln: Protected block, kept as close as possible to its original time.",
+            "Estimate block · J-1042: Calls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 95-minute alternative. The biggest hole is not a morning.",
+            "Crew schedule review: Nearest open time that still respects the fixed county window and the lead-in before it.",
+            "Daily closeout: Nearest open time that still respects the fixed county window and the lead-in before it."
+          ],
+          "unplaced": [],
+          "blocks": [
+            {
+              "id": "standup",
+              "title": "Morning huddle",
+              "kind": "standup",
+              "start": 510,
+              "end": 525,
+              "reason": "Morning huddle stays. It was marked fixed.",
+              "anchor": true,
+              "when": "08:30–08:45"
+            },
+            {
+              "id": "prep:brightspark",
+              "title": "Prep · Bright Spark",
+              "kind": "prep",
+              "start": 525,
+              "end": 540,
+              "reason": "Buffer immediately before Bright Spark · date check.",
+              "accountId": "brightspark",
+              "prepFor": "brightspark",
+              "anchor": false,
+              "when": "08:45–09:00"
+            },
+            {
+              "id": "brightspark",
+              "title": "Bright Spark · date check",
+              "kind": "client",
+              "start": 540,
+              "end": 585,
+              "reason": "Stacked as early as the fixed meetings allow.",
+              "accountId": "brightspark",
+              "anchor": false,
+              "when": "09:00–09:45"
+            },
+            {
+              "id": "one-on-one",
+              "title": "Check-in with Dave",
+              "kind": "internal",
+              "start": 690,
+              "end": 720,
+              "reason": "Check-in with Dave stays. It was marked fixed.",
+              "anchor": true,
+              "when": "11:30–12:00"
+            },
+            {
+              "id": "lunch",
+              "title": "Lunch",
+              "kind": "break",
+              "start": 720,
+              "end": 765,
+              "reason": "Protected block, kept as close as possible to its original time.",
+              "anchor": false,
+              "when": "12:00–12:45"
+            },
+            {
+              "id": "walk",
+              "title": "Site walk · 123 Example Ln",
+              "kind": "personal",
+              "start": 780,
+              "end": 810,
+              "reason": "Protected block, kept as close as possible to its original time.",
+              "anchor": false,
+              "when": "13:00–13:30"
+            },
+            {
+              "id": "focus",
+              "title": "Estimate block · J-1042",
+              "kind": "focus",
+              "start": 810,
+              "end": 920,
+              "reason": "Calls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 95-minute alternative. The biggest hole is not a morning.",
+              "anchor": false,
+              "when": "13:30–15:20"
+            },
+            {
+              "id": "pinecrest",
+              "title": "Pinecrest · rough-in window",
+              "kind": "client",
+              "start": 930,
+              "end": 960,
+              "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
+              "accountId": "pinecrest",
+              "anchor": true,
+              "when": "15:30–16:00"
+            },
+            {
+              "id": "crew",
+              "title": "Crew schedule review",
+              "kind": "internal",
+              "start": 960,
+              "end": 1020,
+              "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+              "anchor": false,
+              "when": "16:00–17:00"
+            },
+            {
+              "id": "wrap",
+              "title": "Daily closeout",
+              "kind": "admin",
+              "start": 1020,
+              "end": 1050,
+              "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+              "anchor": false,
+              "when": "17:00–17:30"
+            }
+          ]
+        },
+        {
+          "strategy": "protect-focus",
+          "notes": [
+            "Estimate block · J-1042: Reserved before non-critical meetings. 120 minutes, starting at the best morning fit.",
+            "Lunch: Protected block, kept as close as possible to its original time.",
+            "Site walk · 123 Example Ln: Protected block, kept as close as possible to its original time.",
+            "Bright Spark · date check: Moved to the nearest open slot after focus, lunch, and the walk were held.",
+            "Crew schedule review: Nearest open time that still respects the fixed county window and the lead-in before it.",
+            "Daily closeout: Nearest open time that still respects the fixed county window and the lead-in before it."
+          ],
+          "unplaced": [],
+          "blocks": [
+            {
+              "id": "standup",
+              "title": "Morning huddle",
+              "kind": "standup",
+              "start": 510,
+              "end": 525,
+              "reason": "Morning huddle stays. It was marked fixed.",
+              "anchor": true,
+              "when": "08:30–08:45"
+            },
+            {
+              "id": "focus",
+              "title": "Estimate block · J-1042",
+              "kind": "focus",
+              "start": 540,
+              "end": 660,
+              "reason": "Reserved before non-critical meetings. 120 minutes, starting at the best morning fit.",
+              "anchor": false,
+              "when": "09:00–11:00"
+            },
+            {
+              "id": "one-on-one",
+              "title": "Check-in with Dave",
+              "kind": "internal",
+              "start": 690,
+              "end": 720,
+              "reason": "Check-in with Dave stays. It was marked fixed.",
+              "anchor": true,
+              "when": "11:30–12:00"
+            },
+            {
+              "id": "lunch",
+              "title": "Lunch",
+              "kind": "break",
+              "start": 720,
+              "end": 765,
+              "reason": "Protected block, kept as close as possible to its original time.",
+              "anchor": false,
+              "when": "12:00–12:45"
+            },
+            {
+              "id": "walk",
+              "title": "Site walk · 123 Example Ln",
+              "kind": "personal",
+              "start": 780,
+              "end": 810,
+              "reason": "Protected block, kept as close as possible to its original time.",
+              "anchor": false,
+              "when": "13:00–13:30"
+            },
+            {
+              "id": "prep:brightspark",
+              "title": "Prep · Bright Spark",
+              "kind": "prep",
+              "start": 810,
+              "end": 825,
+              "reason": "Buffer immediately before Bright Spark · date check.",
+              "accountId": "brightspark",
+              "prepFor": "brightspark",
+              "anchor": false,
+              "when": "13:30–13:45"
+            },
+            {
+              "id": "brightspark",
+              "title": "Bright Spark · date check",
+              "kind": "client",
+              "start": 825,
+              "end": 870,
+              "reason": "Moved to the nearest open slot after focus, lunch, and the walk were held.",
+              "accountId": "brightspark",
+              "anchor": false,
+              "when": "13:45–14:30"
+            },
+            {
+              "id": "crew",
+              "title": "Crew schedule review",
+              "kind": "internal",
+              "start": 870,
+              "end": 920,
+              "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+              "anchor": false,
+              "when": "14:30–15:20"
+            },
+            {
+              "id": "pinecrest",
+              "title": "Pinecrest · rough-in window",
+              "kind": "client",
+              "start": 930,
+              "end": 960,
+              "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
+              "accountId": "pinecrest",
+              "anchor": true,
+              "when": "15:30–16:00"
+            },
+            {
+              "id": "wrap",
+              "title": "Daily closeout",
+              "kind": "admin",
+              "start": 990,
+              "end": 1020,
+              "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+              "anchor": false,
+              "when": "16:30–17:00"
+            }
+          ]
+        }
+      ],
+      "critiques": [
+        {
+          "revision": 1,
+          "strategy": "client-first",
+          "approved": false,
+          "score": 75,
+          "failures": [
+            {
+              "code": "FOCUS_BLOCK",
+              "weight": 25,
+              "detail": "Focus moved to 13:30–15:20. Nothing critical happened, so the morning block should stay within 15 minutes of 09:00. A larger afternoon hole is not a better morning."
+            }
+          ],
+          "passed": [
+            "Every block found a home",
+            "No two blocks overlap",
+            "Fixed meetings stayed put",
+            "The day stays inside 08:30–17:30",
+            "Lunch still lands around noon",
+            "The walk is still on the day",
+            "The request ends before its deadline",
+            "Calls have a prep buffer",
+            "Fixed meetings keep a 10-minute lead-in"
+          ]
+        },
+        {
+          "revision": 2,
+          "strategy": "protect-focus",
+          "approved": true,
+          "score": 100,
+          "failures": [],
+          "passed": [
+            "Every block found a home",
+            "No two blocks overlap",
+            "Fixed meetings stayed put",
+            "The day stays inside 08:30–17:30",
+            "Morning focus survived",
+            "Lunch still lands around noon",
+            "The walk is still on the day",
+            "The request ends before its deadline",
+            "Calls have a prep buffer",
+            "Fixed meetings keep a 10-minute lead-in"
+          ]
+        }
+      ],
+      "approvedPlan": {
+        "strategy": "protect-focus",
+        "notes": [
+          "Estimate block · J-1042: Reserved before non-critical meetings. 120 minutes, starting at the best morning fit.",
+          "Lunch: Protected block, kept as close as possible to its original time.",
+          "Site walk · 123 Example Ln: Protected block, kept as close as possible to its original time.",
+          "Bright Spark · date check: Moved to the nearest open slot after focus, lunch, and the walk were held.",
+          "Crew schedule review: Nearest open time that still respects the fixed county window and the lead-in before it.",
+          "Daily closeout: Nearest open time that still respects the fixed county window and the lead-in before it."
+        ],
+        "unplaced": [],
+        "blocks": [
+          {
+            "id": "standup",
+            "title": "Morning huddle",
+            "kind": "standup",
+            "start": 510,
+            "end": 525,
+            "reason": "Morning huddle stays. It was marked fixed.",
+            "anchor": true,
+            "when": "08:30–08:45"
+          },
+          {
+            "id": "focus",
+            "title": "Estimate block · J-1042",
+            "kind": "focus",
+            "start": 540,
+            "end": 660,
+            "reason": "Reserved before non-critical meetings. 120 minutes, starting at the best morning fit.",
+            "anchor": false,
+            "when": "09:00–11:00"
+          },
+          {
+            "id": "one-on-one",
+            "title": "Check-in with Dave",
+            "kind": "internal",
+            "start": 690,
+            "end": 720,
+            "reason": "Check-in with Dave stays. It was marked fixed.",
+            "anchor": true,
+            "when": "11:30–12:00"
+          },
+          {
+            "id": "lunch",
+            "title": "Lunch",
+            "kind": "break",
+            "start": 720,
+            "end": 765,
+            "reason": "Protected block, kept as close as possible to its original time.",
+            "anchor": false,
+            "when": "12:00–12:45"
+          },
+          {
+            "id": "walk",
+            "title": "Site walk · 123 Example Ln",
+            "kind": "personal",
+            "start": 780,
+            "end": 810,
+            "reason": "Protected block, kept as close as possible to its original time.",
+            "anchor": false,
+            "when": "13:00–13:30"
+          },
+          {
+            "id": "prep:brightspark",
+            "title": "Prep · Bright Spark",
+            "kind": "prep",
+            "start": 810,
+            "end": 825,
+            "reason": "Buffer immediately before Bright Spark · date check.",
+            "accountId": "brightspark",
+            "prepFor": "brightspark",
+            "anchor": false,
+            "when": "13:30–13:45"
+          },
+          {
+            "id": "brightspark",
+            "title": "Bright Spark · date check",
+            "kind": "client",
+            "start": 825,
+            "end": 870,
+            "reason": "Moved to the nearest open slot after focus, lunch, and the walk were held.",
+            "accountId": "brightspark",
+            "anchor": false,
+            "when": "13:45–14:30"
+          },
+          {
+            "id": "crew",
+            "title": "Crew schedule review",
+            "kind": "internal",
+            "start": 870,
+            "end": 920,
+            "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+            "anchor": false,
+            "when": "14:30–15:20"
+          },
+          {
+            "id": "pinecrest",
+            "title": "Pinecrest · rough-in window",
+            "kind": "client",
+            "start": 930,
+            "end": 960,
+            "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
+            "accountId": "pinecrest",
+            "anchor": true,
+            "when": "15:30–16:00"
+          },
+          {
+            "id": "wrap",
+            "title": "Daily closeout",
+            "kind": "admin",
+            "start": 990,
+            "end": 1020,
+            "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+            "anchor": false,
+            "when": "16:30–17:00"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "calendar.create",
+          "id": "prep:brightspark",
+          "title": "Prep · Bright Spark",
+          "to": "13:30–13:45",
+          "reason": "Buffer immediately before Bright Spark · date check.",
+          "status": "draft"
+        },
+        {
+          "type": "calendar.update",
+          "id": "brightspark",
+          "title": "Bright Spark · date check",
+          "from": "10:30–11:15",
+          "to": "13:45–14:30",
+          "reason": "Moved to the nearest open slot after focus, lunch, and the walk were held.",
+          "status": "draft"
+        },
+        {
+          "type": "calendar.update",
+          "id": "crew",
+          "title": "Crew schedule review",
+          "from": "14:00–15:00",
+          "to": "14:30–15:20",
+          "reason": "Nearest open time that still respects the fixed county window and the lead-in before it.",
+          "status": "draft"
+        }
+      ],
+      "brief": {
+        "headline": "Estimate block stays 09:00–11:00. Bright Spark moves off it.",
+        "outcomes": [
+          "Use 09:00–11:00 to price J-1042. It was already double-booked, and the rewrite gives it back.",
+          "See Bright Spark at 13:45–14:30. The certificate is the issue, not a morning slot.",
+          "Leave the Pinecrest window at 15:30. The county set that time."
+        ],
+        "watchouts": [
+          "No quote goes out until Maria approves the total.",
+          "Site walk at 13:00–13:30. It is on the plan on purpose."
+        ],
+        "schedule": [
+          {
+            "time": "08:30–08:45",
+            "title": "Morning huddle",
+            "note": "held"
+          },
+          {
+            "time": "09:00–11:00",
+            "title": "Estimate block · J-1042",
+            "note": "held"
+          },
+          {
+            "time": "11:30–12:00",
+            "title": "Check-in with Dave",
+            "note": "held"
+          },
+          {
+            "time": "12:00–12:45",
+            "title": "Lunch",
+            "note": "held"
+          },
+          {
+            "time": "13:00–13:30",
+            "title": "Site walk · 123 Example Ln",
+            "note": "held"
+          },
+          {
+            "time": "13:30–13:45",
+            "title": "Prep · Bright Spark",
+            "note": "new"
+          },
+          {
+            "time": "13:45–14:30",
+            "title": "Bright Spark · date check",
+            "note": "was 10:30–11:15"
+          },
+          {
+            "time": "14:30–15:20",
+            "title": "Crew schedule review",
+            "note": "was 14:00–15:00"
+          },
+          {
+            "time": "15:30–16:00",
+            "title": "Pinecrest · rough-in window",
+            "note": "held"
+          },
+          {
+            "time": "16:30–17:00",
+            "title": "Daily closeout",
+            "note": "held"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "at": "08:05:02",
+          "agent": "supervisor",
+          "title": "Morning planning is open",
+          "detail": "Plan Thursday before anyone leaves for a site. The calendar is already double-booked. Protect the estimate block, keep the site walk, and move only what is movable.",
+          "handoff": {
+            "to": "intake",
+            "reason": "Start from the calendar and the inbox, not from a hunch."
+          }
+        },
+        {
+          "at": "08:05:10",
+          "agent": "intake",
+          "title": "Read the day",
+          "detail": "Estimate block · J-1042 (09:00–11:00) overlaps Bright Spark · date check (10:30–11:15).\nThe inbox does not change the shape of the day.",
+          "handoff": {
+            "to": "researcher",
+            "reason": "Name the jobs already on the day."
+          }
+        },
+        {
+          "at": "08:05:18",
+          "agent": "researcher",
+          "title": "Pinecrest County Inspections · last touch Monday, March 9",
+          "detail": "· P1 INSP-1042: Rough-in inspection window (Waiting on today's window).\n· Last touch Monday, March 9. Rough-in window held for Thursday at 15:30.\n· The 15:30–16:00 window is the inspector's only opening. Treat it as fixed.\nAsk first: Who on the crew meets the inspector?\nAlso today: Bright Spark Electric (FAKE) (movable).",
+          "handoff": {
+            "to": "planner",
+            "reason": "The board has the constraints and the job facts. Propose a day."
+          }
+        },
+        {
+          "at": "08:05:26",
+          "agent": "planner",
+          "title": "Revision 1 · client-first",
+          "detail": "Focus at 13:30–15:20.\nCalls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 95-minute alternative. The biggest hole is not a morning.\nNew blocks: Prep · Bright Spark 08:45–09:00.",
+          "handoff": {
+            "to": "critic",
+            "reason": "Score this proposal. Do not soften it on the way."
+          }
+        },
+        {
+          "at": "08:05:34",
+          "agent": "critic",
+          "title": "75/100 · rejected",
+          "detail": "FOCUS_BLOCK. Focus moved to 13:30–15:20. Nothing critical happened, so the morning block should stay within 15 minutes of 09:00. A larger afternoon hole is not a better morning.\nStill held: Every block found a home; No two blocks overlap; Fixed meetings stayed put; The day stays inside 08:30–17:30.",
+          "handoff": {
+            "to": "planner",
+            "reason": "Switch to protect-focus. Reserve the morning before you place non-critical meetings."
+          }
+        },
+        {
+          "at": "08:05:42",
+          "agent": "planner",
+          "title": "Revision 2 · protect-focus",
+          "detail": "Focus at 09:00–11:00.\nReserved before non-critical meetings. 120 minutes, starting at the best morning fit.\nNew blocks: Prep · Bright Spark 13:30–13:45.",
+          "handoff": {
+            "to": "critic",
+            "reason": "Score this proposal. Do not soften it on the way."
+          }
+        },
+        {
+          "at": "08:05:50",
+          "agent": "critic",
+          "title": "100/100 · approved",
+          "detail": "Focus, the walk, lunch, the fixed meetings, and the deadline all hold.",
+          "handoff": {
+            "to": "executor",
+            "reason": "Materialize drafts. Do not send them."
+          }
+        },
+        {
+          "at": "08:05:58",
+          "agent": "executor",
+          "title": "3 drafts · nothing sent",
+          "detail": "3 calendar changes, 0 message drafts. Every deadline that needed a written status has a draft. The draft sink is in memory. There is no live calendar, Slack, or mail call on this path.",
+          "handoff": {
+            "to": "brief",
+            "reason": "Write the morning brief off the approved plan."
+          }
+        },
+        {
+          "at": "08:06:06",
+          "agent": "brief",
+          "title": "Estimate block stays 09:00–11:00. Bright Spark moves off it.",
+          "detail": "1. Use 09:00–11:00 to price J-1042. It was already double-booked, and the rewrite gives it back.\n2. See Bright Spark at 13:45–14:30. The certificate is the issue, not a morning slot.\n3. Leave the Pinecrest window at 15:30. The county set that time."
+        },
+        {
+          "at": "08:06:10",
+          "agent": "supervisor",
+          "title": "Closed",
+          "detail": "Approved plan, drafts in memory, brief written. Nothing was sent."
+        }
+      ]
+    }
+  }
+}
