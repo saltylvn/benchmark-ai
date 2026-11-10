@@ -75,7 +75,7 @@ Those three numbers are estimates. They are not a measurement.
 
 ![Where the day could connect](images/showcase/integrations-map.svg)
 
-HubSpot, Google Calendar, and Slack are mocked in the demo. HubSpot is a header mark with no client. Calendar and Slack drafts are written in memory and not delivered. Gmail, Outlook, Procore, and QuickBooks are not referenced. An `email.draft` is not a mailbox API.
+HubSpot, Google Calendar, and Slack are mocked in the demo. HubSpot is a header mark with no client. Calendar and Slack drafts are written in memory and not delivered. Slack live-send is off by default, sends only after a PM approves. Gmail, Outlook, Procore, and QuickBooks are not referenced. An `email.draft` is not a mailbox API.
 
 ![What actually moves](images/showcase/integrations-flow.svg)
 

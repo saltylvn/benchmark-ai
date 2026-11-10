@@ -18,7 +18,7 @@ The runnable piece is one Thursday for Maria Alvarez at Summit Ridge Builders. I
 
 ## What's next
 
-The dashboard branch owns the single time ledger in `dashboard/assumptions.json`, a live Slack send that stays locked until a person approves, and a later compliance-and-billing specialist. That specialist is not the drafting step in this demo. Screenshots of the dashboard belong here after that branch merges. A calendar connector with the same two locks is planned, not built.
+The dashboard branch owns the single time ledger in `dashboard/assumptions.json`, and a later compliance-and-billing specialist. That specialist is not the drafting step in this demo. Slack live-send is off by default, sends only after a PM approves. Screenshots of the dashboard belong here after that branch merges. A calendar connector with the same two locks is planned, not built.
 
 The playable story is one Thursday for Maria Alvarez at Summit Ridge Builders. Names, the address, and the job id are invented. Nothing in the demo is sent.
 
