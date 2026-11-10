@@ -1,6 +1,6 @@
 {#- The team app: Today, Jobs, Team, Messages, Under the hood. Tabs switch on the URL hash, so they work with or without the server. -#}
 {% macro queue_card(i, show_owner=true) %}
-<article class="qcard {{ i.level }}" data-id="{{ i.id }}" data-owner="{{ i.owner }}" data-kind="{{ i.kind }}" data-minutes="{{ i.minutes or 0 }}">
+<article class="qcard {{ i.level }}" data-id="{{ i.id }}" data-owner="{{ i.owner }}" data-kind="{{ i.kind }}" data-label="{{ i.kindLabel or i.channel }}" data-minutes="{{ i.minutes or 0 }}">
   <div class="qhead">
     <span class="pill {{ i.level }}">{{ i.kindLabel or i.channel }}</span>
     {% if i.jobId %}<span class="mono muted">{{ i.jobId }}</span>{% endif %}
@@ -74,6 +74,11 @@
       <div class="kpi accent"><b>~{{ (t.ledger.netMinutes / 60)|round(1) }} h</b><span>team admin drafted this morning (est.)</span></div>
     </div>
   </section>
+
+  <div class="found" role="group" aria-label="Show only">
+    <span class="found-label">Found this morning</span>
+    {% for f in t.found %}<button type="button" class="fchip {{ 'hot' if f.blocked }}" data-kind-filter="{{ f.label }}">{{ f.label }} <b>{{ f.count }}</b></button>{% endfor %}
+  </div>
 
   <div class="filters" role="group" aria-label="Show work for">
     <button type="button" class="on" data-owner-filter="all">Everyone</button>
@@ -224,7 +229,7 @@
       </ol>
       <div class="scroll-x"><table class="ledger">
         <thead><tr><th>Done by hand today</th><th class="num">×</th><th class="num">min</th></tr></thead>
-        <tbody>{% for l in t.ledger.lines %}<tr><td>{{ l.task }}</td><td class="num">{{ l.count }}</td><td class="num">{{ l.minutes|round|int }}</td></tr>{% endfor %}</tbody>
+        <tbody>{% for l in t.ledger.lines %}<tr><td>{{ l.task }}<span class="lbar"><i style="width:{{ l.bar }}%"></i></span></td><td class="num">{{ l.count }}</td><td class="num">{{ l.minutes|round|int }}</td></tr>{% endfor %}</tbody>
         <tfoot>
           <tr><td colspan="2">Review every draft</td><td class="num">−{{ t.ledger.reviewMinutes|round|int }}</td></tr>
           <tr class="total"><td colspan="2">Team minutes back today</td><td class="num">{{ t.ledger.netMinutes|round|int }}</td></tr>

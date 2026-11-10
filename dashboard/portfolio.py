@@ -381,6 +381,9 @@ def team_ledger(p: dict[str, Any], assumptions: dict[str, Any]) -> dict[str, Any
     lines.append({"task": "Write the team status update", "count": 1, "minutesEach": m["statusDigest"]})
     for line in lines:
         line["minutes"] = line["count"] * line["minutesEach"]
+    top = max(l["minutes"] for l in lines) or 1
+    for line in lines:
+        line["bar"] = round(line["minutes"] / top * 100, 1)
     manual = sum(l["minutes"] for l in lines)
     review = (len(drafts) + 1) * assumptions["teamReviewMinutesPerDraft"]
     net = manual - review
@@ -395,6 +398,16 @@ def team_ledger(p: dict[str, Any], assumptions: dict[str, Any]) -> dict[str, Any
     }
 
 
+def found_by_kind(queue: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    counts: dict[str, dict[str, Any]] = {}
+    for i in queue:
+        key = i["kindLabel"]
+        row = counts.setdefault(key, {"label": key, "count": 0, "blocked": 0})
+        row["count"] += 1
+        row["blocked"] += i["level"] == "blocked"
+    return sorted(counts.values(), key=lambda r: (-r["blocked"], -r["count"], r["label"]))
+
+
 def build_team_view(snapshot: dict[str, Any], assumptions: dict[str, Any]) -> dict[str, Any]:
     p = snapshot["portfolio"]
     minutes = {**assumptions["teamManualMinutes"]}
@@ -406,6 +419,7 @@ def build_team_view(snapshot: dict[str, Any], assumptions: dict[str, Any]) -> di
         "todayLabel": short(p["sweep"]["today"]),
         "queue": queue,
         "blockedCount": sum(1 for i in queue if i["level"] == "blocked"),
+        "found": found_by_kind(queue),
         "owners": [{"id": x["id"], "name": x["name"], "first": first(x["name"])} for x in p["data"]["people"] if x["role"] == "Project manager"],
         "board": board(p),
         "lookahead": lookahead(p),

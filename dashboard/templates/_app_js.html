@@ -114,6 +114,13 @@
   document.addEventListener('click', function (e) {
     var btn = e.target.closest('.qactions button[data-act]');
     if (btn) { act(btn.closest('.qcard'), btn.dataset.act); return; }
+    var k = e.target.closest('[data-kind-filter]');
+    if (k) {
+      kind = kind === k.dataset.kindFilter ? null : k.dataset.kindFilter;
+      document.querySelectorAll('[data-kind-filter]').forEach(function (b) { b.classList.toggle('on', b.dataset.kindFilter === kind); });
+      applyFilter();
+      return;
+    }
     var f = e.target.closest('[data-owner-filter]');
     if (f) {
       document.querySelectorAll('[data-owner-filter]').forEach(function (b) { b.classList.toggle('on', b.dataset.ownerFilter === f.dataset.ownerFilter); });
@@ -124,6 +131,7 @@
   });
 
   // ---- "show work for" filter, remembered per browser
+  var kind = null;
   var owner = 'all';
   try { owner = localStorage.getItem('benchmark-owner') || 'all'; } catch (e) {}
   if (!document.querySelector('[data-owner-filter="' + owner + '"]')) owner = 'all';
@@ -133,6 +141,7 @@
     var visible = 0;
     document.querySelectorAll('[data-owner]').forEach(function (el) {
       var mine = owner === 'all' || el.dataset.owner === owner || el.dataset.owner === 'all';
+      if (kind && el.classList.contains('qcard') && el.closest('[data-list="open"]')) mine = mine && el.dataset.label === kind;
       el.hidden = !mine;
       if (mine && el.classList.contains('qcard') && !approvals[el.dataset.id] && el.closest('[data-list="open"]')) visible += 1;
     });
