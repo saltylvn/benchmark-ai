@@ -167,7 +167,7 @@ function checkWellness(events: CalendarEvent[], blocks: PlanBlock[]): CritiqueFa
     return {
       code: "WELLNESS",
       weight: 15,
-      detail: "The wellness walk is missing or shorter than 30 minutes. It can slide. It cannot disappear.",
+      detail: "The site walk is missing or shorter than 30 minutes. It can slide. It cannot disappear.",
     };
   }
   if (Math.abs(walk.start - original.start) > 90) {

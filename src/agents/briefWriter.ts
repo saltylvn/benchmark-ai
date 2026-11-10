@@ -40,20 +40,20 @@ function composeBrief(state: RunState): Brief {
     const deadline = state.demands.find((demand) => demand.id === "meridian")?.statusDeadline;
     const research = state.research.find((note) => note.accountId === "meridian");
     return {
-      headline: `Meridian gets ${hm(meridian.start)}. The morning focus block still happens.`,
+      headline: `Sam gets ${hm(meridian.start)}. The estimate block still happens.`,
       outcomes: [
-        `Take Dana at ${range(meridian.start, meridian.end)} and send the written status by ${deadline ? hm(deadline) : "the deadline"}.`,
+        `Call Sam at ${range(meridian.start, meridian.end)} and send the note by ${deadline ? hm(deadline) : "the deadline"}.`,
         focus
-          ? `Keep ${range(focus.start, focus.end)} for the CaseFlow denial queue. That is the build block, and it stayed in the morning.`
-          : "The focus block did not survive. Do not pretend it did.",
+          ? `Keep ${range(focus.start, focus.end)} to price J-1042. That block stayed in the morning.`
+          : "The estimate block did not survive.",
         northwind
-          ? `Move Northwind to ${range(northwind.start, northwind.end)}. It was a quarterly review sitting on top of focus time.`
-          : "Northwind still needs a home.",
+          ? `Move Bright Spark to ${range(northwind.start, northwind.end)}. Their certificate is expired, and the check-in was sitting on the estimate block.`
+          : "Bright Spark still needs a time.",
       ],
       watchouts: [
-        walk ? `The wellness walk stays at ${range(walk.start, walk.end)}.` : "The wellness walk is missing.",
-        "The 1:1 with Samira did not move.",
-        "Halcyon's 15:30 window was not touched.",
+        walk ? `The site walk stays at ${range(walk.start, walk.end)}.` : "The site walk is missing.",
+        "The check-in with Dave did not move.",
+        "The Pinecrest window at 15:30 was not touched.",
       ],
       schedule,
       callCard: research ? callCard(research, meridian) : undefined,
@@ -62,20 +62,20 @@ function composeBrief(state: RunState): Brief {
 
   return {
     headline: focus
-      ? `Focus stays ${range(focus.start, focus.end)}. Northwind moves off it.`
-      : "The morning needs a decision before you open the laptop all the way.",
+      ? `Estimate block stays ${range(focus.start, focus.end)}. Bright Spark moves off it.`
+      : "The morning needs a decision before anyone leaves for the site.",
     outcomes: [
       focus
-        ? `Use ${range(focus.start, focus.end)} on the CaseFlow denial queue. It was already double-booked, and the rewrite gives it back.`
-        : "Recover a 90-minute focus block before noon.",
+        ? `Use ${range(focus.start, focus.end)} to price J-1042. It was already double-booked, and the rewrite gives it back.`
+        : "Recover 90 minutes for the estimate before noon.",
       northwind
-        ? `Be ready for Northwind at ${range(northwind.start, northwind.end)}. The numbers exist. The meeting needs a narrative, not a new slot in the morning.`
-        : "Give Northwind a real slot.",
-      "Leave Halcyon at 15:30. That window is someone else's calendar, not yours.",
+        ? `See Bright Spark at ${range(northwind.start, northwind.end)}. The certificate is the issue, not a morning slot.`
+        : "Give Bright Spark a time.",
+      "Leave the Pinecrest window at 15:30. The county set that time.",
     ],
     watchouts: [
-      "Nothing on this day is an incident until the inbox says so.",
-      walk ? `Walk at ${range(walk.start, walk.end)}. It is on the plan on purpose.` : "The walk fell off the plan.",
+      "No quote goes out until Maria approves the total.",
+      walk ? `Site walk at ${range(walk.start, walk.end)}. It is on the plan on purpose.` : "The site walk fell off the plan.",
     ],
     schedule,
   };

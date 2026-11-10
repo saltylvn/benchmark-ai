@@ -33,7 +33,7 @@ function openAIModel(): ProseModel {
               {
                 role: "system",
                 content:
-                  "You edit prose for a client-support analyst. Keep every time, name, case id, and commitment exactly as written. Do not add facts. Return only the edited text.",
+                  "You edit prose for a construction project manager. Keep every time, name, job id, and commitment exactly as written. Do not add facts. Return only the edited text.",
               },
               {
                 role: "user",
@@ -66,7 +66,8 @@ function readContent(payload: unknown): string {
 
 export function resolveModel(live: boolean): ProseModel {
   if (!live) return MOCK;
-  if ((process.env.ATLAS_PROVIDER ?? "mock") !== "openai") return MOCK;
+  const provider = process.env.BENCHMARK_PROVIDER ?? process.env.ATLAS_PROVIDER ?? "mock";
+  if (provider !== "openai") return MOCK;
   if (!process.env.OPENAI_API_KEY) return MOCK;
   return openAIModel();
 }

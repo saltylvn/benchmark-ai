@@ -4,18 +4,19 @@ import { runWorkflow } from "./orchestrator/supervisor.js";
 import { resolveModel } from "./providers/model.js";
 import { renderBrief, renderPlan, renderTraceJson, renderWarRoom, type RenderOptions } from "./render/terminal.js";
 
-const HELP = `Atlas — agentic workflows for a day that fights back
+const HELP = `Benchmark — a team of agents for a construction project manager
 
 Usage
-  npm run demo            War room. Escalation at 08:47, swarm rewrites the day.
+  npm run demo            War room. A kitchen request at 08:47, and the day is rewritten.
   npm run demo:plan       Day planner. Show the conflict, the rejected plan, the fix.
-  npm run demo:brief      Morning brief for the same Tuesday, before the escalation.
+  npm run demo:brief      Morning brief for the same Thursday, before the request.
   npm run demo:trace      War room as JSON.
   npm run demo:all        Plan, brief, then war room.
   npm run demo:live       Same as demo, but polish prose if a provider is configured.
 
-Mock mode is the default. Pass --live with ATLAS_PROVIDER=openai and
-OPENAI_API_KEY to restyle prose. The schedule never goes through a model.
+Mock mode is the default. Pass --live with BENCHMARK_PROVIDER=openai and
+OPENAI_API_KEY to restyle prose. ATLAS_PROVIDER still works. The schedule
+never goes through a model.
 `;
 
 export async function main(argv: string[]): Promise<number> {
@@ -30,7 +31,7 @@ export async function main(argv: string[]): Promise<number> {
 
   if (live && model.name === "mock") {
     process.stderr.write(
-      "Live prose polish is off. Set ATLAS_PROVIDER=openai and OPENAI_API_KEY, then pass --live. Running mock.\n",
+      "Live prose polish is off. Set BENCHMARK_PROVIDER=openai and OPENAI_API_KEY, then pass --live. Running mock.\n",
     );
   }
 
