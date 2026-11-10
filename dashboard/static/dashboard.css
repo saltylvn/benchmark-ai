@@ -438,3 +438,16 @@ details summary { cursor: pointer; font-weight: 600; margin: 6px 0; min-height: 
 .lbar { display: block; height: 5px; margin-top: 5px; background: var(--bg); border-radius: 99px; overflow: hidden; }
 .lbar i { display: block; height: 100%; background: var(--good); border-radius: 99px; }
 .summary .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* Under the hood: two layers */
+.layers { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; align-items: stretch; }
+.layer { border: 1px solid var(--line); border-radius: 12px; padding: 14px; min-width: 0; }
+.layer.you { background: var(--accent-bg); border-color: transparent; }
+.layer h3 { font-family: var(--serif); font-size: 18px; }
+.mini { margin: 6px 0 8px; padding-left: 18px; font-size: 13.5px; display: grid; gap: 3px; }
+.mini b { color: var(--bad); font-variant-numeric: tabular-nums; }
+.arrow { align-self: center; font-size: 22px; color: var(--muted); }
+@media (max-width: 1024px) {
+  .layers { grid-template-columns: 1fr; }
+  .arrow { transform: rotate(90deg); justify-self: center; }
+}

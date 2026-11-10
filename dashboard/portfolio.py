@@ -420,6 +420,7 @@ def build_team_view(snapshot: dict[str, Any], assumptions: dict[str, Any]) -> di
         "queue": queue,
         "blockedCount": sum(1 for i in queue if i["level"] == "blocked"),
         "found": found_by_kind(queue),
+        "draftCount": sum(1 for i in queue if i["kind"] not in ("heads-up",)),
         "owners": [{"id": x["id"], "name": x["name"], "first": first(x["name"])} for x in p["data"]["people"] if x["role"] == "Project manager"],
         "board": board(p),
         "lookahead": lookahead(p),

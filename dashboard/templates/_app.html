@@ -21,7 +21,7 @@
     <button type="button" class="skip" data-act="skip">{{ 'Later' }}</button>
     {% if i.minutes %}<span class="saves">saves ~{{ i.minutes|round|int }} min</span>{% endif %}
   </div>
-  <p class="result" hidden></p>
+  <p class="result" hidden aria-live="polite"></p>
 </article>
 {% endmacro %}
 
@@ -58,7 +58,7 @@
   <section class="summary">
     <div class="summary-text">
       <p class="eyebrow">Morning sweep · {{ t.todayLabel }}</p>
-      <h1><span data-count="blocked">{{ t.blockedCount }}</span> things are blocked. Everything else is drafted.</h1>
+      <h1><span data-count="blocked">{{ t.blockedCount }}</span> things are blocked. {{ t.draftCount }} follow-ups are already drafted.</h1>
       <p class="lede">The Coordinator checked {{ t.jobsTotal }} jobs, {{ t.subs|length }} subs, and {{ t.team|length }} PMs before anyone got in. Approve what's right, skip what isn't. Nothing goes out until someone approves it.</p>
     </div>
     <div class="kpis">
@@ -289,6 +289,31 @@
 
 <!-- UNDER THE HOOD -------------------------------------------------------->
 <div class="tab" id="tab-hood" data-panel="hood" hidden>
+  <section>
+    <h2>Two layers of agents</h2>
+    <p class="lede">The Coordinator watches the whole team every morning. When one request needs a day rebuilt, a supervisor runs a small team of specialists on it. Neither layer sends anything.</p>
+    <div class="layers">
+      <div class="layer">
+        <p class="eyebrow">Every morning · whole team</p>
+        <h3>Coordinator</h3>
+        <ol class="mini">{% for s in t.steps %}<li>{{ s.check }} <b>{{ s.found }}</b></li>{% endfor %}</ol>
+        <p class="small muted"><code>src/agents/coordinator.ts</code> · {{ t.queue|length }} items into Today</p>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="layer">
+        <p class="eyebrow">On demand · one request</p>
+        <h3>Supervisor and specialists</h3>
+        <ol class="mini"><li>Intake reads the calendar and inbox</li><li>Job lookup pulls facts and do-not-promise lines</li><li>Scheduling proposes a day</li><li>The checklist scores it and can reject it</li><li>Compliance turns it into drafts</li><li>Briefing writes the call card</li></ol>
+        <p class="small muted"><code>src/orchestrator/supervisor.ts</code> · the 08:47 request below</p>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="layer you">
+        <p class="eyebrow">Always · a person</p>
+        <h3>You approve</h3>
+        <ol class="mini"><li>Today queue, one tap each</li><li>Slack posts only with sending on</li><li>Email, calendar, invoices stay drafts</li><li>Every approval logged by name</li></ol>
+      </div>
+    </div>
+  </section>
   {% include "_hood.html" %}
 </div>
 </main>
