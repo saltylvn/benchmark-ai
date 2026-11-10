@@ -27,8 +27,8 @@ function composeBrief(state: RunState): Brief {
     return { headline: "No plan.", outcomes: [], watchouts: [], schedule: [] };
   }
   const focus = plan.blocks.find((block) => block.kind === "focus");
-  const northwind = plan.blocks.find((block) => block.id === "northwind");
-  const meridian = plan.blocks.find((block) => block.id === "meridian");
+  const brightspark = plan.blocks.find((block) => block.id === "brightspark");
+  const rivera = plan.blocks.find((block) => block.id === "rivera");
   const walk = plan.blocks.find((block) => block.kind === "personal");
   const schedule = plan.blocks.map((block) => ({
     time: range(block.start, block.end),
@@ -36,18 +36,18 @@ function composeBrief(state: RunState): Brief {
     note: movement(state, block),
   }));
 
-  if (state.workflow === "war-room" && meridian) {
-    const deadline = state.demands.find((demand) => demand.id === "meridian")?.statusDeadline;
-    const research = state.research.find((note) => note.accountId === "meridian");
+  if (state.workflow === "thursday" && rivera) {
+    const deadline = state.demands.find((demand) => demand.id === "rivera")?.statusDeadline;
+    const research = state.research.find((note) => note.accountId === "rivera");
     return {
-      headline: `Sam gets ${hm(meridian.start)}. The estimate block still happens.`,
+      headline: `Sam gets ${hm(rivera.start)}. The estimate block still happens.`,
       outcomes: [
-        `Call Sam at ${range(meridian.start, meridian.end)} and send the note by ${deadline ? hm(deadline) : "the deadline"}.`,
+        `Call Sam at ${range(rivera.start, rivera.end)} and send the note by ${deadline ? hm(deadline) : "the deadline"}.`,
         focus
           ? `Keep ${range(focus.start, focus.end)} to price J-1042. That block stayed in the morning.`
           : "The estimate block did not survive.",
-        northwind
-          ? `Move Bright Spark to ${range(northwind.start, northwind.end)}. Their certificate is expired, and the check-in was sitting on the estimate block.`
+        brightspark
+          ? `Move Bright Spark to ${range(brightspark.start, brightspark.end)}. Their certificate is expired, and the check-in was sitting on the estimate block.`
           : "Bright Spark still needs a time.",
       ],
       watchouts: [
@@ -56,7 +56,7 @@ function composeBrief(state: RunState): Brief {
         "The Pinecrest window at 15:30 was not touched.",
       ],
       schedule,
-      callCard: research ? callCard(research, meridian) : undefined,
+      callCard: research ? callCard(research, rivera) : undefined,
     };
   }
 
@@ -68,8 +68,8 @@ function composeBrief(state: RunState): Brief {
       focus
         ? `Use ${range(focus.start, focus.end)} to price J-1042. It was already double-booked, and the rewrite gives it back.`
         : "Recover 90 minutes for the estimate before noon.",
-      northwind
-        ? `See Bright Spark at ${range(northwind.start, northwind.end)}. The certificate is the issue, not a morning slot.`
+      brightspark
+        ? `See Bright Spark at ${range(brightspark.start, brightspark.end)}. The certificate is the issue, not a morning slot.`
         : "Give Bright Spark a time.",
       "Leave the Pinecrest window at 15:30. The county set that time.",
     ],

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1360" viewBox="0 0 1600 1360" role="img" aria-labelledby="title desc">
+  <title id="title">Benchmark architecture</title>
+  <desc id="desc">Layered architecture of the Benchmark demo: fixture inputs, page-only integration points, a read-only toolkit, a mock prose model, the supervisor and shared RunState, four specialists, the critic revision loop, Maria's approval, and unsent drafts.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 1.2 L 8.5 5 L 0 8.8 Z" fill="#221f1a"/>
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 1.2 L 8.5 5 L 0 8.8 Z" fill="#9b2832"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; }
+    .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }
+  </style>
+  <rect width="1600" height="1360" fill="#f3f0e8"/>
+  <text x="48" y="46" class="serif" font-size="34" fill="#221f1a">Benchmark architecture</text>
+  <text x="48" y="78" font-size="16" fill="#3a342c">One lead and four specialists. Mock mode. The schedule never goes through a model.</text>
+  <g aria-label="Legend">
+    <rect x="48" y="96" width="1504" height="44" rx="12" fill="#fffdf9" stroke="#d2c8b8"/>
+    <line x1="68" y1="118" x2="104" y2="118" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="112" y="123" font-size="14" fill="#221f1a">Moves in this demo</text>
+    <rect x="280" y="108" width="36" height="20" rx="4" fill="#fffdf9" stroke="#8a4e0c" stroke-dasharray="4 3"/>
+    <text x="324" y="123" font-size="14" fill="#221f1a">Dashed border: named, not called</text>
+    <rect x="620" y="108" width="18" height="18" rx="3" fill="#2c3d86"/>
+    <text x="646" y="123" font-size="14" fill="#221f1a">Lead</text>
+    <rect x="720" y="108" width="18" height="18" rx="3" fill="#fffdf9" stroke="#9b2832"/>
+    <text x="746" y="123" font-size="14" fill="#221f1a">Critic or human gate</text>
+    <rect x="960" y="108" width="18" height="18" rx="3" fill="#e7f4ee" stroke="#1b754e"/>
+    <text x="986" y="123" font-size="14" fill="#221f1a">Unsent draft</text>
+  </g>
+  <text x="48" y="184" font-size="13" font-weight="700" letter-spacing="0.08em" fill="#5c564c">1  SOURCES</text>
+  <text x="48" y="376" font-size="13" font-weight="700" letter-spacing="0.08em" fill="#5c564c">2  TOOLS AND MODEL</text>
+  <text x="48" y="556" font-size="13" font-weight="700" letter-spacing="0.08em" fill="#5c564c">3  ORCHESTRATION</text>
+  <text x="48" y="764" font-size="13" font-weight="700" letter-spacing="0.08em" fill="#5c564c">4  SPECIALISTS</text>
+  <text x="48" y="1150" font-size="13" font-weight="700" letter-spacing="0.08em" fill="#5c564c">5  HUMAN GATE AND OUTPUTS</text>
+  <line x1="439" y1="332" x2="439" y2="368" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="800" y1="512" x2="800" y2="548" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="800" y1="720" x2="800" y2="756" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="610" y1="936" x2="610" y2="980" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M 450 980 V 936" fill="none" stroke="#9b2832" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+<text x="442" y="964" text-anchor="end" font-size="12" font-weight="700" fill="#9b2832">if rejected</text>
+<line x1="990" y1="936" x2="990" y2="1178" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <g>
+      <rect x="48" y="200" width="250" height="132" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+      <text x="64" y="224" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">FIXTURE</text>
+      <text x="64" y="250" fill="#221f1a" font-size="20" font-weight="700">Inbox</text>
+      <text x="64" y="276" fill="#3a342c" font-size="15">Sam Rivera, 08:47</text><text x="64" y="298" fill="#3a342c" font-size="15">Kitchen, 123 Example Ln</text>
+    </g>
+<g>
+      <rect x="314" y="200" width="250" height="132" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+      <text x="330" y="224" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">FIXTURE</text>
+      <text x="330" y="250" fill="#221f1a" font-size="20" font-weight="700">Thursday calendar</text>
+      <text x="330" y="276" fill="#3a342c" font-size="15">12 March 2026</text><text x="330" y="298" fill="#3a342c" font-size="15">Bright Spark overlaps 09:00</text>
+    </g>
+<g>
+      <rect x="580" y="200" width="250" height="132" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+      <text x="596" y="224" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">FIXTURE</text>
+      <text x="596" y="250" fill="#221f1a" font-size="20" font-weight="700">Job file</text>
+      <text x="596" y="276" fill="#3a342c" font-size="15">J-1042 and two partners</text><text x="596" y="298" fill="#3a342c" font-size="15">Facts, questions, limits</text>
+    </g>
+<rect x="846" y="200" width="706" height="132" rx="12" fill="#fffdf9" stroke="#8a4e0c" stroke-width="1.5" stroke-dasharray="7 5"/>
+    <text x="864" y="226" fill="#8a4e0c" font-size="12" font-weight="700" letter-spacing="0.08em">ON THE PAGE, NOT CALLED</text>
+    <text x="864" y="254" fill="#221f1a" font-size="18" font-weight="700">HubSpot</text>
+    <text x="976" y="254" fill="#3a342c" font-size="15">Job context. No client in this repo.</text>
+    <text x="864" y="282" fill="#221f1a" font-size="18" font-weight="700">Google Calendar</text>
+    <text x="1042" y="282" fill="#3a342c" font-size="15">The day. The run reads the fixture.</text>
+    <text x="864" y="310" fill="#221f1a" font-size="18" font-weight="700">Slack</text>
+    <text x="926" y="310" fill="#3a342c" font-size="15">#job-j1042. The note is not posted.</text>
+<g>
+      <rect x="48" y="392" width="744" height="120" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+      <text x="64" y="416" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">TOOLS</text>
+      <text x="64" y="442" fill="#221f1a" font-size="20" font-weight="700">Read-only toolkit</text>
+      <text x="64" y="468" fill="#3a342c" font-size="15">listEvents, listInbox, lookupAccount, accountsOnCalendar.</text><text x="64" y="490" fill="#3a342c" font-size="15">Intake reads through these. They write nothing.</text>
+    </g>
+<g>
+      <rect x="808" y="392" width="744" height="120" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+      <text x="824" y="416" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">MODEL</text>
+      <text x="824" y="442" fill="#221f1a" font-size="20" font-weight="700">Prose model</text>
+      <text x="824" y="468" fill="#3a342c" font-size="15">Mock returns the draft. It is the default.</text><text x="824" y="490" fill="#3a342c" font-size="15">OpenAI polishes wording only, and only with --live.</text>
+    </g>
+<g>
+      <rect x="48" y="572" width="500" height="148" rx="12" fill="#2c3d86" stroke="#2c3d86" stroke-width="1.5"/>
+      <text x="64" y="596" fill="#c9d2f2" font-size="12" font-weight="700" letter-spacing="0.08em">LEAD</text>
+      <text x="64" y="622" fill="#fffdf9" font-size="20" font-weight="700">Supervisor</text>
+      <text x="64" y="648" fill="#e7ebf6" font-size="15">The only router. Specialists never call each other.</text><text x="64" y="670" fill="#e7ebf6" font-size="15">Stops when the plan is approved, or after three tries.</text><text x="64" y="692" fill="#e7ebf6" font-size="15">If nothing passes, status is needs_human.</text>
+    </g>
+<g>
+      <rect x="564" y="572" width="988" height="148" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+      <text x="580" y="596" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">SHARED MEMORY</text>
+      <text x="580" y="622" fill="#221f1a" font-size="20" font-weight="700">RunState, the board</text>
+      <text x="580" y="648" fill="#3a342c" font-size="15">findings, research, attempts, critiques, actions, brief, trace.</text><text x="580" y="670" fill="#3a342c" font-size="15">Handoffs are written here. Agents do not call one another.</text>
+    </g>
+<g>
+      <rect x="48" y="780" width="364" height="156" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+      <text x="64" y="804" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">INTAKE</text>
+      <text x="64" y="830" fill="#221f1a" font-size="20" font-weight="700">Intake</text>
+      <text x="64" y="856" fill="#3a342c" font-size="15">Calendar, inbox, and the job file.</text><text x="64" y="878" fill="#3a342c" font-size="15">intake.ts and researcher.ts.</text><text x="64" y="900" fill="#3a342c" font-size="15">Does not propose a day.</text>
+    </g>
+<g>
+      <rect x="428" y="780" width="364" height="156" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+      <text x="444" y="804" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">SCHEDULING</text>
+      <text x="444" y="830" fill="#221f1a" font-size="20" font-weight="700">Scheduling</text>
+      <text x="444" y="856" fill="#3a342c" font-size="15">One proposal each revision.</text><text x="444" y="878" fill="#3a342c" font-size="15">planner.ts. Calls early, then morning.</text><text x="444" y="900" fill="#3a342c" font-size="15">Hands the plan to the critic.</text>
+    </g>
+<g>
+      <rect x="808" y="780" width="364" height="156" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+      <text x="824" y="804" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">COMPLIANCE</text>
+      <text x="824" y="830" fill="#221f1a" font-size="20" font-weight="700">Compliance</text>
+      <text x="824" y="856" fill="#3a342c" font-size="15">Runs only after approval.</text><text x="824" y="878" fill="#3a342c" font-size="15">executor.ts writes the drafts.</text><text x="824" y="900" fill="#3a342c" font-size="15">Calendar, email, and Slack.</text>
+    </g>
+<g>
+      <rect x="1188" y="780" width="364" height="156" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+      <text x="1204" y="804" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">BRIEFING</text>
+      <text x="1204" y="830" fill="#221f1a" font-size="20" font-weight="700">Briefing</text>
+      <text x="1204" y="856" fill="#3a342c" font-size="15">Three outcomes, one call card.</text><text x="1204" y="878" fill="#3a342c" font-size="15">briefWriter.ts.</text><text x="1204" y="900" fill="#3a342c" font-size="15">Adds no new promise.</text>
+    </g>
+<g>
+      <rect x="428" y="980" width="364" height="142" rx="12" fill="#fffdf9" stroke="#9b2832" stroke-width="1.5"/>
+      <text x="444" y="1004" fill="#9b2832" font-size="12" font-weight="700" letter-spacing="0.08em">CHECKLIST</text>
+      <text x="444" y="1030" fill="#221f1a" font-size="20" font-weight="700">Critic</text>
+      <text x="444" y="1056" fill="#3a342c" font-size="15">Scores the plan. Does not edit it.</text><text x="444" y="1078" fill="#3a342c" font-size="15">Rejection goes back to Scheduling.</text><text x="444" y="1100" fill="#3a342c" font-size="15">Cap of three. critic.ts.</text>
+    </g>
+<g>
+      <rect x="48" y="1178" width="500" height="112" rx="12" fill="#fffdf9" stroke="#9b2832" stroke-width="1.5"/>
+      <text x="64" y="1202" fill="#9b2832" font-size="12" font-weight="700" letter-spacing="0.08em">HUMAN GATE</text>
+      <text x="64" y="1228" fill="#221f1a" font-size="20" font-weight="700">Maria approves</text>
+      <text x="64" y="1254" fill="#3a342c" font-size="15">Price, dates, and notes a homeowner</text><text x="64" y="1276" fill="#3a342c" font-size="15">would see. The run does not send.</text>
+    </g>
+<g>
+      <rect x="564" y="1178" width="988" height="112" rx="12" fill="#e7f4ee" stroke="#1b754e" stroke-width="1.5"/>
+      <text x="580" y="1202" fill="#1b754e" font-size="12" font-weight="700" letter-spacing="0.08em">OUTPUTS</text>
+      <text x="580" y="1228" fill="#221f1a" font-size="20" font-weight="700">Drafts stay in the process</text>
+      <text x="580" y="1254" fill="#3a342c" font-size="15">calendar.create, calendar.update, email.draft, slack.draft, brief.</text><text x="580" y="1276" fill="#3a342c" font-size="15">Every action has status draft. There is no send path.</text>
+    </g>
+</svg>

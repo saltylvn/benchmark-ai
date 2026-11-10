@@ -23,12 +23,12 @@ interface Placeable {
 /**
  * Two honest strategies, not one hidden heuristic.
  *
- * client-first clears client meetings as early as possible, keeps lunch and
- * the walk, then drops focus into the biggest hole that remains. The biggest
- * hole is often the wrong hole.
+ * client-first clears the homeowner and sub calls as early as possible, keeps
+ * lunch and the walk, then drops the estimate block into the biggest hole
+ * that remains. The biggest hole is often the wrong hole.
  *
- * protect-focus places a true escalation first, reserves morning focus before
- * any non-critical meeting, then fits the rest.
+ * protect-focus places the kitchen request first, reserves the morning
+ * estimate block before any non-critical meeting, then fits the rest.
  */
 export function planSchedule(input: {
   events: CalendarEvent[];
@@ -281,7 +281,7 @@ function reasonFor(strategy: Strategy, item: Placeable, placed: Placement): stri
       compared === undefined
         ? `The largest opening left is ${placed.gapMinutes} minutes`
         : `The largest opening left is ${placed.gapMinutes} minutes, ahead of a ${compared}-minute alternative`;
-    return `Client calls were cleared first, so focus got whatever remained. ${sizeNote}. The biggest hole is not a morning.`;
+    return `Calls were cleared first, so the estimate block got whatever remained. ${sizeNote}. The biggest hole is not a morning.`;
   }
   if (item.kind === "focus") {
     return `Reserved before non-critical meetings. ${placed.end - placed.start} minutes, starting at the best morning fit.`;

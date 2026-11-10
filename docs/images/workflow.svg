@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="900" viewBox="0 0 1640 900" role="img" aria-labelledby="title desc">
+  <title id="title">Benchmark Thursday workflow</title>
+  <desc id="desc">Swimlane of Maria Alvarez's Thursday at Summit Ridge Builders. Sam Rivera's kitchen request is read by Intake, scheduled twice after the critic rejects the first plan, and turned into unsent drafts for Maria to approve.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 1.2 L 8.5 5 L 0 8.8 Z" fill="#221f1a"/>
+    </marker>
+  </defs>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1640" height="900" fill="#f3f0e8"/>
+  <text x="48" y="52" class="serif" font-size="34" fill="#221f1a">Thursday, from request to drafts</text>
+  <text x="48" y="82" font-size="16" fill="#3a342c">Maria Alvarez, Summit Ridge Builders. Sam Rivera wants a kitchen quote. Mock mode. Nothing is sent.</text>
+  <text x="48" y="112" font-size="14" fill="#3a342c">Bright Spark moves to 13:45 on the approved day. Dave and the Pinecrest 15:30 window stay put. The site walk stays at 13:00.</text>
+  <rect x="32" y="168" width="1576" height="86" fill="#fffdf9"/>
+        <text x="48" y="216" font-size="15" font-weight="700" fill="#221f1a">Sam Rivera</text>
+<rect x="32" y="254" width="1576" height="86" fill="#efeae2"/>
+        <text x="48" y="302" font-size="15" font-weight="700" fill="#221f1a">Supervisor</text>
+<rect x="32" y="340" width="1576" height="86" fill="#fffdf9"/>
+        <text x="48" y="388" font-size="15" font-weight="700" fill="#221f1a">Intake</text>
+<rect x="32" y="426" width="1576" height="86" fill="#efeae2"/>
+        <text x="48" y="474" font-size="15" font-weight="700" fill="#221f1a">Scheduling</text>
+<rect x="32" y="512" width="1576" height="86" fill="#fffdf9"/>
+        <text x="48" y="560" font-size="15" font-weight="700" fill="#221f1a">Compliance</text>
+<rect x="32" y="598" width="1576" height="86" fill="#efeae2"/>
+        <text x="48" y="646" font-size="15" font-weight="700" fill="#221f1a">Briefing</text>
+<rect x="32" y="684" width="1576" height="86" fill="#fffdf9"/>
+        <text x="48" y="732" font-size="15" font-weight="700" fill="#221f1a">Maria Alvarez</text>
+  <text x="287.75" y="148" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="0.04em" fill="#5c564c">REQUEST</text>
+<text x="463.25" y="148" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="0.04em" fill="#5c564c">READ</text>
+<text x="638.75" y="148" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="0.04em" fill="#5c564c">FIRST PLAN</text>
+<text x="814.25" y="148" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="0.04em" fill="#5c564c">REJECTED</text>
+<text x="989.75" y="148" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="0.04em" fill="#5c564c">SECOND PLAN</text>
+<text x="1165.25" y="148" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="0.04em" fill="#5c564c">APPROVED</text>
+<text x="1340.75" y="148" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="0.04em" fill="#5c564c">DRAFTS</text>
+<text x="1516.25" y="148" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="0.04em" fill="#5c564c">GATE</text>
+  <path d="M 287.75 242 V 266" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+        
+<path d="M 367.5 297 H 375.5 V 383 H 383.5" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+        
+<path d="M 543 383 H 551 V 469 H 559" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+        
+<path d="M 718.5 469 H 726.5 V 297 H 734.5" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+        
+<path d="M 894 297 H 902 V 469 H 910" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <rect x="844" y="404" width="116" height="18" rx="6" fill="#fbeeee"/>
+               <text x="902" y="418" text-anchor="middle" font-size="12" font-weight="700" fill="#9b2832">protect-focus</text>
+<path d="M 1069.5 469 H 1077.5 V 297 H 1085.5" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+        
+<path d="M 1245 297 H 1253 V 555 H 1261" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+        
+<path d="M 1340.75 586 V 610" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+        
+<path d="M 1420.5 641 H 1428.5 V 727 H 1436.5" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+        
+  <g>
+        <rect x="210" y="182" width="155.5" height="58" rx="10" fill="#f8efe3" stroke="#8a4e0c" stroke-width="1.5"/>
+        <text x="222" y="206" font-size="15" font-weight="700" fill="#6d3c09">08:47 email</text>
+        <text x="222" y="226" font-size="13" fill="#3a342c">Kitchen quote today</text>
+      </g>
+<g>
+        <rect x="210" y="268" width="155.5" height="58" rx="10" fill="#2c3d86" stroke="#2c3d86" stroke-width="1.5"/>
+        <text x="222" y="292" font-size="15" font-weight="700" fill="#fffdf9">Thursday is open</text>
+        <text x="222" y="312" font-size="13" fill="#e7ebf6">Routes to Intake</text>
+      </g>
+<g>
+        <rect x="385.5" y="354" width="155.5" height="58" rx="10" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+        <text x="397.5" y="378" font-size="15" font-weight="700" fill="#221f1a">Reads the day</text>
+        <text x="397.5" y="398" font-size="13" fill="#3a342c">Overlap and J-1042</text>
+      </g>
+<g>
+        <rect x="561" y="440" width="155.5" height="58" rx="10" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+        <text x="573" y="464" font-size="15" font-weight="700" fill="#221f1a">Revision 1</text>
+        <text x="573" y="484" font-size="13" fill="#3a342c">Estimate at 13:30</text>
+      </g>
+<g>
+        <rect x="736.5" y="268" width="155.5" height="58" rx="10" fill="#fffdf9" stroke="#9b2832" stroke-width="1.5"/>
+        <text x="748.5" y="292" font-size="15" font-weight="700" fill="#9b2832">Critic 75/100</text>
+        <text x="748.5" y="312" font-size="13" fill="#3a342c">FOCUS_BLOCK</text>
+      </g>
+<g>
+        <rect x="912" y="440" width="155.5" height="58" rx="10" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+        <text x="924" y="464" font-size="15" font-weight="700" fill="#221f1a">Revision 2</text>
+        <text x="924" y="484" font-size="13" fill="#3a342c">Estimate 09:40–11:20</text>
+      </g>
+<g>
+        <rect x="1087.5" y="268" width="155.5" height="58" rx="10" fill="#e7f4ee" stroke="#1b754e" stroke-width="1.5"/>
+        <text x="1099.5" y="292" font-size="15" font-weight="700" fill="#145c3c">Critic 100/100</text>
+        <text x="1099.5" y="312" font-size="13" fill="#3a342c">Morning holds</text>
+      </g>
+<g>
+        <rect x="1263" y="526" width="155.5" height="58" rx="10" fill="#e7f4ee" stroke="#1b754e" stroke-width="1.5"/>
+        <text x="1275" y="550" font-size="15" font-weight="700" fill="#145c3c">Eight drafts</text>
+        <text x="1275" y="570" font-size="13" fill="#3a342c">Nothing sent</text>
+      </g>
+<g>
+        <rect x="1263" y="612" width="155.5" height="58" rx="10" fill="#e7f4ee" stroke="#1b754e" stroke-width="1.5"/>
+        <text x="1275" y="636" font-size="15" font-weight="700" fill="#145c3c">Call card</text>
+        <text x="1275" y="656" font-size="13" fill="#3a342c">No new promises</text>
+      </g>
+<g>
+        <rect x="1438.5" y="698" width="155.5" height="58" rx="10" fill="#fffdf9" stroke="#221f1a" stroke-width="1.5"/>
+        <text x="1450.5" y="722" font-size="15" font-weight="700" fill="#221f1a">Not sent</text>
+        <text x="1450.5" y="742" font-size="13" fill="#3a342c">Maria approves first</text>
+      </g>
+  <text x="48" y="860" font-size="14" fill="#3a342c">The critic is the lead's checklist, not a fifth specialist. This Thursday ends on revision 2. The supervisor would stop after three.</text>
+  <text x="48" y="884" font-size="14" fill="#3a342c">Red is the critic's rejection. The last card is Maria's gate. Drafts are calendar changes, an email, a Slack note, and the call card.</text>
+</svg>

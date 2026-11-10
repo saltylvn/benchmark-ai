@@ -8,12 +8,12 @@
     "node": ">=20"
   },
   "scripts": {
-    "demo": "tsx src/cli.ts war-room",
+    "demo": "tsx src/cli.ts thursday",
     "demo:plan": "tsx src/cli.ts plan",
     "demo:brief": "tsx src/cli.ts brief",
     "demo:trace": "tsx src/cli.ts trace",
     "demo:all": "tsx src/cli.ts all",
-    "demo:live": "tsx src/cli.ts war-room --live",
+    "demo:live": "tsx src/cli.ts thursday --live",
     "build:web": "esbuild web/main.ts --bundle --minify --format=esm --target=es2022 --outfile=docs/app.js",
     "preview": "npm run build:web && node scripts/preview.mjs",
     "test": "tsx --test tests/*.test.ts",

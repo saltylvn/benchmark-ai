@@ -9,9 +9,9 @@ export interface RenderOptions {
 
 const WIDTH = 78;
 
-export function renderWarRoom(state: RunState, options: RenderOptions): string {
+export function renderThursday(state: RunState, options: RenderOptions): string {
   const lines: string[] = [];
-  lines.push(banner(state, options, "War room"));
+  lines.push(banner(state, options, "Thursday"));
   lines.push(section(options, "The ask"));
   const mail = state.inbox[0];
   if (mail) {
@@ -27,7 +27,7 @@ export function renderWarRoom(state: RunState, options: RenderOptions): string {
     lines.push(paint(options, "31", `  × ${clash.a.title} overlaps ${clash.b.title}.`));
   }
   lines.push("");
-  lines.push(section(options, "Swarm"));
+  lines.push(section(options, "Team"));
   for (const event of state.trace) {
     const tag = paint(options, event.agent === "critic" ? "35" : "36", event.agent.toUpperCase().padEnd(10));
     lines.push(`${paint(options, "2", event.at)}  ${tag}  ${event.title}`);
@@ -170,7 +170,7 @@ function section(options: RenderOptions, title: string): string {
 }
 
 function attemptsView(state: RunState, options: RenderOptions): string {
-  const lines: string[] = [section(options, "How the swarm argued")];
+  const lines: string[] = [section(options, "How the team argued")];
   state.attempts.forEach((plan, index) => {
     const critique = state.critiques[index];
     const focus = plan.blocks.find((block) => block.kind === "focus");

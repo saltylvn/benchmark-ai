@@ -1,4 +1,4 @@
-/** Shared contracts for the blackboard, the tools, and the swarm. */
+/** Shared contracts for the blackboard, the tools, and the team. */
 
 export type AgentId =
   | "intake"
@@ -78,7 +78,8 @@ export interface Account {
   ownerRole: string;
   ownerEmail: string;
   slackChannel: string;
-  goLive?: string;
+  /** Next job milestone, such as a demolition day. Not a software release. */
+  milestone?: string;
   lastTouch: string;
   lastTouchNote: string;
   summary: string;
@@ -213,7 +214,7 @@ export interface TraceEvent {
 
 export interface RunState {
   runId: string;
-  workflow: "war-room" | "morning";
+  workflow: "thursday" | "morning";
   goal: string;
   dateLabel: string;
   persona: string;

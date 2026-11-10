@@ -24,7 +24,7 @@ export function critiquePlan(input: {
   const hours = checkHours(blocks);
   const focus = checkFocus(input.events, input.demands, blocks);
   const lunch = checkLunch(blocks);
-  const wellness = checkWellness(input.events, blocks);
+  const walk = checkWalk(input.events, blocks);
   const deadlines = checkDeadlines(input.demands, blocks);
   const prep = checkPrep(input.events, input.demands, blocks);
   const buffer = checkClientBuffer(blocks);
@@ -35,10 +35,10 @@ export function critiquePlan(input: {
   judge("INSIDE_HOURS", "The day stays inside 08:30–17:30", hours, failures, passed);
   judge("FOCUS_BLOCK", "Morning focus survived", focus, failures, passed);
   judge("LUNCH_WINDOW", "Lunch still lands around noon", lunch, failures, passed);
-  judge("WELLNESS", "The walk is still on the day", wellness, failures, passed);
-  judge("DEADLINES", "The escalation ends before its deadline", deadlines, failures, passed);
-  judge("PREP", "Client calls have a prep buffer", prep, failures, passed);
-  judge("CLIENT_BUFFER", "Fixed client windows keep a 10-minute lead-in", buffer, failures, passed);
+  judge("WALK", "The walk is still on the day", walk, failures, passed);
+  judge("DEADLINES", "The request ends before its deadline", deadlines, failures, passed);
+  judge("PREP", "Calls have a prep buffer", prep, failures, passed);
+  judge("MEETING_BUFFER", "Fixed meetings keep a 10-minute lead-in", buffer, failures, passed);
 
   const score = Math.max(0, 100 - failures.reduce((sum, failure) => sum + failure.weight, 0));
   return {
@@ -141,7 +141,7 @@ function checkFocus(
     return {
       code: "FOCUS_BLOCK",
       weight: HARD,
-      detail: `Focus landed at ${range(focus.start, focus.end)}. The escalation is allowed to shift it, not to push it out of the morning. The largest open gap was the wrong gap.`,
+      detail: `Focus landed at ${range(focus.start, focus.end)}. The request is allowed to shift it, not to push it out of the morning. The largest open gap was the wrong gap.`,
     };
   }
   return null;
@@ -160,19 +160,19 @@ function checkLunch(blocks: PlanBlock[]): CritiqueFailure | null {
   return null;
 }
 
-function checkWellness(events: CalendarEvent[], blocks: PlanBlock[]): CritiqueFailure | null {
+function checkWalk(events: CalendarEvent[], blocks: PlanBlock[]): CritiqueFailure | null {
   const original = events.find((event) => event.kind === "personal" && event.protected);
   const walk = blocks.find((block) => block.kind === "personal");
   if (!original || !walk || walk.end - walk.start < original.minDuration) {
     return {
-      code: "WELLNESS",
+      code: "WALK",
       weight: 15,
       detail: "The site walk is missing or shorter than 30 minutes. It can slide. It cannot disappear.",
     };
   }
   if (Math.abs(walk.start - original.start) > 90) {
     return {
-      code: "WELLNESS",
+      code: "WALK",
       weight: 15,
       detail: `The walk slid to ${hm(walk.start)}, more than 90 minutes from ${hm(original.start)}.`,
     };
@@ -231,7 +231,7 @@ function checkClientBuffer(blocks: PlanBlock[]): CritiqueFailure | null {
     if (ownsPrep) continue;
     if (previous.end <= block.start - 10) continue;
     return {
-      code: "CLIENT_BUFFER",
+      code: "MEETING_BUFFER",
       weight: 10,
       detail: `${block.title} starts at ${hm(block.start)} with only ${block.start - previous.end} minutes after ${previous.title}. Leave 10, or give it a prep block.`,
     };

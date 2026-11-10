@@ -39,7 +39,7 @@ export async function runResearcher(state: RunState, tools: Toolkit): Promise<vo
           .filter(Boolean)
           .join("\n")
       : "Nothing to look up.",
-    handoff: handoff("planner", "The board has the constraints and the account facts. Propose a day."),
+    handoff: handoff("planner", "The board has the constraints and the job facts. Propose a day."),
   });
 }
 
@@ -53,8 +53,8 @@ function rank(account: Account, urgentIds: Set<string>): number {
 function toNote(account: Account, urgent: boolean): ResearchNote {
   const topCase = [...account.cases].sort((a, b) => a.priority.localeCompare(b.priority))[0];
   const headline = urgent
-    ? `${account.name} · ${account.tier} · go-live ${account.goLive ?? "unscheduled"}`
-    : `${account.name} · ${account.tier} · last touch ${account.lastTouch}`;
+    ? `${account.name} · quote needed today · ${account.milestone ?? "no date yet"}`
+    : `${account.name} · last touch ${account.lastTouch}`;
   const bullets = [
     topCase ? `${topCase.priority} ${topCase.id}: ${topCase.title} (${topCase.status}).` : "",
     `Last touch ${account.lastTouch}. ${account.lastTouchNote}`,

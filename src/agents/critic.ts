@@ -34,7 +34,7 @@ export async function runCritic(state: RunState): Promise<void> {
       handoff: handoff(
         "planner",
         failure?.code === "FOCUS_BLOCK"
-          ? "Switch to protect-focus. Reserve the morning before you place non-critical clients."
+          ? "Switch to protect-focus. Reserve the morning before you place non-critical meetings."
           : "Revise against the named failure. Do not start over from a blank page.",
       ),
     });
