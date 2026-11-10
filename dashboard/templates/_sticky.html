@@ -1,0 +1,10 @@
+<script>
+  // Keep the section bar just under the header, whose height changes when it wraps on phones.
+  (function () {
+    var top = document.querySelector('.top');
+    if (!top) return;
+    function sync() { document.documentElement.style.setProperty('--top-h', top.offsetHeight + 'px'); }
+    sync();
+    window.addEventListener('resize', sync);
+  })();
+</script>

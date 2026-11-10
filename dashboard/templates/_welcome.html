@@ -1,0 +1,25 @@
+<div class="welcome">
+  <div class="welcome-card">
+    <span class="mark">B</span>
+    <div>
+      <h1>Benchmark</h1>
+      <p>An agent team that gives construction project managers their day back. Every calendar move, email and Slack note waits for your approval.</p>
+    </div>
+    {% if not static_mode %}{% with flashes = get_flashed_messages(with_categories=true) %}
+      {% for cat, msg in flashes %}<div class="flash {{ cat }}" role="status">{{ msg }}</div>{% endfor %}
+    {% endwith %}{% endif %}
+    <a class="btn demo" href="{{ '#run-thursday' if static_mode else url_for('demo') }}">View the demo</a>
+    <p class="small">A fictional Thursday at Summit Ridge Builders. No account needed, and nothing is sent.</p>
+    <div class="signin">
+      <span class="signin-label">or sign in with</span>
+      {% for p in providers %}
+        {% if static_mode %}
+          <span class="btn provider" role="link" aria-disabled="true"><span class="logo {{ p.id }}" aria-hidden="true">{{ p.label[0] }}</span>{{ p.label }}<small>in the live dashboard</small></span>
+        {% else %}
+          <a class="btn provider" href="{{ url_for('login', provider_id=p.id) }}"><span class="logo {{ p.id }}" aria-hidden="true">{{ p.label[0] }}</span>{{ p.label }}<small>{{ p.why if p.ready else 'not set up yet' }}</small></a>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <p class="welcome-foot">Signing in uses your company account through the provider. Benchmark never sees your password. Signed-in approvals are logged under your name.</p>
+  </div>
+</div>

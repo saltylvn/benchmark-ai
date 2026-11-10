@@ -128,6 +128,28 @@ What is on it, top to bottom:
 | **Approval queue · Slack** | The executor's Slack draft and the morning brief, each with **Approve & send**. Every press is written to an audit log with the approver's name and the exact payload. |
 | **Under the hood** | The full trace and JSON endpoints: `/api/runs/thursday`, `/api/snapshot`, `/api/slack/status`, `/api/slack/audit`. |
 
+### On iPhone and iPad
+
+The dashboard is built for the job site as much as the office.
+
+- **Phone layout.** A pinned section bar (Insights, Team, Day, Checklist, Risk, Time, Approvals, Trace), two-up KPI tiles, a day chart you swipe sideways, and tap targets of at least 44px. iPad portrait keeps the header pinned and pairs the approval cards.
+- **Add to Home Screen.** A web app manifest and an iOS icon make it open full screen like an app.
+- **On your Wi-Fi.** `DASHBOARD_HOST=0.0.0.0 npm run dashboard` prints a `http://192.168.x.x:5050` address to open on any device on the same network.
+- **A link that works anywhere.** `npm run export:static` writes `dashboard/dist/benchmark-dashboard.html`, a single read-only file with both runs and no server calls. Host it on any static host, or share it as a page.
+
+### Sign-in
+
+The first screen offers **View the demo** (no account, nothing ever posts) or sign-in with the accounts construction teams already have:
+
+| Provider | Why it fits | Keys |
+| --- | --- | --- |
+| Google | Google Workspace offices and field crews on Gmail | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` |
+| Slack | The workspace the crew already talks in, same as the approval channel | `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET` |
+| Microsoft 365 | Most general contractors run Outlook and Teams on Entra ID | `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET`, `MICROSOFT_TENANT` |
+| Procore | The project management system of record on many jobs | `PROCORE_CLIENT_ID`, `PROCORE_CLIENT_SECRET` |
+
+Each provider uses the OAuth authorization-code flow with a `state` check, then reads only name and email (`dashboard/auth.py`). `ALLOWED_EMAIL_DOMAINS` limits sign-in to company accounts. A signed-in person's name and email become the approver on every Slack send. Demo visitors can press Approve and see the exact payload, but their approvals never post, even with `SLACK_SEND_ENABLED=1`. Providers that aren't configured still show on the welcome screen and say which keys to add.
+
 ### Slack
 
 The dashboard talks to the Slack Web API directly (`dashboard/slack.py`, standard library only).
@@ -178,7 +200,8 @@ npm run preview
 | `npm run build:web` | Rebuild `docs/app.js`. |
 | `npm run export:dashboard` | Write the agent run to `dashboard/data/snapshot.json`. |
 | `npm run dashboard` | Export, then serve the PM dashboard on port 5050. |
-| `npm run test:dashboard` | Python dashboard and Slack connector tests. |
+| `npm run test:dashboard` | Python dashboard, sign-in, and Slack connector tests. |
+| `npm run export:static` | Read-only single-file dashboard for phones, tablets, and static hosts. |
 
 ![Thursday in the terminal](docs/images/cli-thursday.png)
 

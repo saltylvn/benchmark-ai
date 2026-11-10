@@ -1,0 +1,38 @@
+<title>Benchmark Dashboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+{{ css | safe }}
+</style>
+<div id="welcome" class="run-view">{{ welcome | safe }}</div>
+{% for view in views %}
+<div id="view-{{ view.key }}" class="run-view" hidden>{{ view.html | safe }}</div>
+{% endfor %}
+<script>
+  // Routes: "" or "#welcome" -> welcome; "#run-<key>" -> that run; "#<key>-<section>" -> that run, scrolled to the section.
+  (function () {
+    var keys = {{ views | map(attribute='key') | list | tojson }};
+    function route() {
+      var h = (location.hash || '').slice(1);
+      var key = null;
+      if (h.indexOf('run-') === 0) key = h.slice(4);
+      else keys.forEach(function (k) { if (h.indexOf(k + '-') === 0) key = k; });
+      if (keys.indexOf(key) < 0) key = null;
+      document.getElementById('welcome').hidden = !!key;
+      keys.forEach(function (k) { document.getElementById('view-' + k).hidden = k !== key; });
+      if (key) {
+        var top = document.querySelector('#view-' + key + ' .top');
+        if (top) document.documentElement.style.setProperty('--top-h', top.offsetHeight + 'px');
+        var target = h.indexOf('run-') === 0 ? null : document.getElementById(h);
+        if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
+      } else {
+        window.scrollTo(0, 0);
+      }
+    }
+    window.addEventListener('hashchange', route);
+    window.addEventListener('resize', function () {
+      var shown = document.querySelector('.run-view:not([hidden]) .top');
+      if (shown) document.documentElement.style.setProperty('--top-h', shown.offsetHeight + 'px');
+    });
+    route();
+  })();
+</script>

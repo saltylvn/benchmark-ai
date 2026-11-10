@@ -1,6 +1,7 @@
 import io
 import json
 import unittest
+import urllib.parse
 import urllib.request
 
 from dashboard.app import create_app, slack_messages
@@ -150,8 +151,27 @@ class SlackTest(unittest.TestCase):
 class AppTest(unittest.TestCase):
     def setUp(self):
         self.slack = SlackConnector(SlackConfig())
-        self.app = create_app(slack=self.slack)
+        self.app = create_app(slack=self.slack, env={})
         self.client = self.app.test_client()
+        self.client.get("/demo")
+
+    def test_welcome_comes_first(self):
+        fresh = self.app.test_client()
+        page = fresh.get("/").data
+        self.assertIn(b"View the demo", page)
+        for label in (b"Google", b"Slack", b"Microsoft 365", b"Procore"):
+            self.assertIn(label, page)
+        self.assertNotIn(b"Critic scorecard", page)
+        self.assertEqual(fresh.get("/api/runs/thursday").status_code, 401)
+
+    def test_unconfigured_provider_explains_itself(self):
+        fresh = self.app.test_client()
+        response = fresh.get("/login/google", follow_redirects=True)
+        self.assertIn(b"GOOGLE_CLIENT_ID", response.data)
+
+    def test_sign_out_returns_to_welcome(self):
+        self.client.get("/logout")
+        self.assertIn(b"View the demo", self.client.get("/").data)
 
     def test_pages_render(self):
         for path in ("/", "/?run=morning"):
@@ -178,11 +198,96 @@ class AppTest(unittest.TestCase):
         token = self.app.config["FORM_TOKEN"]
         response = self.client.post(
             "/slack/send",
-            data={"token": token, "run": "thursday", "message": "slack-draft", "approved_by": "Maria"},
+            data={"token": token, "run": "thursday", "message": "slack-draft"},
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.slack.audit[0]["result"], "dry-run")
+        self.assertEqual(self.slack.audit[0]["approvedBy"], "Demo viewer")
         self.assertIn("Estimate block stays", self.slack.audit[0]["payload"]["text"])
+
+
+class SignInTest(unittest.TestCase):
+    ENV = {"GOOGLE_CLIENT_ID": "cid", "GOOGLE_CLIENT_SECRET": "secret", "DASHBOARD_SECRET": "x" * 32}
+
+    def make(self, opener, env=None, slack=None):
+        app = create_app(env=env or self.ENV, auth_opener=opener, slack=slack or SlackConnector(SlackConfig()))
+        return app, app.test_client()
+
+    def start(self, client):
+        response = client.get("/login/google")
+        self.assertEqual(response.status_code, 302)
+        location = response.headers["Location"]
+        self.assertTrue(location.startswith("https://accounts.google.com/o/oauth2/v2/auth?"))
+        query = urllib.parse.parse_qs(urllib.parse.urlsplit(location).query)
+        self.assertEqual(query["client_id"], ["cid"])
+        self.assertTrue(query["redirect_uri"][0].endswith("/auth/google/callback"))
+        return query["state"][0]
+
+    def test_google_round_trip(self):
+        opener = RecordingOpener(
+            json.dumps({"access_token": "at"}),
+            json.dumps({"email": "maria@summitridge.example", "name": "Maria Alvarez"}),
+        )
+        _, client = self.make(opener)
+        state = self.start(client)
+        client.get(f"/auth/google/callback?code=abc&state={state}")
+        page = client.get("/").data
+        self.assertIn(b"Maria Alvarez", page)
+        self.assertIn(b"Critic scorecard", page)
+        token_request = opener.requests[0]
+        self.assertEqual(token_request.full_url, "https://oauth2.googleapis.com/token")
+        self.assertIn(b"code=abc", token_request.data)
+        self.assertEqual(opener.requests[1].get_header("Authorization"), "Bearer at")
+
+    def test_state_mismatch_is_rejected(self):
+        opener = RecordingOpener()
+        _, client = self.make(opener)
+        self.start(client)
+        response = client.get("/auth/google/callback?code=abc&state=forged", follow_redirects=True)
+        self.assertIn(b"expired", response.data)
+        self.assertEqual(opener.requests, [])
+        self.assertIn(b"View the demo", client.get("/").data)
+
+    def test_domain_allow_list(self):
+        opener = RecordingOpener(json.dumps({"access_token": "at"}), json.dumps({"email": "x@gmail.com", "name": "X"}))
+        _, client = self.make(opener, env={**self.ENV, "ALLOWED_EMAIL_DOMAINS": "summitridge.example"})
+        state = self.start(client)
+        response = client.get(f"/auth/google/callback?code=abc&state={state}", follow_redirects=True)
+        self.assertIn(b"allowed company domain", response.data)
+
+    def test_demo_never_posts_even_when_sending_is_on(self):
+        slack_opener = RecordingOpener()
+        slack = SlackConnector(SlackConfig(bot_token="xoxb", channel="C1", send_enabled=True), opener=slack_opener)
+        app, client = self.make(RecordingOpener(), slack=slack)
+        client.get("/demo")
+        client.post("/slack/send", data={"token": app.config["FORM_TOKEN"], "run": "thursday", "message": "brief"})
+        self.assertEqual(slack.audit[0]["mode"], "demo")
+        self.assertEqual(slack_opener.requests, [])
+
+    def test_signed_in_user_is_the_approver(self):
+        auth_opener = RecordingOpener(json.dumps({"access_token": "at"}), json.dumps({"email": "maria@summitridge.example", "name": "Maria Alvarez"}))
+        slack_opener = RecordingOpener(json.dumps({"ok": True, "channel": "C1", "ts": "1.2"}))
+        slack = SlackConnector(SlackConfig(bot_token="xoxb", channel="C1", send_enabled=True), opener=slack_opener)
+        app, client = self.make(auth_opener, slack=slack)
+        state = self.start(client)
+        client.get(f"/auth/google/callback?code=abc&state={state}")
+        client.post("/slack/send", data={"token": app.config["FORM_TOKEN"], "run": "thursday", "message": "slack-draft"})
+        self.assertEqual(slack.audit[0]["result"], "sent")
+        self.assertEqual(slack.audit[0]["approvedBy"], "Maria Alvarez (maria@summitridge.example)")
+
+
+class StaticExportTest(unittest.TestCase):
+    def test_static_copy_is_self_contained(self):
+        from dashboard.static_export import render_static
+
+        html = render_static()
+        self.assertTrue(html.lstrip().startswith("<title>"))
+        self.assertIn("View the demo", html)
+        self.assertIn('id="view-thursday"', html)
+        self.assertIn('id="view-morning"', html)
+        self.assertNotIn("<form", html)
+        self.assertNotIn('href="/', html)
+        self.assertNotIn("<link", html)
 
 
 if __name__ == "__main__":
