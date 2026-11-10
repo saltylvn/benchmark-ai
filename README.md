@@ -170,7 +170,9 @@ A useful reading order is `src/orchestrator/supervisor.ts`, `src/schedule/plan.t
 
 The page's only outbound link is [github.com/saltylvn/benchmark-ai](https://github.com/saltylvn/benchmark-ai).
 
-From this repository, `npm run build:web` rewrites `docs/app.js` after a change to `web/main.ts`. If this repository is public, `.github/workflows/pages.yml` publishes `docs/` to [saltylvn.github.io/benchmark-ai](https://saltylvn.github.io/benchmark-ai/).
+From this repository, `npm run build:web` rewrites `docs/app.js` after a change to `web/main.ts`.
+
+`.github/workflows/pages.yml` does not run on push. This repository is private and does not have GitHub Pages turned on, so a push trigger fails before it can publish. Run that workflow by hand only after Benchmark has a public home and Pages is enabled for it. Until then, copy `docs/` yourself. The workflow keeps `.nojekyll` in the upload.
 
 ## Working together
 

@@ -10,6 +10,7 @@ A dated log of how this repository became Benchmark. Older private names are not
 - Added architecture, Thursday workflow, and agent-card diagrams in `docs/images/`. `scripts/diagrams.mjs` regenerates the SVG and PNG files.
 - Added this log and `docs/COLLABORATION.md`. Claude Code leads direction. Cursor handles cleanup, docs, visuals, and the showcase.
 - Checked `origin` before the push. `main` had not moved, and there were no new direction notes or pull request comments.
+- Stopped the Pages workflow from running on every push to `main`. It is manual only, until Benchmark has a public home and Pages is enabled. Action versions were moved to the Node 24 majors. Claude Code's CI workflow on the dashboard branch was left alone.
 
 ## 2026-11-06
 
