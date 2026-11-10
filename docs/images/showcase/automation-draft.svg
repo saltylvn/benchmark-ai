@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="700" viewBox="0 0 1440 700" role="img" aria-labelledby="title desc">
+  <title id="title">Homeowner email and crew note</title>
+  <desc id="desc">Homeowner email and crew note. Before and after steps. Minutes are illustrative estimates from A3, not measured results.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1440" height="700" fill="#f3f0e8"/>
+  
+    <text x="40" y="48" class="serif" font-size="30" fill="#221f1a">Homeowner email and crew note</text>
+    <rect x="40" y="68" width="101.2" height="22" rx="11" fill="#e7f4ee" stroke="#1b754e"/>
+    <text x="51" y="83" fill="#1b754e" font-size="12" font-weight="700">IN THE DEMO</text>
+    <text x="40" y="120" font-size="16" fill="#3a342c">Steps only. Minutes come from dashboard/assumptions.json, not from this picture.</text>
+    <rect x="40" y="150" width="640" height="420" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+    <text x="64" y="190" fill="#d2c8b8" font-size="14" font-weight="700" letter-spacing="0.08em">BEFORE</text>
+    <text x="64" y="250" fill="#221f1a" font-size="18" font-weight="700">1</text>
+           <text x="96" y="250" fill="#3a342c" font-size="16">Write the email from scratch.</text><text x="64" y="322" fill="#221f1a" font-size="18" font-weight="700">2</text>
+           <text x="96" y="322" fill="#3a342c" font-size="16">Write the Slack note from scratch.</text><text x="64" y="394" fill="#221f1a" font-size="18" font-weight="700">3</text>
+           <text x="96" y="394" fill="#3a342c" font-size="16">Remember what not to promise.</text>
+    <rect x="760" y="150" width="640" height="420" rx="14" fill="#e7f4ee" stroke="#1b754e" stroke-width="1.5"/>
+    <text x="784" y="190" fill="#1b754e" font-size="14" font-weight="700" letter-spacing="0.08em">AFTER</text>
+    <text x="784" y="250" fill="#221f1a" font-size="18" font-weight="700">1</text>
+           <text x="816" y="250" fill="#3a342c" font-size="16">Drafting stages both as drafts.</text><text x="784" y="322" fill="#221f1a" font-size="18" font-weight="700">2</text>
+           <text x="816" y="322" fill="#3a342c" font-size="16">The call card lists the limits.</text><text x="784" y="394" fill="#221f1a" font-size="18" font-weight="700">3</text>
+           <text x="816" y="394" fill="#3a342c" font-size="16">Maria reviews. Nothing is sent.</text>
+    <text x="40" y="640" font-size="15" fill="#5c564c">From docs/TIME_SAVED.md. Maria reviews. Nothing in this demo is sent.</text>
+</svg>

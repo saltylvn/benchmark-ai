@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="820" viewBox="0 0 1600 820" role="img" aria-labelledby="title desc">
+  <title id="title">One Thursday, put together</title>
+  <desc id="desc">How the Thursday demo combines the team, the drafts, and Maria's approval, with illustrative minutes kept separate from planned tools.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1600" height="820" fill="#f3f0e8"/>
+  
+    <text x="48" y="56" class="serif" font-size="32" fill="#221f1a">One Thursday, put together</text>
+    <text x="48" y="92" font-size="16" fill="#3a342c">The pieces that exist. The 68 minutes are the shared ledger, not a second model.</text>
+    <rect x="48" y="130" width="350" height="180" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="68" y="170" fill="#2c3d86" font-size="14" font-weight="700">1</text>
+          <text x="96" y="170" fill="#221f1a" font-size="22" font-weight="700">Request</text>
+          <text x="68" y="214" fill="#3a342c" font-size="16">Sam's email at 08:47 is fixture data.</text><rect x="428" y="130" width="350" height="180" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="448" y="170" fill="#2c3d86" font-size="14" font-weight="700">2</text>
+          <text x="476" y="170" fill="#221f1a" font-size="22" font-weight="700">Team</text>
+          <text x="448" y="214" fill="#3a342c" font-size="16">Intake, Scheduling, and the critic run in order.</text><rect x="808" y="130" width="350" height="180" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="828" y="170" fill="#2c3d86" font-size="14" font-weight="700">3</text>
+          <text x="856" y="170" fill="#221f1a" font-size="22" font-weight="700">Drafts</text>
+          <text x="828" y="214" fill="#3a342c" font-size="16">Calendar, email, and Slack stay status draft.</text><rect x="1188" y="130" width="350" height="180" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="1208" y="170" fill="#2c3d86" font-size="14" font-weight="700">4</text>
+          <text x="1236" y="170" fill="#221f1a" font-size="22" font-weight="700">Maria</text>
+          <text x="1208" y="214" fill="#3a342c" font-size="16">She approves. The demo cannot send.</text>
+    <rect x="48" y="350" width="736" height="200" rx="14" fill="#e7f4ee" stroke="#1b754e"/>
+    <text x="72" y="394" fill="#1b754e" font-size="13" font-weight="700">ILLUSTRATIVE, THIS DEMO</text>
+    <text x="72" y="444" fill="#221f1a" font-size="36" font-weight="700">68 minutes</text>
+    <text x="72" y="484" fill="#3a342c" font-size="16">76 manual minus 8 of review, one request.</text>
+    <text x="72" y="514" fill="#3a342c" font-size="16">About 4.5 hours per PM per week at 4 requests.</text>
+    <rect x="808" y="350" width="744" height="200" rx="14" fill="#f8efe3" stroke="#8a4e0c" stroke-dasharray="7 5"/>
+    <text x="832" y="394" fill="#8a4e0c" font-size="13" font-weight="700">NOT ADDED IN</text>
+    <text x="832" y="444" fill="#221f1a" font-size="28" font-weight="700">Procore, QuickBooks, mail APIs</text>
+    <text x="832" y="484" fill="#3a342c" font-size="16">They are not in the code, so they add no minutes here.</text>
+    <text x="832" y="514" fill="#3a342c" font-size="16">They are not in the 68 minutes.</text>
+    <text x="48" y="610" font-size="16" fill="#3a342c">The team saves the illustrated time only if Maria's review is shorter than doing the task by hand, and only for the patterns the demo can run.</text>
+    <text x="48" y="680" font-size="14" fill="#5c564c">See docs/TIME_SAVED.md. These are assumptions. They are not customer data and not a measurement.</text>
+</svg>

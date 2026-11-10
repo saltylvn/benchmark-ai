@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="980" viewBox="0 0 1440 980" role="img" aria-labelledby="title desc">
+  <title id="title">Illustrative minutes</title>
+  <desc id="desc">Bar chart of illustrative time savings from documented assumptions. Green bars are demo patterns. Amber bars are planned and not implemented.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1440" height="980" fill="#f3f0e8"/>
+  
+    <text x="40" y="48" class="serif" font-size="30" fill="#221f1a">Estimates from the shared ledger</text>
+    <text x="40" y="80" font-size="16" fill="#3a342c">Counts from the Thursday run. Minutes from dashboard/assumptions.json. Not a measurement.</text>
+    <text x="40" y="172" fill="#221f1a" font-size="15" font-weight="700">1</text>
+        <text x="90" y="172" fill="#3a342c" font-size="15">Triage the inbox and the overlap</text>
+        <rect x="520" y="150" width="640" height="28" rx="6" fill="#efeae2"/>
+        <rect x="520" y="150" width="320" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="170" fill="#221f1a" font-size="15" font-weight="700">10 min</text><text x="40" y="234" fill="#221f1a" font-size="15" font-weight="700">2</text>
+        <text x="90" y="234" fill="#3a342c" font-size="15">Job files for three records</text>
+        <rect x="520" y="212" width="640" height="28" rx="6" fill="#efeae2"/>
+        <rect x="520" y="212" width="480" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="232" fill="#221f1a" font-size="15" font-weight="700">15 min</text><text x="40" y="296" fill="#221f1a" font-size="15" font-weight="700">3</text>
+        <text x="90" y="296" fill="#3a342c" font-size="15">Untangle the double-booking once</text>
+        <rect x="520" y="274" width="640" height="28" rx="6" fill="#efeae2"/>
+        <rect x="520" y="274" width="480" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="294" fill="#221f1a" font-size="15" font-weight="700">15 min</text><text x="40" y="358" fill="#221f1a" font-size="15" font-weight="700">4</text>
+        <text x="90" y="358" fill="#3a342c" font-size="15">Six calendar creates and updates</text>
+        <rect x="520" y="336" width="640" height="28" rx="6" fill="#efeae2"/>
+        <rect x="520" y="336" width="192" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="356" fill="#221f1a" font-size="15" font-weight="700">6 min</text><text x="40" y="420" fill="#221f1a" font-size="15" font-weight="700">5</text>
+        <text x="90" y="420" fill="#3a342c" font-size="15">Homeowner email</text>
+        <rect x="520" y="398" width="640" height="28" rx="6" fill="#efeae2"/>
+        <rect x="520" y="398" width="352" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="418" fill="#221f1a" font-size="15" font-weight="700">11 min</text><text x="40" y="482" fill="#221f1a" font-size="15" font-weight="700">6</text>
+        <text x="90" y="482" fill="#3a342c" font-size="15">Crew Slack note</text>
+        <rect x="520" y="460" width="640" height="28" rx="6" fill="#efeae2"/>
+        <rect x="520" y="460" width="128" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="480" fill="#221f1a" font-size="15" font-weight="700">4 min</text><text x="40" y="544" fill="#221f1a" font-size="15" font-weight="700">7</text>
+        <text x="90" y="544" fill="#3a342c" font-size="15">Call card and morning brief</text>
+        <rect x="520" y="522" width="640" height="28" rx="6" fill="#efeae2"/>
+        <rect x="520" y="522" width="480" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="542" fill="#221f1a" font-size="15" font-weight="700">15 min</text>
+    <rect x="40" y="730" width="430" height="150" rx="12" fill="#e7f4ee" stroke="#1b754e"/>
+    <text x="60" y="766" fill="#1b754e" font-size="13" font-weight="700">ONE HOMEOWNER REQUEST</text>
+    <text x="60" y="806" fill="#221f1a" font-size="28" font-weight="700">68 min</text>
+    <text x="60" y="840" fill="#3a342c" font-size="14">76 manual minus 8 review. An estimate.</text>
+    <rect x="490" y="730" width="430" height="150" rx="12" fill="#e7f4ee" stroke="#1b754e"/>
+    <text x="510" y="766" fill="#1b754e" font-size="13" font-weight="700">PER PM PER WEEK</text>
+    <text x="510" y="806" fill="#221f1a" font-size="28" font-weight="700">4.5 h</text>
+    <text x="510" y="840" fill="#3a342c" font-size="14">68 min times 4 requests. An estimate.</text>
+    <rect x="940" y="730" width="460" height="150" rx="12" fill="#fffdf9" stroke="#d2c8b8"/>
+    <text x="960" y="766" fill="#5c564c" font-size="13" font-weight="700">SIX PMS, 48 WEEKS</text>
+    <text x="960" y="806" fill="#221f1a" font-size="28" font-weight="700">~1,300 h</text>
+    <text x="960" y="840" fill="#3a342c" font-size="14">Same rate. An estimate, not a measurement.</text>
+    <text x="40" y="930" font-size="14" fill="#5c564c">Source: dashboard/assumptions.json on the dashboard branch. Not customer data.</text>
+</svg>

@@ -5,11 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Benchmark is a team of AI agents for construction project managers. Mock demo, nothing is sent."
+      content="Benchmark is a team of agents for a construction project manager. Mock demo, nothing is sent."
     />
+    <meta property="og:title" content="Benchmark" />
+    <meta
+      property="og:description"
+      content="A team of agents for a construction project manager. Maria approves. Nothing is sent."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Benchmark" />
+    <meta
+      name="twitter:description"
+      content="A team of agents for a construction project manager. Maria approves. Nothing is sent."
+    />
+    <meta name="twitter:image" content="./og.png" />
     <meta name="theme-color" content="#f3f0e8" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#141311" media="(prefers-color-scheme: dark)" />
     <title>Benchmark</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <script>
       (function () {
         var choice = "system";
@@ -27,6 +42,9 @@
   <body>
     <div id="app">
       <p class="boot">Loading Thursday…</p>
+      <noscript>
+        <p>Benchmark needs JavaScript for the Thursday demo. It runs in mock mode and sends nothing. Maria Alvarez still approves every draft.</p>
+      </noscript>
     </div>
     <script type="module" src="./app.js"></script>
   </body>

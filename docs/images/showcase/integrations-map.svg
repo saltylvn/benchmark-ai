@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="860" viewBox="0 0 1600 860" role="img" aria-labelledby="title desc">
+  <title id="title">Connectors</title>
+  <desc id="desc">Connector map. HubSpot, Google Calendar, and Slack are mocked in the demo. Gmail, Outlook, Procore, and QuickBooks are planned and not implemented.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1600" height="860" fill="#f3f0e8"/>
+  
+    <text x="48" y="52" class="serif" font-size="32" fill="#221f1a">Where the day could connect</text>
+    <text x="48" y="86" font-size="16" fill="#3a342c">Solid green is mocked in the demo. Dashed amber is not in the code. Neither row is a live integration.</text>
+    <text x="48" y="140" fill="#1b754e" font-size="13" font-weight="700" letter-spacing="0.08em">CONNECTED IN THE DEMO, MOCKED</text>
+    <rect x="48" y="156" width="468" height="180" rx="14" fill="#fffdf9" stroke="#1b754e" stroke-width="1.5"/>
+          <text x="72" y="204" fill="#221f1a" font-size="22" font-weight="700">HubSpot</text>
+          <text x="72" y="244" fill="#3a342c" font-size="16">Header mark only.</text>
+          <text x="72" y="274" fill="#3a342c" font-size="16">No client and no API call.</text><rect x="548" y="156" width="468" height="180" rx="14" fill="#fffdf9" stroke="#1b754e" stroke-width="1.5"/>
+          <text x="572" y="204" fill="#221f1a" font-size="22" font-weight="700">Google Calendar</text>
+          <text x="572" y="244" fill="#3a342c" font-size="16">Header mark.</text>
+          <text x="572" y="274" fill="#3a342c" font-size="16">Calendar drafts stay in memory.</text><rect x="1048" y="156" width="468" height="180" rx="14" fill="#fffdf9" stroke="#1b754e" stroke-width="1.5"/>
+          <text x="1072" y="204" fill="#221f1a" font-size="22" font-weight="700">Slack</text>
+          <text x="1072" y="244" fill="#3a342c" font-size="16">A slack.draft is written.</text>
+          <text x="1072" y="274" fill="#3a342c" font-size="16">It is not posted.</text>
+    <text x="48" y="400" fill="#8a4e0c" font-size="13" font-weight="700" letter-spacing="0.08em">PLANNED, NOT IMPLEMENTED</text>
+    <rect x="48" y="416" width="468" height="180" rx="14" fill="#f8efe3" stroke="#8a4e0c" stroke-width="1.5" stroke-dasharray="7 5"/>
+          <text x="72" y="464" fill="#221f1a" font-size="22" font-weight="700">Gmail or Outlook</text>
+          <text x="72" y="504" fill="#3a342c" font-size="16">email.draft is local.</text>
+          <text x="72" y="534" fill="#3a342c" font-size="16">No mailbox API.</text><rect x="548" y="416" width="468" height="180" rx="14" fill="#f8efe3" stroke="#8a4e0c" stroke-width="1.5" stroke-dasharray="7 5"/>
+          <text x="572" y="464" fill="#221f1a" font-size="22" font-weight="700">Procore</text>
+          <text x="572" y="504" fill="#3a342c" font-size="16">Not referenced.</text>
+          <text x="572" y="534" fill="#3a342c" font-size="16">No client in this repo.</text><rect x="1048" y="416" width="468" height="180" rx="14" fill="#f8efe3" stroke="#8a4e0c" stroke-width="1.5" stroke-dasharray="7 5"/>
+          <text x="1072" y="464" fill="#221f1a" font-size="22" font-weight="700">QuickBooks</text>
+          <text x="1072" y="504" fill="#3a342c" font-size="16">Not referenced.</text>
+          <text x="1072" y="534" fill="#3a342c" font-size="16">No client in this repo.</text>
+    <text x="48" y="660" font-size="15" fill="#3a342c">The toolkit reads the Thursday fixture. It does not call these systems. There is no webhook handler.</text>
+    <text x="48" y="800" font-size="14" fill="#5c564c">Optional OpenAI polish is a prose call, not one of these connectors. The schedule never goes through it.</text>
+</svg>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="860" viewBox="0 0 1280 860" role="img" aria-labelledby="title desc">
+  <title id="title">Drafting</title>
+  <desc id="desc">Drafting for Benchmark: role, triggers, inputs, outputs, tools, hand-off, and where a person approves.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1280" height="860" fill="#f3f0e8"/>
+  
+    <text x="40" y="52" class="serif" font-size="32" fill="#221f1a">Drafting</text>
+    <text x="40" y="84" font-size="16" fill="#3a342c">Turns an approved plan into drafts. Never sends.</text>
+    <text x="40" y="110" font-size="13" fill="#5c564c">executor.ts and schedule/actions.ts</text>
+    <rect x="40" y="140" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="60" y="172" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">TRIGGERS</text>
+          <text x="60" y="212" fill="#221f1a" font-size="16">The critic scores 100</text>
+          <text x="60" y="242" fill="#3a342c" font-size="16">The supervisor marks the run approved</text><rect x="640" y="140" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="660" y="172" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">INPUTS</text>
+          <text x="660" y="212" fill="#221f1a" font-size="16">The approved plan and the original events</text>
+          <text x="660" y="242" fill="#3a342c" font-size="16">Jobs, the deadline, and Maria's name</text><rect x="40" y="324" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="60" y="356" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">OUTPUTS</text>
+          <text x="60" y="396" fill="#221f1a" font-size="16">Calendar, email, and Slack drafts</text>
+          <text x="60" y="426" fill="#3a342c" font-size="16">Every action has status draft</text><rect x="640" y="324" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="660" y="356" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">TOOLS</text>
+          <text x="660" y="396" fill="#221f1a" font-size="16">buildActions, in memory</text>
+          <text x="660" y="426" fill="#3a342c" font-size="16">Optional prose model for wording only</text><rect x="40" y="508" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="60" y="540" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">HANDS OFF TO</text>
+          <text x="60" y="580" fill="#221f1a" font-size="16">Briefing</text>
+          <text x="60" y="610" fill="#3a342c" font-size="16">Drafts are already on the board</text><rect x="640" y="508" width="584" height="168" rx="12" fill="#fbeeee" stroke="#9b2832" stroke-width="1.5"/>
+          <text x="660" y="540" fill="#9b2832" font-size="12" font-weight="700" letter-spacing="0.08em">WHERE MARIA APPROVES</text>
+          <text x="660" y="580" fill="#221f1a" font-size="16">There is no send path</text>
+          <text x="660" y="610" fill="#3a342c" font-size="16">Maria approves before anything could leave</text>
+</svg>

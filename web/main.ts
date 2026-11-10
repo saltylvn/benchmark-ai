@@ -79,9 +79,9 @@ function team(): { id: string; name: string; role: string; job: string }[] {
     },
     {
       id: "compliance",
-      name: "Compliance",
-      role: "Compliance and billing",
-      job: "Tracks permits, insurance certificates, lien waivers, and invoices.",
+      name: "Drafting",
+      role: "Drafts for review",
+      job: "Turns an approved day into calendar, email, and Slack drafts.",
     },
     {
       id: "briefing",
@@ -194,7 +194,7 @@ function shell(state: RunState): string {
         <ol class="org-flow" aria-label="How a run moves">
           <li>Intake</li>
           <li>Scheduling</li>
-          <li>Compliance</li>
+          <li>Drafting</li>
           <li>Briefing</li>
         </ol>
         <p class="org-return">A rejected schedule comes back to Benchmark, and Scheduling tries again. Nothing goes to the homeowner or the crew until Maria approves it.</p>
@@ -741,7 +741,7 @@ function label(agent: string): string {
   if (agent === "supervisor" || agent === "critic") return "Benchmark";
   if (agent === "intake" || agent === "researcher") return "Intake";
   if (agent === "planner") return "Scheduling";
-  if (agent === "executor") return "Compliance";
+  if (agent === "executor") return "Drafting";
   if (agent === "brief") return "Briefing";
   return agent.slice(0, 1).toUpperCase() + agent.slice(1);
 }

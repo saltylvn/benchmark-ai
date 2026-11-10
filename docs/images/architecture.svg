@@ -106,8 +106,8 @@
     </g>
 <g>
       <rect x="808" y="780" width="364" height="156" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
-      <text x="824" y="804" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">COMPLIANCE</text>
-      <text x="824" y="830" fill="#221f1a" font-size="20" font-weight="700">Compliance</text>
+      <text x="824" y="804" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">DRAFTING</text>
+      <text x="824" y="830" fill="#221f1a" font-size="20" font-weight="700">Drafting</text>
       <text x="824" y="856" fill="#3a342c" font-size="15">Runs only after approval.</text><text x="824" y="878" fill="#3a342c" font-size="15">executor.ts writes the drafts.</text><text x="824" y="900" fill="#3a342c" font-size="15">Calendar, email, and Slack.</text>
     </g>
 <g>

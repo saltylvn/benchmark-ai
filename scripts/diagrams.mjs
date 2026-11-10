@@ -129,7 +129,7 @@ function architecture() {
   const specialists = [
     ["INTAKE", "Intake", ["Calendar, inbox, and the job file.", "intake.ts and researcher.ts.", "Does not propose a day."]],
     ["SCHEDULING", "Scheduling", ["One proposal each revision.", "planner.ts. Calls early, then morning.", "Hands the plan to the critic."]],
-    ["COMPLIANCE", "Compliance", ["Runs only after approval.", "executor.ts writes the drafts.", "Calendar, email, and Slack."]],
+    ["DRAFTING", "Drafting", ["Runs only after approval.", "executor.ts writes the drafts.", "Calendar, email, and Slack."]],
     ["BRIEFING", "Briefing", ["Three outcomes, one call card.", "briefWriter.ts.", "Adds no new promise."]],
   ];
   specialists.forEach((item, index) => {
@@ -285,7 +285,7 @@ function agents() {
     },
     {
       kind: "compliance",
-      name: "Compliance",
+      name: "Drafting",
       role: "Turns an approved plan into drafts. Never sends.",
       file: "executor.ts and schedule/actions.ts",
       inputs: ["The approved plan only", "Events, jobs, and the deadline"],
@@ -309,7 +309,7 @@ function agents() {
     ["INPUTS", ["Thursday fixture and the goal", "The critic score, once it exists"]],
     ["OUTPUTS", ["The trace and the run status", "approved, or needs_human"]],
     ["TOOLS", ["None of its own", "It passes the read-only toolkit in"]],
-    ["HANDS OFF TO", ["Intake, to open the day", "Then Scheduling or Compliance"]],
+    ["HANDS OFF TO", ["Intake, to open the day", "Then Scheduling or Drafting"]],
   ]
     .map((item, index) => field(fieldX + index * fieldW, leadY + 132, item[0], item[1], "#c9d2f2", "#e7ebf6"))
     .join("");
@@ -346,7 +346,7 @@ function agents() {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc">
   <title id="title">Benchmark agents</title>
-  <desc id="desc">Cards for the Benchmark supervisor and the four specialists Intake, Scheduling, Compliance, and Briefing. Each card lists the role, inputs, outputs, tools, and hand-off from the source.</desc>
+  <desc id="desc">Cards for the Benchmark supervisor and the four specialists Intake, Scheduling, Drafting, and Briefing. Each card lists the role, inputs, outputs, tools, and hand-off from the source.</desc>
   <style>text { font-family: ${SANS}; } .serif { font-family: ${SERIF}; }</style>
   <rect width="${width}" height="${height}" fill="#f3f0e8"/>
   <text x="48" y="52" class="serif" font-size="34" fill="#221f1a">Meet the agents</text>
@@ -371,7 +371,7 @@ function workflow() {
     "Supervisor",
     "Intake",
     "Scheduling",
-    "Compliance",
+    "Drafting",
     "Briefing",
     "Maria Alvarez",
   ];

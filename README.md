@@ -1,6 +1,24 @@
 # Benchmark
 
-Benchmark is a team of agents for a construction project manager. The hours disappear into the same loop: a homeowner email, a quote that still needs a price, a calendar that is already double-booked, a subcontractor whose paperwork is stale, and a note that should go out before lunch. Benchmark runs that morning for a fictional project manager and stops at drafts. The project manager still approves the money, the dates, and anything a homeowner would see.
+A team of agents that gives a construction project manager the day back, and stops at drafts.
+
+[![CI](https://github.com/saltylvn/benchmark-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/saltylvn/benchmark-ai/actions/workflows/ci.yml)
+
+The badge points at the CI workflow on the dashboard pull request. It stays empty until that workflow is on `main`.
+
+Benchmark takes one fictional Thursday, reads a double-booked calendar and a homeowner email, and leaves calendar, email, and Slack drafts for Maria Alvarez to approve. Nothing is sent.
+
+## Tech stack
+
+TypeScript on Node 20 or newer. Tests use `node:test` through `tsx`. The page is `web/main.ts` bundled by esbuild into `docs/app.js`. Schedule decisions stay in code. An optional OpenAI call can restyle prose only. A Python dashboard that reads an exported snapshot is in progress on a separate branch. This repository does not call it yet.
+
+## What I built, and the design decisions
+
+The runnable piece is one Thursday for Maria Alvarez at Summit Ridge Builders. Intake reads the day, Scheduling proposes it, a checklist can reject the first plan, Drafting writes unsent drafts, and Briefing writes the call card. The supervisor is the only router. Drafts stay `status: "draft"` because there is no send path. Mock mode is the default even when an API key is present. The page in `docs/` is the same function as the CLI, and it can be copied out and published on its own.
+
+## What's next
+
+The dashboard branch owns the single time ledger in `dashboard/assumptions.json`, and a later compliance-and-billing specialist. That specialist is not the drafting step in this demo. Slack live-send is off by default, sends only after a PM approves. Screenshots of the dashboard belong here after that branch merges. A calendar connector with the same two locks is planned, not built.
 
 The playable story is one Thursday for Maria Alvarez at Summit Ridge Builders. Names, the address, and the job id are invented. Nothing in the demo is sent.
 
@@ -18,7 +36,7 @@ One lead, four specialists. The lead is the supervisor. It does not price the jo
 | --- | --- |
 | **Intake** | Reads the calendar and the inbox, then pulls the job file: what is known, what to ask, and what not to promise. |
 | **Scheduling** | Proposes a day. The first pass clears calls early. If that pushes the estimate block out of the morning, the lead rejects it and Scheduling tries again with the morning held. |
-| **Compliance** | Turns the approved day into calendar changes, an email draft, and a Slack draft. It also carries the expired insurance certificate into that note. |
+| **Drafting** | Turns the approved day into calendar changes, an email draft, and a Slack draft. The expired insurance certificate is already on the job file. |
 | **Briefing** | Writes the morning brief: three outcomes and a call card. |
 
 The lead's check is a named checklist. It scores the plan and hands it back. It does not quietly rewrite the day. Specialists do not call each other. The header shows HubSpot, Google Calendar, and Slack. Those are the systems the day is about. Mock mode reads the Thursday fixture through the toolkit and does not call them.
@@ -29,8 +47,8 @@ flowchart LR
   I --> P[Scheduling]
   P --> S
   S -->|rule broken| P
-  S -->|approved| C[Compliance]
-  C --> B[Briefing]
+  S -->|approved| D[Drafting]
+  D --> B[Briefing]
 ```
 
 ```mermaid
@@ -38,7 +56,7 @@ sequenceDiagram
   participant S as Supervisor
   participant I as Intake
   participant P as Scheduling
-  participant C as Compliance
+  participant D as Drafting
   participant B as Briefing
   S->>I: calendar and inbox
   I->>P: conflicts and the job file
@@ -46,16 +64,26 @@ sequenceDiagram
   S->>P: rejected, estimate block left the morning
   P->>S: second day, morning held
   S->>C: approved, write drafts
-  C->>B: drafts, unsent
+  D->>B: drafts, unsent
 ```
 
-In the source, Intake is `src/agents/intake.ts` plus the job lookup in `src/agents/researcher.ts`. Scheduling is `src/agents/planner.ts`. The checklist the lead applies is `src/agents/critic.ts` and `src/schedule/critique.ts`. Compliance is `src/agents/executor.ts`. Briefing is `src/agents/briefWriter.ts`. The supervisor in `src/orchestrator/supervisor.ts` is the only router, and it stops after three revisions.
+In the source, Intake is `src/agents/intake.ts` plus the job lookup in `src/agents/researcher.ts`. Scheduling is `src/agents/planner.ts`. The checklist the lead applies is `src/agents/critic.ts` and `src/schedule/critique.ts`. Drafting is `src/agents/executor.ts`. Briefing is `src/agents/briefWriter.ts`. The supervisor in `src/orchestrator/supervisor.ts` is the only router, and it stops after three revisions. The name Drafting is the display name, so a later compliance-and-billing specialist can have its own name.
 
 ## Meet the agents
 
-Five cards, taken from the source. The supervisor is the only router. Intake, Scheduling, Compliance, and Briefing do not call each other. The critic is the checklist the supervisor runs between Scheduling and the next hand-off. It is not a fifth specialist.
+Five cards, taken from the source. The supervisor is the only router. Intake, Scheduling, Drafting, and Briefing do not call each other. The critic is the checklist the supervisor runs between Scheduling and the next hand-off. It is not a fifth specialist.
 
 ![Supervisor and the four specialists](docs/images/agents.svg)
+
+## Showcase
+
+[docs/SHOWCASE.md](docs/SHOWCASE.md) walks through the drawings in `docs/images/showcase/`. Green means the demo runs it. Amber means it is planned and not in the code. Minute counts are estimates from [docs/TIME_SAVED.md](docs/TIME_SAVED.md), not measurements.
+
+![The Benchmark team](docs/images/showcase/agents-hero.svg)
+
+![Sam Rivera's kitchen request](docs/images/showcase/workflow-request.svg)
+
+![Illustrative minutes, not measured results](docs/images/showcase/time-saved.svg)
 
 ## A Thursday at Summit Ridge
 
@@ -77,7 +105,7 @@ At 08:47 Sam Rivera (FAKE) writes about a kitchen at 123 Example Ln. Sam wants a
 
 Press play. Intake reads the overlap and the email. Scheduling's first day puts Sam at 09:00–09:40 and parks the estimate block at 13:30–15:20, because that afternoon hole is larger. The lead scores that plan 75/100 and rejects it: the request may shift the estimate block, not push it out of the morning. Scheduling's second day holds the block at 09:40–11:20, moves Bright Spark to 13:45–14:30, and leaves the site walk at 13:00. The lead scores that plan 100/100.
 
-Compliance then stages an email to Sam and a Slack note in `#job-j1042`. Both say they have not been sent. Briefing prints three outcomes and a call card: ask about the budget and the cabinet scope, and do not promise a price, a start date, or that the electrician is confirmed.
+Drafting then stages an email to Sam and a Slack note in `#job-j1042`. Both say they have not been sent. Briefing prints three outcomes and a call card: ask about the budget and the cabinet scope, and do not promise a price, a start date, or that the electrician is confirmed.
 
 ![Play demo, partway through Thursday](docs/images/play-demo.png)
 
@@ -275,7 +303,7 @@ Color follows the terminal. Set `NO_COLOR=1` for plain text.
 
 ```text
 src/
-  agents/            Intake, job lookup, Scheduling, the lead's checklist, Compliance, Briefing
+  agents/            Intake, job lookup, Scheduling, the lead's checklist, Drafting, Briefing
   orchestrator/      supervisor loop
   memory/            trace and finding helpers
   schedule/          the two strategies, the checklist, the draft builder

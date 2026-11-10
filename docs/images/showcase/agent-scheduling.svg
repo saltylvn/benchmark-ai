@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="860" viewBox="0 0 1280 860" role="img" aria-labelledby="title desc">
+  <title id="title">Scheduling</title>
+  <desc id="desc">Scheduling for Benchmark: role, triggers, inputs, outputs, tools, hand-off, and where a person approves.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1280" height="860" fill="#f3f0e8"/>
+  
+    <text x="40" y="52" class="serif" font-size="32" fill="#221f1a">Scheduling</text>
+    <text x="40" y="84" font-size="16" fill="#3a342c">Proposes one day. Calls early first, then holds the morning.</text>
+    <text x="40" y="110" font-size="13" fill="#5c564c">planner.ts and schedule/plan.ts</text>
+    <rect x="40" y="140" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="60" y="172" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">TRIGGERS</text>
+          <text x="60" y="212" fill="#221f1a" font-size="16">Job facts are on the board</text>
+          <text x="60" y="242" fill="#3a342c" font-size="16">The critic names a failure</text><rect x="640" y="140" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="660" y="172" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">INPUTS</text>
+          <text x="660" y="212" fill="#221f1a" font-size="16">Events, demands, and the last failure</text>
+          <text x="660" y="242" fill="#3a342c" font-size="16">Fixed meetings stay fixed</text><rect x="40" y="324" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="60" y="356" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">OUTPUTS</text>
+          <text x="60" y="396" fill="#221f1a" font-size="16">One plan stored on attempts</text>
+          <text x="60" y="426" fill="#3a342c" font-size="16">client-first, or protect-focus</text><rect x="640" y="324" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="660" y="356" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">TOOLS</text>
+          <text x="660" y="396" fill="#221f1a" font-size="16">planSchedule, a pure function</text>
+          <text x="660" y="426" fill="#3a342c" font-size="16">No model and no toolkit</text><rect x="40" y="508" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="60" y="540" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">HANDS OFF TO</text>
+          <text x="60" y="580" fill="#221f1a" font-size="16">The critic, run by the supervisor</text>
+          <text x="60" y="610" fill="#3a342c" font-size="16">A rejection comes back here</text><rect x="640" y="508" width="584" height="168" rx="12" fill="#fbeeee" stroke="#9b2832" stroke-width="1.5"/>
+          <text x="660" y="540" fill="#9b2832" font-size="12" font-weight="700" letter-spacing="0.08em">WHERE MARIA APPROVES</text>
+          <text x="660" y="580" fill="#221f1a" font-size="16">Does not move Dave or the county window</text>
+          <text x="660" y="610" fill="#3a342c" font-size="16">Does not send the calendar change</text>
+</svg>
