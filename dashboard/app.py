@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import os
 import secrets
-from datetime import timedelta
+from datetime import datetime, timedelta
 from functools import wraps
 from pathlib import Path
 from typing import Any
@@ -18,6 +18,8 @@ from flask import Flask, abort, flash, jsonify, redirect, render_template, reque
 
 from . import auth
 from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, build_view, load_json
+from .brief import build_brief, with_brief
+from .portfolio import build_team_view, client_view
 from .slack import SlackConfig, SlackConnector
 
 RUNS = {"thursday": "08:47 request", "morning": "Morning plan"}
@@ -66,6 +68,8 @@ def create_app(
     )
     connector = slack or SlackConnector(SlackConfig.from_env(env))
     app.extensions["slack"] = connector
+    approvals: dict[str, dict[str, Any]] = {}
+    app.extensions["approvals"] = approvals
     opener = auth_opener or auth._default_opener
 
     def view(run_key: str) -> dict[str, Any]:
@@ -101,22 +105,31 @@ def create_app(
         user = current_user()
         if not user:
             return render_template("index.html", page="welcome", providers=provider_cards(env), static_mode=False)
-        run_key = request.args.get("run", "thursday")
-        data = view(run_key)
+        snapshot = load_json(Path(snapshot_path))
+        assumptions = load_json(Path(assumptions_path))
         status = connector.status()
         return render_template(
             "index.html",
-            page="dashboard",
+            page="app",
             static_mode=False,
-            v=data,
+            v=build_view(snapshot, assumptions, "thursday"),
+            t=with_brief(build_team_view(snapshot, assumptions), snapshot, assumptions),
+            brief_at=env.get("BRIEF_AT", "").strip(),
             runs=RUNS,
             user=user,
             slack=status,
-            can_send=user["provider"] != "demo" and status["connected"] and status["sendEnabled"],
-            messages=slack_messages(data["run"]),
             audit=list(reversed(connector.audit))[:8],
+            approvals=approvals,
             form_token=app.config["FORM_TOKEN"],
         )
+
+    @app.get("/jobs/<job_id>/client")
+    @signed_in
+    def client_page(job_id: str):
+        data = client_view(load_json(Path(snapshot_path)), job_id)
+        if data is None:
+            abort(404)
+        return render_template("client.html", c=data)
 
     @app.get("/demo")
     def demo():
@@ -163,27 +176,49 @@ def create_app(
         session.clear()
         return redirect(url_for("index"))
 
-    # -- approvals ---------------------------------------------------------
+    def approvable(item_id: str) -> dict[str, Any] | None:
+        """Find what an approval refers to: a Coordinator draft, the digest, the day rewrite, or a heads-up."""
+        snapshot = load_json(Path(snapshot_path))
+        sweep = snapshot["portfolio"]["sweep"]
+        if item_id == "digest":
+            return {"label": "Morning brief", "slack": build_brief(snapshot, load_json(Path(assumptions_path)))}
+        if item_id == "day-maria":
+            return {"label": "Maria's rewritten day", "slack": None}
+        draft = next((d for d in sweep["drafts"] if d["id"] == item_id), None)
+        if draft:
+            text = f"_For {draft['to']}:_ {draft['body']}" if draft["kind"] == "slack" else None
+            return {"label": draft["subject"], "slack": text}
+        risk = next((r for r in sweep["risks"] if r["id"] == item_id), None)
+        if risk:
+            return {"label": risk["title"], "slack": None}
+        return None
 
-    @app.post("/slack/send")
+    @app.post("/api/approve")
     @signed_in
-    def slack_send():
-        if request.form.get("token") != app.config["FORM_TOKEN"]:
-            abort(400, "Stale form. Reload the dashboard.")
-        run_key = request.form.get("run", "thursday")
-        run = view(run_key)["run"]
-        message = next((m for m in slack_messages(run) if m["id"] == request.form.get("message")), None)
-        if message is None:
-            abort(400, "Unknown message.")
+    def api_approve():
+        if request.headers.get("X-Form-Token") != app.config["FORM_TOKEN"]:
+            return jsonify({"error": "This page is out of date"}), 400
+        body = request.get_json(silent=True) or {}
+        item_id, act = str(body.get("id", "")), body.get("act")
+        if act not in ("approve", "skip"):
+            return jsonify({"error": "Unknown action"}), 400
+        item = approvable(item_id)
+        if item is None:
+            return jsonify({"error": "That item is no longer in today's sweep"}), 404
         user = current_user()
-        context = f"{RUNS[run_key]} · {message['label']}"
-        if user["provider"] == "demo":
-            # Demo visitors see the exact payload, but nothing ever posts.
-            result = connector.preview(message["text"], context=context, approved_by=user["name"])
-        else:
-            result = connector.send(message["text"], context=context, approved_by=f"{user['name']} ({user['email']})")
-        flash(f"{message['label']}: {result['result']}. {result['detail']}", result["result"])
-        return redirect(url_for("index", run=run_key) + f"#{run_key}-slack")
+        record = {"act": act, "by": user["name"], "at": datetime.now().strftime("%-I:%M %p"), "detail": ""}
+        if act == "approve" and item["slack"]:
+            if user["provider"] == "demo":
+                result = connector.preview(item["slack"], context=item["label"], approved_by=user["name"])
+            else:
+                result = connector.send(item["slack"], context=item["label"], approved_by=f"{user['name']} ({user['email']})")
+            record["detail"] = {"sent": "Posted to Slack", "dry-run": "Preview only: nothing was posted", "error": result["detail"]}[result["result"]]
+            if result["result"] == "error":
+                return jsonify({"error": result["detail"]}), 502
+        elif act == "approve":
+            record["detail"] = "Saved as approved. Calendar, email, and invoices stay drafts in this demo"
+        approvals[item_id] = record
+        return jsonify(record)
 
     # -- JSON API: the same data the page renders --------------------------
 
@@ -192,6 +227,12 @@ def create_app(
     def api_run(run_key: str):
         data = view(run_key)
         return jsonify({k: data[k] for k in ("insights", "ledger", "changes", "agents", "handoffs", "compliance", "guardrails")})
+
+    @app.get("/api/team")
+    @signed_in
+    def api_team():
+        t = build_team_view(load_json(Path(snapshot_path)), load_json(Path(assumptions_path)))
+        return jsonify({k: t[k] for k in ("queue", "board", "timeline", "counts", "team", "subs", "steps", "ledger", "digest")})
 
     @app.get("/api/snapshot")
     @signed_in

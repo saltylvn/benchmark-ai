@@ -105,6 +105,46 @@ The same morning, before Sam's email, is the Day plan tab. The calendar is alrea
 
 TypeScript on Node 20 or newer. No agent framework. The tests use `node:test`, run through `tsx`. The page is `web/main.ts` bundled by esbuild into `docs/app.js`, with plain HTML and CSS beside it. The page and the CLI call the same `runWorkflow` function. Optional prose polish is one OpenAI chat call. Schedule decisions, quote totals, and dates stay in code.
 
+## The team view
+
+One PM's day is the hero story. Benchmark's day-to-day job is the whole team: every job, every PM, every sub.
+
+Each morning the **Coordinator** (`src/agents/coordinator.ts`) sweeps the portfolio and drafts the follow-ups a PM would otherwise chase by hand:
+
+| It checks | It drafts |
+| --- | --- |
+| Sub insurance that has expired or lapses before booked work | A Slack ask to the sub |
+| Permits that expire before the work ends | An extension request to the county |
+| Lien waivers holding a final payment | A Slack ask to the sub, with the dollars held |
+| Milestones done but not billed | A progress invoice, amount computed in code |
+| Clients without an update in 4+ days | An update email with percent complete and the next milestone |
+| A sub booked on two jobs the same day | A resolution proposal to both PMs |
+| Quotes due, late milestones | Heads-ups in Today |
+| PM hours against capacity | A handoff of an early-stage job to the PM with room |
+
+It also scores every job: **percent complete** (weighted by billing share), **status** (on track, at risk, behind), and the reason. `npm run demo:team` prints the sweep.
+
+In the dashboard that becomes five tabs:
+
+- **Today**: one queue of decisions, most urgent first, filtered by PM. Approve or push to later in one tap. A Done today log shows who handled what.
+- **Jobs**: a stage board from lead to closeout, and a timeline with every milestone on one calendar and a today line.
+- **Team**: hours against capacity per PM, the handoff proposal, sub insurance, what the Coordinator checked, and team time back.
+- **Messages**: every draft by channel (Slack, email, invoices, team changes), led by the morning brief.
+- **Under the hood**: the two agent layers, then the Thursday run, agent by agent.
+
+Every job card also links to a **client status page** (`/jobs/<id>/client`): percent complete, milestones, the next step, and the PM's name, in plain language. Internal issues (sub insurance, lien waivers, double-bookings, money) never appear there, and a test enforces it.
+
+### The 8:00 brief
+
+```bash
+npm run brief                      # the team brief
+python3 -m dashboard.brief --for tomas   # one PM's brief
+python3 -m dashboard.brief --send        # post it to Slack now
+BRIEF_AT=08:00 npm run dashboard         # post it every day at 8:00
+```
+
+The brief leads with what's blocked, then lists every job worst-first with percent complete and the blocker, then flags overloaded PMs. It is the one post Benchmark makes on its own, and it only goes to the team's internal channel. Client emails, sub nudges and invoices still wait for a person.
+
 ## PM dashboard (Python)
 
 The Thursday demo shows the argument. The dashboard shows a project manager **what the agent team did, why, and what it is waiting on them for**, on one page.

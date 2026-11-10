@@ -2,7 +2,9 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { sweepPortfolio } from "../agents/coordinator.js";
 import { ROLES } from "../agents/roles.js";
+import { PORTFOLIO } from "../fixtures/portfolio.js";
 import { runWorkflow } from "../orchestrator/supervisor.js";
 import { resolveModel } from "../providers/model.js";
 import { range } from "../time.js";
@@ -62,6 +64,7 @@ export async function buildSnapshot() {
     generatedBy: "src/export/snapshot.ts",
     roles: ROLES,
     runs: { thursday: snapshotRun(thursday), morning: snapshotRun(morning) },
+    portfolio: { data: PORTFOLIO, sweep: sweepPortfolio(PORTFOLIO) },
   };
 }
 

@@ -1,37 +1,10 @@
 {% set run = v.run %}
 {% set final = run.critiques[-1] if run.critiques else none %}
-{% set idp = v.runKey ~ '-' %}
-<header class="top">
-  <div class="brand">
-    <span class="mark">B</span>
-    <div>
-      <strong>Benchmark</strong>
-      <span class="muted">Agent team for construction PMs · under the hood</span>
-    </div>
-  </div>
-  <nav class="runs" aria-label="Run">
-    {% for key, label in runs.items() %}
-      <a href="{{ '#run-' ~ key if static_mode else url_for('index', run=key) }}" class="{{ 'on' if key == v.runKey }}"{% if key == v.runKey %} aria-current="page"{% endif %}>{{ label }}</a>
-    {% endfor %}
-  </nav>
-  <div class="integrations" aria-label="Connections">
-    <a href="#{{ idp }}slack" class="chip {{ 'ok' if slack.connected else 'off' }}" title="{{ slack.detail }}">
-      <span class="dot"></span>Slack · {{ 'live' if slack.connected and slack.sendEnabled else ('connected, sends off' if slack.connected else 'not connected') }}
-    </a>
-    <span class="chip draft" title="Calendar changes are staged as drafts"><span class="dot"></span>Calendar · drafts</span>
-    <span class="chip draft" title="Emails are staged as drafts"><span class="dot"></span>Email · drafts</span>
-    {% if not static_mode and user %}<span class="chip user" title="{{ user.email or 'Demo session' }}">{{ user.name }} · {{ user.providerLabel }}</span><a class="chip" href="{{ url_for('logout') }}">Sign out</a>{% endif %}
-  </div>
-</header>
-<nav class="jump" aria-label="Sections">
-  <a href="#{{ idp }}insights">Insights</a><a href="#{{ idp }}flow">Team</a><a href="#{{ idp }}schedule">Day</a><a href="#{{ idp }}critic">Checklist</a><a href="#{{ idp }}compliance">Risk</a><a href="#{{ idp }}time">Time</a><a href="#{{ idp }}slack">Approvals</a><a href="#{{ idp }}hood">Trace</a>
-</nav>
-
-<main>
-  {% if not static_mode %}{% with flashes = get_flashed_messages(with_categories=true) %}
-    {% for cat, msg in flashes %}<div class="flash {{ cat }}" role="status">{{ msg }}</div>{% endfor %}
-  {% endwith %}{% endif %}
-
+{% set idp = 'hood-' %}
+<div class="hood-intro">
+  <p class="eyebrow">Under the hood · one request, start to finish</p>
+  <p class="lede">At 08:47 a homeowner asked Maria for a morning call. Here is how the agent team rebuilt her day: who did what, the plan the checklist rejected, and every rule it checked.</p>
+</div>
   <section class="hero">
     <div>
       <p class="eyebrow">{{ run.dateLabel }} · {{ run.persona }}, {{ run.role }}</p>
@@ -184,57 +157,6 @@
     </section>
   </div>
 
-  <section id="{{ idp }}slack">
-    <h2>Approval queue · Slack</h2>
-    <div class="slack-status {{ 'ok' if slack.connected else 'off' }}">
-      <b>Slack {{ 'connected' if slack.connected else 'not connected' }}</b>
-      <span>mode: {{ slack.mode }}{% if slack.channel %} · channel {{ slack.channel }}{% endif %} · sends {{ 'ON' if slack.sendEnabled else 'off (dry run)' }}</span>
-      <p>{{ slack.detail }}</p>
-    </div>
-    <div class="queue">
-      {% for m in messages %}
-        {% if static_mode %}
-        <div class="msg">
-          <header><b>{{ m.label }}</b><span class="pill draft">draft</span></header>
-          <pre>{{ m.text }}</pre>
-          <p class="muted small">Approving and sending to Slack happens in the live dashboard (<code>npm run dashboard</code>). This copy is read-only.</p>
-        </div>
-        {% else %}
-        <form class="msg" method="post" action="{{ url_for('slack_send') }}">
-          <header><b>{{ m.label }}</b><span class="pill draft">draft</span></header>
-          <pre>{{ m.text }}</pre>
-          <input type="hidden" name="token" value="{{ form_token }}">
-          <input type="hidden" name="run" value="{{ v.runKey }}">
-          <input type="hidden" name="message" value="{{ m.id }}">
-          <p class="muted small">Approving as <b>{{ user.name }}</b>{% if user.provider == 'demo' %} (demo: preview only, nothing posts){% endif %}.</p>
-          <button type="submit">{{ 'Approve & send to Slack' if can_send else 'Approve & preview message' }}</button>
-        </form>
-        {% endif %}
-      {% endfor %}
-      {% for a in run.actions if a.type == 'email.draft' %}
-        <div class="msg">
-          <header><b>Email to {{ a.to }}</b><span class="pill draft">draft · send at {{ a.sendAt }}</span></header>
-          <p class="subject">{{ a.subject }}</p>
-          <pre>{{ a.body }}</pre>
-          <p class="muted small">Email stays a draft in this demo. Calendar and email connectors are the next integration.</p>
-        </div>
-      {% endfor %}
-    </div>
-    {% if audit %}
-      <h3>Slack audit log</h3>
-      <div class="scroll-x"><table class="audit">
-        <thead><tr><th>When (UTC)</th><th>What</th><th>By</th><th>Result</th></tr></thead>
-        <tbody>
-        {% for r in audit %}
-          <tr><td class="mono">{{ r.at }}</td><td>{{ r.context }}</td><td>{{ r.approvedBy }}</td><td><span class="pill {{ r.result }}">{{ r.result }}</span> {{ r.detail }}</td></tr>
-        {% endfor %}
-        </tbody>
-      </table></div>
-      {% set last = audit[0] %}
-      <details><summary>Last payload sent to Slack's API</summary><pre class="json">{{ last.payload | tojson(indent=2) }}</pre></details>
-    {% endif %}
-  </section>
-
   <section id="{{ idp }}hood">
     <h2>Under the hood · full trace</h2>
     <ol class="trace">
@@ -250,4 +172,3 @@
     </ol>
     {% if static_mode %}<p class="muted small">Read-only copy of the agent run · model: {{ run.model }} · data from <code>npm run export:dashboard</code></p>{% else %}<p class="muted small">JSON: <a href="{{ url_for('api_run', run_key=v.runKey) }}">/api/runs/{{ v.runKey }}</a> · <a href="{{ url_for('api_snapshot') }}">/api/snapshot</a> · <a href="{{ url_for('api_slack_status') }}">/api/slack/status</a> · model: {{ run.model }} · data from <code>npm run export:dashboard</code></p>{% endif %}
   </section>
-</main>

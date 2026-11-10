@@ -4,7 +4,7 @@ import unittest
 import urllib.parse
 import urllib.request
 
-from dashboard.app import create_app, slack_messages
+from dashboard.app import create_app
 from dashboard.insights import (
     DEFAULT_ASSUMPTIONS,
     DEFAULT_SNAPSHOT,
@@ -173,37 +173,62 @@ class AppTest(unittest.TestCase):
         self.client.get("/logout")
         self.assertIn(b"View the demo", self.client.get("/").data)
 
-    def test_pages_render(self):
-        for path in ("/", "/?run=morning"):
-            response = self.client.get(path)
-            self.assertEqual(response.status_code, 200)
-            self.assertIn(b"Critic scorecard", response.data)
-        self.assertEqual(self.client.get("/?run=nope").status_code, 404)
+    def approve(self, item_id, act="approve", token=None, client=None):
+        return (client or self.client).post(
+            "/api/approve",
+            json={"id": item_id, "act": act},
+            headers={"X-Form-Token": token or self.app.config["FORM_TOKEN"]},
+        )
+
+    def test_app_renders_all_tabs(self):
+        page = self.client.get("/").data
+        for marker in (b'id="tab-today"', b'id="tab-jobs"', b'id="tab-team"', b'id="tab-messages"', b'id="tab-hood"', b"Critic scorecard"):
+            self.assertIn(marker, page)
+        self.assertIn(b"Cedar duplex", page)
+        self.assertIn(b"brief", page)
+        self.assertIn(b"Good morning", page)
 
     def test_api(self):
         data = self.client.get("/api/runs/thursday").get_json()
         self.assertIn("insights", data)
+        team = self.client.get("/api/team").get_json()
+        self.assertEqual(team["counts"], {"on-track": 3, "at-risk": 4, "behind": 1})
         self.assertFalse(self.client.get("/api/slack/status").get_json()["connected"])
 
-    def test_slack_messages_include_draft_and_brief(self):
-        ids = [m["id"] for m in slack_messages(snapshot()["runs"]["thursday"])]
-        self.assertEqual(ids, ["slack-draft", "brief"])
-
     def test_approve_requires_form_token(self):
-        response = self.client.post("/slack/send", data={"run": "thursday", "message": "brief"})
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(self.approve("D1", token="stale").status_code, 400)
         self.assertEqual(self.slack.audit, [])
 
-    def test_approve_records_audit(self):
-        token = self.app.config["FORM_TOKEN"]
-        response = self.client.post(
-            "/slack/send",
-            data={"token": token, "run": "thursday", "message": "slack-draft"},
-        )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.slack.audit[0]["result"], "dry-run")
-        self.assertEqual(self.slack.audit[0]["approvedBy"], "Demo viewer")
-        self.assertIn("Estimate block stays", self.slack.audit[0]["payload"]["text"])
+    def test_approving_a_slack_draft_previews_for_demo(self):
+        rec = self.approve("D1").get_json()
+        self.assertEqual(rec["by"], "Demo viewer")
+        self.assertIn("Preview only", rec["detail"])
+        self.assertEqual(self.slack.audit[0]["mode"], "demo")
+        self.assertIn("#subs-brightspark", self.slack.audit[0]["payload"]["text"])
+
+    def test_approving_an_invoice_never_touches_slack(self):
+        rec = self.approve("D5").get_json()
+        self.assertIn("stay drafts", rec["detail"])
+        self.assertEqual(self.slack.audit, [])
+
+    def test_skip_and_unknown_items(self):
+        self.assertEqual(self.approve("R3", act="skip").get_json()["act"], "skip")
+        self.assertEqual(self.approve("nope").status_code, 404)
+        self.assertEqual(self.approve("D1", act="delete").status_code, 400)
+
+    def test_client_page_shows_progress_but_no_internal_risks(self):
+        page = self.client.get("/jobs/J-1038/client").get_data(as_text=True)
+        self.assertIn("Pinecrest addition", page)
+        self.assertIn("40% complete", page)
+        self.assertIn("Maria Alvarez", page)
+        for internal in ("insurance", "Bright Spark", "lien waiver", "Lien", "double", "blocked", "$"):
+            self.assertNotIn(internal, page)
+        self.assertEqual(self.client.get("/jobs/J-9999/client").status_code, 404)
+        self.assertEqual(self.app.test_client().get("/jobs/J-1038/client").status_code, 302)
+
+    def test_approvals_survive_a_reload(self):
+        self.approve("D5")
+        self.assertIn(b'"D5": {', self.client.get("/").data)
 
 
 class SignInTest(unittest.TestCase):
@@ -260,7 +285,7 @@ class SignInTest(unittest.TestCase):
         slack = SlackConnector(SlackConfig(bot_token="xoxb", channel="C1", send_enabled=True), opener=slack_opener)
         app, client = self.make(RecordingOpener(), slack=slack)
         client.get("/demo")
-        client.post("/slack/send", data={"token": app.config["FORM_TOKEN"], "run": "thursday", "message": "brief"})
+        client.post("/api/approve", json={"id": "digest", "act": "approve"}, headers={"X-Form-Token": app.config["FORM_TOKEN"]})
         self.assertEqual(slack.audit[0]["mode"], "demo")
         self.assertEqual(slack_opener.requests, [])
 
@@ -271,9 +296,96 @@ class SignInTest(unittest.TestCase):
         app, client = self.make(auth_opener, slack=slack)
         state = self.start(client)
         client.get(f"/auth/google/callback?code=abc&state={state}")
-        client.post("/slack/send", data={"token": app.config["FORM_TOKEN"], "run": "thursday", "message": "slack-draft"})
+        rec = client.post("/api/approve", json={"id": "D1", "act": "approve"}, headers={"X-Form-Token": app.config["FORM_TOKEN"]}).get_json()
+        self.assertEqual(rec["detail"], "Posted to Slack")
         self.assertEqual(slack.audit[0]["result"], "sent")
         self.assertEqual(slack.audit[0]["approvedBy"], "Maria Alvarez (maria@summitridge.example)")
+
+
+class TeamViewTest(unittest.TestCase):
+    def view(self):
+        from dashboard.portfolio import build_team_view
+
+        return build_team_view(snapshot(), assumptions())
+
+    def test_today_queue_puts_blockers_first(self):
+        q = self.view()["queue"]
+        levels = [i["level"] for i in q]
+        self.assertEqual(levels, sorted(levels, key=lambda l: l != "blocked"))
+        self.assertEqual(q[0]["id"], "day-maria")
+
+    def test_lookahead_flags_conflicts_on_the_right_day(self):
+        days = {d["label"]: d for d in self.view()["lookahead"]}
+        crews = [e for e in days["Tomorrow"]["events"] if e["kind"] == "Crew"]
+        self.assertEqual({e["jobId"] for e in crews}, {"J-1036", "J-1019"})
+        self.assertTrue(all(e["flag"] == "blocked" for e in crews))
+        tile = [e for e in days["Tue, Mar 24"]["events"] if e["jobId"] == "J-1045"][0]
+        self.assertIn("insurance lapses first", tile["note"])
+
+    def test_timeline_orders_worst_first_and_marks_late(self):
+        rows = self.view()["timeline"]["rows"]
+        self.assertEqual(rows[0]["jobId"], "J-1019")
+        self.assertIn("late", [m["state"] for m in rows[0]["points"]])
+
+    def test_team_ledger_counts_drafts(self):
+        ledger = self.view()["ledger"]
+        self.assertEqual(ledger["reviewMinutes"], 9)  # 8 drafts + the brief
+        self.assertEqual(ledger["netMinutes"], ledger["manualMinutes"] - 9)
+
+
+class BriefTest(unittest.TestCase):
+    def test_team_brief_leads_with_blockers_and_lists_every_job(self):
+        from dashboard.brief import build_brief
+
+        text = build_brief(snapshot(), assumptions())
+        self.assertTrue(text.startswith("*Good morning. Thu, Mar 12.*"))
+        self.assertIn("*Needs you first*", text)
+        for job in ("J-1019", "J-1027", "J-1031", "J-1036", "J-1038", "J-1042", "J-1045", "J-1047"):
+            self.assertIn(job, text)
+        self.assertLess(text.index("J-1019"), text.index("J-1031"))  # behind before on track
+        self.assertIn("Tomas Reyes is at 37 of 40 h", text)
+
+    def test_personal_brief_only_shows_their_work(self):
+        from dashboard.brief import build_brief
+
+        text = build_brief(snapshot(), assumptions(), "tomas")
+        self.assertIn("Good morning, Tomas", text)
+        self.assertIn("J-1019", text)
+        self.assertNotIn("J-1031", text)
+        self.assertNotIn("Tomorrow · Tomorrow", text)
+
+    def test_scheduler_posts_once_a_day_at_the_set_time(self):
+        from datetime import datetime
+
+        from dashboard.brief import start_scheduler
+
+        clock = {"now": datetime(2026, 3, 12, 7, 0)}
+        opener = RecordingOpener(*[json.dumps({"ok": True, "channel": "C1", "ts": str(n)}) for n in range(3)])
+        slack = SlackConnector(SlackConfig(bot_token="xoxb", channel="C1", send_enabled=True), opener=opener)
+        stop = []
+        thread = start_scheduler(slack, "08:00", now=lambda: clock["now"], sleep=lambda s: stop.append(s) or (_ for _ in ()).throw(SystemExit))
+        thread.join(1)
+        tick = thread.tick
+        self.assertFalse(tick())                      # 07:00, too early
+        clock["now"] = datetime(2026, 3, 12, 8, 0)
+        self.assertTrue(tick())                       # 08:00, posts
+        clock["now"] = datetime(2026, 3, 12, 8, 30)
+        self.assertFalse(tick())                      # same day, no repeat
+        clock["now"] = datetime(2026, 3, 13, 8, 1)
+        self.assertTrue(tick())                       # next morning
+        self.assertEqual([r["result"] for r in slack.audit], ["sent", "sent"])
+        self.assertIn("Good morning", json.loads(opener.requests[0].data)["text"])
+
+    def test_scheduler_skips_a_brief_that_was_due_before_startup(self):
+        from datetime import datetime
+
+        from dashboard.brief import start_scheduler
+
+        slack = SlackConnector(SlackConfig())
+        thread = start_scheduler(slack, "08:00", now=lambda: datetime(2026, 3, 12, 9, 30), sleep=lambda s: (_ for _ in ()).throw(SystemExit))
+        thread.join(1)
+        self.assertFalse(thread.tick())
+        self.assertEqual(slack.audit, [])
 
 
 class SiteBuildTest(unittest.TestCase):
@@ -303,8 +415,8 @@ class StaticExportTest(unittest.TestCase):
         html = render_static()
         self.assertTrue(html.lstrip().startswith("<title>"))
         self.assertIn("View the demo", html)
-        self.assertIn('id="view-thursday"', html)
-        self.assertIn('id="view-morning"', html)
+        self.assertIn('id="tab-today"', html)
+        self.assertIn('"mode": "static"', html)
         self.assertNotIn("<form", html)
         self.assertNotIn('href="/', html)
         self.assertNotIn("<link", html)

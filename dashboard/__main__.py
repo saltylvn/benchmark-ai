@@ -38,4 +38,11 @@ if __name__ == "__main__":
             print(f"On an iPhone or iPad on the same Wi-Fi, open http://{address}:{port}")
     else:
         print("To open it on an iPhone or iPad on this Wi-Fi, restart with DASHBOARD_HOST=0.0.0.0")
-    create_app().run(host=host, port=port, debug=os.environ.get("FLASK_DEBUG") == "1")
+    app = create_app()
+    brief_at = os.environ.get("BRIEF_AT", "").strip()
+    if brief_at:
+        from .brief import start_scheduler
+
+        start_scheduler(app.extensions["slack"], brief_at)
+        print(f"Morning brief posts to Slack daily at {brief_at} (sends only if SLACK_SEND_ENABLED=1).")
+    app.run(host=host, port=port, debug=os.environ.get("FLASK_DEBUG") == "1", use_reloader=False)

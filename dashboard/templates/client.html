@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{ c.job.name }} · {{ c.company }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+<main class="client">
+  <p class="preview-note">Preview of the page {{ c.job.client }} would see. <a href="{{ url_for('index') }}#jobs">Back to Jobs</a></p>
+  <section class="client-card">
+    <p class="eyebrow">{{ c.company }} · {{ c.job.id }}</p>
+    <h1>{{ c.job.name }}</h1>
+    <p class="muted">{{ c.job.address }}</p>
+    <div class="client-progress">
+      <div class="progress big" role="img" aria-label="{{ c.percent }}% complete"><i style="width:{{ c.percent }}%"></i></div>
+      <b>{{ c.percent }}% complete</b>
+    </div>
+    {% if c.current %}<p class="client-next">Next: <b>{{ c.current.name }}</b> · {{ c.current.note }}</p>{% endif %}
+    <ol class="client-steps">
+      {% for s in c.steps %}
+        <li class="{{ s.state }}"><span class="dot"></span><b>{{ s.name }}</b><span class="muted">{{ s.note }}</span></li>
+      {% endfor %}
+    </ol>
+    <div class="client-pm">
+      <p class="eyebrow">Your project manager</p>
+      <b>{{ c.pm.name }}</b>
+      <p class="muted small">Last update {{ c.lastUpdate }}. Questions go to {{ c.pm.name.split(' ')[0] }} directly.</p>
+    </div>
+  </section>
+</main>
+</body>
+</html>

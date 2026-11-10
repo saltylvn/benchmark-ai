@@ -12,5 +12,19 @@
   "reviewMinutesPerDraft": 1,
   "requestsPerPmPerWeek": 4,
   "pmsOnTeam": 6,
-  "workWeeksPerYear": 48
+  "workWeeksPerYear": 48,
+  "teamManualMinutes": {
+    "_note": "Minutes a PM spends on each follow-up by hand, and on the daily cross-job check the Coordinator replaces. Estimates.",
+    "dailySweep": 45,
+    "subNudge": 6,
+    "permitCheck": 15,
+    "lienChase": 8,
+    "invoiceDraft": 20,
+    "clientUpdate": 12,
+    "conflictResolution": 20,
+    "reassign": 10,
+    "statusDigest": 30
+  },
+  "teamReviewMinutesPerDraft": 1,
+  "workDaysPerWeek": 5
 }

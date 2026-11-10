@@ -1,0 +1,160 @@
+<script>
+(function () {
+  var state = JSON.parse(document.getElementById('app-state').textContent);
+  var STORE = 'benchmark-approvals-v1';
+  var TABS = ['today', 'jobs', 'team', 'messages', 'hood'];
+
+  // ---- tabs (hash routed so links, the back button, and the static copy all work)
+  function tabFromHash() {
+    var h = (location.hash || '').slice(1);
+    if (TABS.indexOf(h) >= 0) return h;
+    if (h.indexOf('hood-') === 0) return 'hood';
+    return 'today';
+  }
+  function showTab() {
+    var tab = tabFromHash();
+    document.querySelectorAll('[data-panel]').forEach(function (p) { p.hidden = p.dataset.panel !== tab; });
+    document.querySelectorAll('.tabs a').forEach(function (a) {
+      var on = a.dataset.tab === tab;
+      a.classList.toggle('on', on);
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    var h = (location.hash || '').slice(1);
+    var target = h.indexOf('hood-') === 0 ? document.getElementById(h) : null;
+    if (target) target.scrollIntoView(); else if (TABS.indexOf(h) >= 0) window.scrollTo(0, 0);
+    syncHeader();
+  }
+  function syncHeader() {
+    var top = document.querySelector('.top');
+    if (top) document.documentElement.style.setProperty('--top-h', top.offsetHeight + 'px');
+  }
+  window.addEventListener('hashchange', showTab);
+  window.addEventListener('resize', syncHeader);
+
+  // ---- approvals: server-backed when signed in, kept in this browser in the static copy
+  var local = {};
+  if (state.mode === 'static') {
+    try { local = JSON.parse(localStorage.getItem(STORE) || '{}'); } catch (e) { local = {}; }
+  }
+  var approvals = state.mode === 'static' ? local : (state.approvals || {});
+
+  function save() {
+    if (state.mode !== 'static') return;
+    try { localStorage.setItem(STORE, JSON.stringify(approvals)); } catch (e) {}
+  }
+
+  function cards(id) { return document.querySelectorAll('.qcard[data-id="' + id + '"]'); }
+
+  function markDone(id, rec) {
+    cards(id).forEach(function (card) {
+      card.classList.add('is-done', rec.act === 'skip' ? 'is-skipped' : 'is-approved');
+      var r = card.querySelector('.result');
+      r.hidden = false;
+      r.textContent = (rec.act === 'skip' ? 'Moved to later by ' : 'Approved by ') + rec.by + (rec.detail ? '. ' + rec.detail : '.');
+      card.querySelectorAll('.qactions button').forEach(function (b) { b.disabled = true; });
+    });
+    render();
+  }
+
+  function render() {
+    var open = 0, blocked = 0, done = 0, saved = 0;
+    var list = document.querySelector('[data-list="done"]');
+    list.innerHTML = '';
+    document.querySelectorAll('[data-list="open"] .qcard').forEach(function (card) {
+      var rec = approvals[card.dataset.id];
+      if (rec) {
+        done += 1;
+        if (rec.act === 'approve') saved += Number(card.dataset.minutes || 0);
+        var li = document.createElement('li');
+        li.innerHTML = '<span class="pill ' + (rec.act === 'skip' ? 'watch' : 'ok') + '"></span> <b></b> <span class="muted"></span>';
+        li.querySelector('.pill').textContent = rec.act === 'skip' ? 'later' : 'approved';
+        li.querySelector('b').textContent = card.querySelector('h3').textContent;
+        li.querySelector('.muted').textContent = '· ' + rec.by + (rec.at ? ' · ' + rec.at : '');
+        list.appendChild(li);
+      } else {
+        open += 1;
+        if (card.classList.contains('blocked')) blocked += 1;
+      }
+    });
+    document.querySelectorAll('[data-count="open"]').forEach(function (n) { n.textContent = open; });
+    document.querySelectorAll('[data-count="blocked"]').forEach(function (n) { n.textContent = blocked; });
+    document.querySelectorAll('[data-count="done"]').forEach(function (n) { n.textContent = done; });
+    document.querySelector('[data-done-empty]').hidden = done > 0;
+    applyFilter();
+  }
+
+  function act(card, which) {
+    var id = card.dataset.id;
+    var time = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    var buttons = card.querySelectorAll('.qactions button');
+    if (state.mode === 'static') {
+      approvals[id] = { act: which, by: 'You', at: time, detail: which === 'approve' && (card.dataset.kind === 'slack' || card.dataset.kind === 'digest') ? 'Preview only in this copy: nothing was posted' : '' };
+      save();
+      markDone(id, approvals[id]);
+      return;
+    }
+    buttons.forEach(function (b) { b.disabled = true; });
+    fetch('/api/approve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Form-Token': state.token },
+      body: JSON.stringify({ id: id, act: which }),
+    }).then(function (res) {
+      return res.json().then(function (body) { if (!res.ok) throw new Error(body.error || 'Request failed'); return body; });
+    }).then(function (rec) {
+      approvals[id] = rec;
+      markDone(id, rec);
+    }).catch(function (err) {
+      buttons.forEach(function (b) { b.disabled = false; });
+      var r = card.querySelector('.result');
+      r.hidden = false;
+      r.textContent = err.message + '. Reload the page and try again.';
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.qactions button[data-act]');
+    if (btn) { act(btn.closest('.qcard'), btn.dataset.act); return; }
+    var k = e.target.closest('[data-kind-filter]');
+    if (k) {
+      kind = kind === k.dataset.kindFilter ? null : k.dataset.kindFilter;
+      document.querySelectorAll('[data-kind-filter]').forEach(function (b) { b.classList.toggle('on', b.dataset.kindFilter === kind); });
+      applyFilter();
+      return;
+    }
+    var f = e.target.closest('[data-owner-filter]');
+    if (f) {
+      document.querySelectorAll('[data-owner-filter]').forEach(function (b) { b.classList.toggle('on', b.dataset.ownerFilter === f.dataset.ownerFilter); });
+      owner = f.dataset.ownerFilter;
+      try { localStorage.setItem('benchmark-owner', owner); } catch (err) {}
+      applyFilter();
+    }
+  });
+
+  // ---- "show work for" filter, remembered per browser
+  var kind = null;
+  var owner = 'all';
+  try { owner = localStorage.getItem('benchmark-owner') || 'all'; } catch (e) {}
+  if (!document.querySelector('[data-owner-filter="' + owner + '"]')) owner = 'all';
+  document.querySelectorAll('[data-owner-filter]').forEach(function (b) { b.classList.toggle('on', b.dataset.ownerFilter === owner); });
+
+  function applyFilter() {
+    var visible = 0;
+    document.querySelectorAll('[data-owner]').forEach(function (el) {
+      var mine = owner === 'all' || el.dataset.owner === owner || el.dataset.owner === 'all';
+      if (kind && el.classList.contains('qcard') && el.closest('[data-list="open"]')) mine = mine && el.dataset.label === kind;
+      el.hidden = !mine;
+      if (mine && el.classList.contains('qcard') && !approvals[el.dataset.id] && el.closest('[data-list="open"]')) visible += 1;
+    });
+    // Hide look-ahead days that have nothing left for this person.
+    document.querySelectorAll('[data-day]').forEach(function (day) {
+      day.hidden = !day.querySelector('.ev:not([hidden])');
+    });
+    var empty = document.querySelector('[data-empty]');
+    if (empty) empty.hidden = visible > 0;
+  }
+
+  Object.keys(approvals).forEach(function (id) { markDone(id, approvals[id]); });
+  render();
+  showTab();
+})();
+</script>
