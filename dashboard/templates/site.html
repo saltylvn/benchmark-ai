@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Benchmark</title>
+  <meta name="description" content="The agent team for construction project managers: what it did, why, and what is waiting on you.">
+  <meta name="theme-color" content="#f3f0e8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141311" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Benchmark">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <style>
+{{ css | safe }}
+.install-tip { position: fixed; z-index: 20; left: 0; right: 0; bottom: 0;
+  padding-block: 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  padding-left: var(--gutter-l); padding-right: var(--gutter-r);
+  background: var(--ink); color: var(--on-ink); display: flex; gap: 12px; align-items: center; font-size: 14px; }
+.install-tip p { margin: 0; flex: 1; min-width: 0; }
+.install-tip svg { flex: none; vertical-align: -3px; }
+.install-tip button { flex: none; min-height: var(--tap); min-width: var(--tap); border: 1px solid var(--on-ink); background: transparent; color: var(--on-ink); border-radius: 10px; font: 600 14px var(--sans); padding: 0 12px; }
+  </style>
+</head>
+<body>
+{% include "_static_body.html" %}
+<div class="install-tip" id="install-tip" role="note" hidden>
+  <p><b>Put Benchmark on your home screen.</b> Tap
+    <svg width="16" height="18" viewBox="0 0 16 18" aria-label="Share" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 1v11M4 5l4-4 4 4"/><path d="M3 8H1.5v9h13V8H13"/></svg>
+    Share, then <b>Add to Home Screen</b>.</p>
+  <button type="button" id="install-tip-close">Got it</button>
+</div>
+<script>
+  // iPhone and iPad have no install prompt, so show the steps once, in Safari only, until dismissed.
+  (function () {
+    var tip = document.getElementById('install-tip');
+    var ua = navigator.userAgent;
+    var iOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var installed = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+    var dismissed = false;
+    try { dismissed = localStorage.getItem('benchmark-install-tip') === 'done'; } catch (e) {}
+    function pad() { document.body.style.paddingBottom = tip.hidden ? '' : tip.offsetHeight + 'px'; }
+    if (iOS && !installed && !dismissed) { tip.hidden = false; pad(); window.addEventListener('resize', pad); }
+    document.getElementById('install-tip-close').addEventListener('click', function () {
+      tip.hidden = true;
+      pad();
+      try { localStorage.setItem('benchmark-install-tip', 'done'); } catch (e) {}
+    });
+  })();
+  // Offline: keep the last copy so the home-screen app opens without signal on site.
+  if ('serviceWorker' in navigator && window.isSecureContext) {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  }
+</script>
+</body>
+</html>

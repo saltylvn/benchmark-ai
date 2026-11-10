@@ -135,6 +135,7 @@ The dashboard is built for the job site as much as the office.
 - **Phone layout.** A pinned section bar (Insights, Team, Day, Checklist, Risk, Time, Approvals, Trace), two-up KPI tiles, a day chart you swipe sideways, and tap targets of at least 44px. iPad portrait keeps the header pinned and pairs the approval cards.
 - **Add to Home Screen.** A web app manifest and an iOS icon make it open full screen like an app.
 - **On your Wi-Fi.** `DASHBOARD_HOST=0.0.0.0 npm run dashboard` prints a `http://192.168.x.x:5050` address to open on any device on the same network.
+- **Installable site.** `npm run build:site` writes `dashboard/dist/site/`: `index.html`, a manifest, iOS and Android icons, and an offline service worker. Host that folder on any HTTPS static host and it saves to the home screen as its own app, opens full screen, works without signal after the first visit, and shows iPhone visitors a one-time tip with the Add to Home Screen steps.
 - **A link that works anywhere.** `npm run export:static` writes `dashboard/dist/benchmark-dashboard.html`, a single read-only file with both runs and no server calls. Host it on any static host, or share it as a page.
 
 ### Sign-in
