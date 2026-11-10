@@ -22,14 +22,15 @@ DAY_START = 8 * 60 + 30
 DAY_END = 17 * 60 + 30
 
 AGENT_ORDER = ["supervisor", "intake", "researcher", "planner", "critic", "executor", "brief"]
+# Product names from the README, with the source agent kept visible on the page.
 AGENT_LABELS = {
-    "supervisor": "Supervisor",
+    "supervisor": "Benchmark lead",
     "intake": "Intake",
-    "researcher": "Research",
-    "planner": "Planner",
-    "critic": "Critic",
-    "executor": "Executor",
-    "brief": "Brief",
+    "researcher": "Intake · job lookup",
+    "planner": "Scheduling",
+    "critic": "Lead's checklist",
+    "executor": "Compliance",
+    "brief": "Briefing",
 }
 
 
@@ -286,7 +287,7 @@ def insights(run: dict[str, Any], ledger: dict[str, Any]) -> list[dict[str, str]
         out.append(
             {
                 "tone": "catch",
-                "title": f"The critic stopped a bad day before anyone saw it ({codes})",
+                "title": f"The lead's checklist stopped a bad day before anyone saw it ({codes})",
                 "body": (
                     f"Revision {critique['revision']} ({critique['strategy']}) scored {critique['score']}/100"
                     + (f" and would have pushed the estimate block to {focus['when']}." if focus else ".")
@@ -347,7 +348,7 @@ def insights(run: dict[str, Any], ledger: dict[str, Any]) -> list[dict[str, str]
     return out
 
 
-def build_view(snapshot: dict[str, Any], assumptions: dict[str, Any], run_key: str = "warRoom") -> dict[str, Any]:
+def build_view(snapshot: dict[str, Any], assumptions: dict[str, Any], run_key: str = "thursday") -> dict[str, Any]:
     run = snapshot["runs"][run_key]
     ledger = time_ledger(run, assumptions)
     return {

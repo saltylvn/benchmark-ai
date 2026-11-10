@@ -17,7 +17,7 @@ from flask import Flask, abort, flash, jsonify, redirect, render_template, reque
 from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, build_view, load_json
 from .slack import SlackConfig, SlackConnector
 
-RUNS = {"warRoom": "War room · 08:47 request", "morning": "Morning plan · before the request"}
+RUNS = {"thursday": "Thursday · 08:47 request", "morning": "Morning plan · before the request"}
 
 
 def slack_messages(run: dict[str, Any]) -> list[dict[str, str]]:
@@ -56,7 +56,7 @@ def create_app(
 
     @app.get("/")
     def index():
-        run_key = request.args.get("run", "warRoom")
+        run_key = request.args.get("run", "thursday")
         data = view(run_key)
         return render_template(
             "index.html",
@@ -72,7 +72,7 @@ def create_app(
     def slack_send():
         if request.form.get("token") != app.config["FORM_TOKEN"]:
             abort(400, "Stale form. Reload the dashboard.")
-        run_key = request.form.get("run", "warRoom")
+        run_key = request.form.get("run", "thursday")
         run = view(run_key)["run"]
         message = next((m for m in slack_messages(run) if m["id"] == request.form.get("message")), None)
         if message is None:

@@ -44,26 +44,26 @@ class RecordingOpener:
 
 class InsightsTest(unittest.TestCase):
     def test_war_room_matches_the_agent_run(self):
-        run = snapshot()["runs"]["warRoom"]
+        run = snapshot()["runs"]["thursday"]
         self.assertEqual(run["status"], "approved")
         self.assertEqual([c["score"] for c in run["critiques"]], [75, 100])
 
     def test_schedule_diff_never_moves_fixed_events(self):
-        changes = schedule_changes(snapshot()["runs"]["warRoom"])
+        changes = schedule_changes(snapshot()["runs"]["thursday"])
         self.assertFalse([m for m in changes["moved"] if m["fixed"]])
         moved = {m["id"]: (m["from"], m["when"]) for m in changes["moved"]}
-        self.assertEqual(moved["northwind"], ("10:30–11:15", "13:45–14:30"))
+        self.assertEqual(moved["brightspark"], ("10:30–11:15", "13:45–14:30"))
         self.assertEqual(moved["focus"], ("09:00–11:00", "09:40–11:20"))
-        self.assertIn("meridian", {a["id"] for a in changes["added"]})
+        self.assertIn("rivera", {a["id"] for a in changes["added"]})
 
     def test_expired_certificate_is_blocked(self):
-        items = {i["id"]: i for i in compliance_items(snapshot()["runs"]["warRoom"])}
+        items = {i["id"]: i for i in compliance_items(snapshot()["runs"]["thursday"])}
         self.assertEqual(items["COI-1042"]["level"], "blocked")
         self.assertEqual(items["COI-1042"]["kind"], "Insurance certificate")
         self.assertEqual(items["INSP-1042"]["kind"], "Inspection")
 
     def test_time_ledger_counts_come_from_the_run(self):
-        run = snapshot()["runs"]["warRoom"]
+        run = snapshot()["runs"]["thursday"]
         a = assumptions()
         ledger = time_ledger(run, a)
         self.assertEqual(ledger["reviewMinutes"], len(run["actions"]) * a["reviewMinutesPerDraft"])
@@ -73,7 +73,7 @@ class InsightsTest(unittest.TestCase):
         self.assertEqual((ledger["manualMinutes"], ledger["netMinutes"]), (76, 68))
 
     def test_ledger_follows_edited_assumptions(self):
-        run = snapshot()["runs"]["warRoom"]
+        run = snapshot()["runs"]["thursday"]
         a = assumptions()
         a["manualMinutes"] = {k: 0 for k in a["manualMinutes"]}
         self.assertLess(time_ledger(run, a)["netMinutes"], 0)
@@ -90,7 +90,7 @@ class InsightsTest(unittest.TestCase):
         lanes = build_view(snapshot(), assumptions())["lanes"]
         self.assertEqual(lanes[0]["status"], "conflict")
         overlapping = {b["id"] for b in lanes[0]["blocks"] if b["overlap"]}
-        self.assertEqual(overlapping, {"focus", "northwind"})
+        self.assertEqual(overlapping, {"focus", "brightspark"})
         self.assertEqual([l["status"] for l in lanes[1:]], ["rejected", "approved"])
 
 
@@ -123,7 +123,7 @@ class SlackTest(unittest.TestCase):
     def test_bot_send_posts_to_chat_post_message(self):
         opener = RecordingOpener(json.dumps({"ok": True, "channel": "C1", "ts": "1.2"}))
         slack = SlackConnector(SlackConfig(bot_token="xoxb-test", channel="C1", send_enabled=True), opener=opener)
-        result = slack.send("crew update", context="war room", approved_by="Maria")
+        result = slack.send("crew update", context="thursday", approved_by="Maria")
         self.assertEqual(result["result"], "sent")
         request = opener.requests[0]
         self.assertTrue(request.full_url.endswith("/chat.postMessage"))
@@ -161,16 +161,16 @@ class AppTest(unittest.TestCase):
         self.assertEqual(self.client.get("/?run=nope").status_code, 404)
 
     def test_api(self):
-        data = self.client.get("/api/runs/warRoom").get_json()
+        data = self.client.get("/api/runs/thursday").get_json()
         self.assertIn("insights", data)
         self.assertFalse(self.client.get("/api/slack/status").get_json()["connected"])
 
     def test_slack_messages_include_draft_and_brief(self):
-        ids = [m["id"] for m in slack_messages(snapshot()["runs"]["warRoom"])]
+        ids = [m["id"] for m in slack_messages(snapshot()["runs"]["thursday"])]
         self.assertEqual(ids, ["slack-draft", "brief"])
 
     def test_approve_requires_form_token(self):
-        response = self.client.post("/slack/send", data={"run": "warRoom", "message": "brief"})
+        response = self.client.post("/slack/send", data={"run": "thursday", "message": "brief"})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.slack.audit, [])
 
@@ -178,7 +178,7 @@ class AppTest(unittest.TestCase):
         token = self.app.config["FORM_TOKEN"]
         response = self.client.post(
             "/slack/send",
-            data={"token": token, "run": "warRoom", "message": "slack-draft", "approved_by": "Maria"},
+            data={"token": token, "run": "thursday", "message": "slack-draft", "approved_by": "Maria"},
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.slack.audit[0]["result"], "dry-run")

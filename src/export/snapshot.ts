@@ -53,15 +53,15 @@ function plan(p: Plan) {
 
 export async function buildSnapshot() {
   const model = resolveModel(false);
-  const [warRoom, morning] = await Promise.all([
-    runWorkflow({ workflow: "war-room", model }),
+  const [thursday, morning] = await Promise.all([
+    runWorkflow({ workflow: "thursday", model }),
     runWorkflow({ workflow: "morning", model }),
   ]);
   return {
     schema: 1,
     generatedBy: "src/export/snapshot.ts",
     roles: ROLES,
-    runs: { warRoom: snapshotRun(warRoom), morning: snapshotRun(morning) },
+    runs: { thursday: snapshotRun(thursday), morning: snapshotRun(morning) },
   };
 }
 

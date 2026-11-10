@@ -15,9 +15,9 @@ Benchmark is an agent team that gives construction project managers their day ba
 
 ## Merge order for open work
 
-1. Cursor #4 (Atlas cleanup, `tuesday.ts` → `thursday.ts`) merges first.
-2. Claude Code rebases #7 (PM dashboard) on it, re-runs `npm run export:dashboard`, and fixes `src/export/snapshot.ts` imports.
-3. Cursor #5 (showcase) rebases last and takes its minute figures from `dashboard/assumptions.json`.
+1. ~~Cursor #4 (cleanup, `thursday` workflow, `brightspark` / `rivera` ids)~~ merged.
+2. ~~Claude Code rebases #7 on it~~ done: run key is `thursday`, the dashboard uses the README's agent names (lead, Intake, Scheduling, Compliance, Briefing) with the source agent id beside each.
+3. Cursor #5 (showcase) rebases after #7 and takes its minute figures from `dashboard/assumptions.json`.
 
 ## Ownership
 

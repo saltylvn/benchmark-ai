@@ -184,3 +184,4 @@ details summary { cursor: pointer; font-weight: 600; margin: 6px 0; }
   .trace li { grid-template-columns: 1fr; gap: 2px; }
   .handoffs table td:nth-child(5) { display: none; }
 }
+.pipeline .agent code.src { font-size: 11px; color: var(--muted); }

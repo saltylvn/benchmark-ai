@@ -70,7 +70,7 @@
     <ol class="pipeline">
       {% for a in v.agents %}
         <li class="agent {{ a.id }}">
-          <b>{{ a.label }}</b>
+          <b>{{ a.label }}</b><code class="src">{{ a.id }}</code>
           <span>{{ a.steps }} step{{ 's' if a.steps != 1 }}</span>
           {% if v.roles.get(a.id) %}<p>{{ v.roles[a.id] }}</p>{% endif %}
         </li>

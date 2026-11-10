@@ -3,16 +3,16 @@
   "generatedBy": "src/export/snapshot.ts",
   "roles": {
     "intake": "Read the calendar and the inbox. Put conflicts, deadlines, and protected blocks on the board. Do not propose a schedule.",
-    "researcher": "Look up only the accounts this day will touch. Separate what we know, what we must ask, and what we must not promise.",
-    "planner": "Propose one schedule. First try may clear client calls early. If the critic rejects the focus block, reserve morning focus before non-critical meetings.",
-    "critic": "Score the plan against the rules. Do not quietly fix it. Name the failure and hand it back, or approve it.",
+    "researcher": "Look up only the jobs this day will touch. Separate what we know, what we must ask, and what we must not promise.",
+    "planner": "Propose one schedule. First try may clear calls early. If the critic rejects the estimate block, reserve the morning before non-critical meetings.",
+    "critic": "Score the plan against Maria's rules. Do not quietly fix it. Name the failure and hand it back, or approve it.",
     "executor": "Turn an approved plan into calendar, email, and Slack drafts. Never send.",
-    "brief": "Write the morning brief from the approved plan and the research notes. Three outcomes, one call card, no new commitments."
+    "brief": "Write the morning brief from the approved plan and the job notes. Three outcomes, one call card, no new commitments."
   },
   "runs": {
-    "warRoom": {
-      "runId": "tuesday-war-room",
-      "workflow": "war-room",
+    "thursday": {
+      "runId": "thursday-request",
+      "workflow": "thursday",
       "status": "approved",
       "model": "mock",
       "goal": "Sam Rivera's kitchen email landed at 08:47. Make room for a morning call, keep the estimate block, and do not drop the site walk or move Dave.",
@@ -59,7 +59,7 @@
           "when": "09:00–11:00"
         },
         {
-          "id": "northwind",
+          "id": "brightspark",
           "title": "Bright Spark · date check",
           "kind": "client",
           "start": 630,
@@ -71,7 +71,7 @@
           "needsPrepMinutes": 15,
           "earliest": 525,
           "latest": 1020,
-          "accountId": "northwind",
+          "accountId": "brightspark",
           "notes": "Already overlapping the estimate block. Not an emergency.",
           "when": "10:30–11:15"
         },
@@ -107,7 +107,7 @@
           "when": "12:00–12:45"
         },
         {
-          "id": "wellness",
+          "id": "walk",
           "title": "Site walk · 123 Example Ln",
           "kind": "personal",
           "start": 780,
@@ -123,7 +123,7 @@
           "when": "13:00–13:30"
         },
         {
-          "id": "caseflow",
+          "id": "crew",
           "title": "Crew schedule review",
           "kind": "internal",
           "start": 840,
@@ -138,7 +138,7 @@
           "when": "14:00–15:00"
         },
         {
-          "id": "halcyon",
+          "id": "pinecrest",
           "title": "Pinecrest · rough-in window",
           "kind": "client",
           "start": 930,
@@ -150,7 +150,7 @@
           "needsPrepMinutes": 0,
           "earliest": 930,
           "latest": 960,
-          "accountId": "halcyon",
+          "accountId": "pinecrest",
           "notes": "The county set this window. Do not move it.",
           "when": "15:30–16:00"
         },
@@ -172,9 +172,9 @@
       ],
       "demands": [
         {
-          "id": "meridian",
+          "id": "rivera",
           "title": "Rivera kitchen · scope call",
-          "accountId": "meridian",
+          "accountId": "rivera",
           "duration": 40,
           "prepMinutes": 15,
           "earliest": 525,
@@ -186,27 +186,27 @@
       ],
       "inbox": [
         {
-          "id": "mail-meridian-0847",
+          "id": "mail-rivera-0847",
           "at": "08:47",
           "from": "Sam Rivera (FAKE)",
           "fromRole": "Homeowner",
           "to": "Maria Alvarez",
           "subject": "Kitchen remodel at 123 Example Ln",
           "urgent": true,
-          "accountId": "meridian",
+          "accountId": "rivera",
           "body": "Hi Maria,\n\nWe want a quote for our kitchen at 123 Example Ln. Cabinets, counters, and maybe new lighting. We are hoping to start soon. Can you call this morning?\n\nSam Rivera"
         }
       ],
       "accounts": [
         {
-          "id": "meridian",
+          "id": "rivera",
           "name": "Rivera Kitchen",
           "tier": "strategic",
           "owner": "Sam Rivera (FAKE)",
           "ownerRole": "Homeowner",
           "ownerEmail": "sam.rivera@example.com",
           "slackChannel": "#job-j1042",
-          "goLive": "Demo Friday, March 13",
+          "milestone": "Demo Friday, March 13",
           "lastTouch": "Never. This is a new lead.",
           "lastTouchNote": "Inbound email only. No site visit yet.",
           "summary": "Kitchen remodel at 123 Example Ln. Fictional draft total is $38,450. Two lines are flagged.",
@@ -236,7 +236,7 @@
           ]
         },
         {
-          "id": "northwind",
+          "id": "brightspark",
           "name": "Bright Spark Electric (FAKE)",
           "tier": "enterprise",
           "owner": "Luis Ortega (FAKE)",
@@ -268,7 +268,7 @@
           ]
         },
         {
-          "id": "halcyon",
+          "id": "pinecrest",
           "name": "Pinecrest County Inspections",
           "tier": "standard",
           "owner": "Priya Raman (FAKE)",
@@ -324,29 +324,29 @@
           "source": "researcher",
           "level": "critical",
           "code": "ACCOUNT",
-          "summary": "Rivera Kitchen · strategic · go-live Demo Friday, March 13",
+          "summary": "Rivera Kitchen · quote needed today · Demo Friday, March 13",
           "id": "ACCOUNT-4"
         },
         {
           "source": "researcher",
           "level": "info",
           "code": "ACCOUNT",
-          "summary": "Pinecrest County Inspections · standard · last touch Monday, March 9",
+          "summary": "Pinecrest County Inspections · last touch Monday, March 9",
           "id": "ACCOUNT-5"
         },
         {
           "source": "researcher",
           "level": "info",
           "code": "ACCOUNT",
-          "summary": "Bright Spark Electric (FAKE) · enterprise · last touch Last month",
+          "summary": "Bright Spark Electric (FAKE) · last touch Last month",
           "id": "ACCOUNT-6"
         }
       ],
       "research": [
         {
-          "accountId": "meridian",
+          "accountId": "rivera",
           "name": "Rivera Kitchen",
-          "headline": "Rivera Kitchen · strategic · go-live Demo Friday, March 13",
+          "headline": "Rivera Kitchen · quote needed today · Demo Friday, March 13",
           "summary": "Kitchen remodel at 123 Example Ln. Fictional draft total is $38,450. Two lines are flagged.",
           "bullets": [
             "P0 J-1042: Kitchen remodel request, cabinets and counters (Lead since 8:47).",
@@ -367,9 +367,9 @@
           ]
         },
         {
-          "accountId": "halcyon",
+          "accountId": "pinecrest",
           "name": "Pinecrest County Inspections",
-          "headline": "Pinecrest County Inspections · standard · last touch Monday, March 9",
+          "headline": "Pinecrest County Inspections · last touch Monday, March 9",
           "summary": "County inspection window. The inspector is only free at 15:30.",
           "bullets": [
             "P1 INSP-1042: Rough-in inspection window (Waiting on today's window).",
@@ -384,9 +384,9 @@
           ]
         },
         {
-          "accountId": "northwind",
+          "accountId": "brightspark",
           "name": "Bright Spark Electric (FAKE)",
-          "headline": "Bright Spark Electric (FAKE) · enterprise · last touch Last month",
+          "headline": "Bright Spark Electric (FAKE) · last touch Last month",
           "summary": "Preferred electrician. The date check is routine. The certificate is not.",
           "bullets": [
             "P2 COI-1042: Insurance certificate expired (Renewal not received).",
@@ -409,7 +409,7 @@
             "Bright Spark · date check: Stacked as early as the fixed meetings allow.",
             "Lunch: Protected block, kept as close as possible to its original time.",
             "Site walk · 123 Example Ln: Protected block, kept as close as possible to its original time.",
-            "Estimate block · J-1042: Client calls were cleared first, so focus got whatever remained. The largest opening left is 110 minutes, ahead of a 90-minute alternative. The biggest hole is not a morning.",
+            "Estimate block · J-1042: Calls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 90-minute alternative. The biggest hole is not a morning.",
             "Crew schedule review: Nearest open time that still respects the fixed county window and the lead-in before it.",
             "Daily closeout: Nearest open time that still respects the fixed county window and the lead-in before it."
           ],
@@ -426,48 +426,48 @@
               "when": "08:30–08:45"
             },
             {
-              "id": "prep:meridian",
+              "id": "prep:rivera",
               "title": "Prep · Rivera kitchen",
               "kind": "prep",
               "start": 525,
               "end": 540,
               "reason": "Buffer immediately before Rivera kitchen · scope call.",
-              "accountId": "meridian",
-              "prepFor": "meridian",
+              "accountId": "rivera",
+              "prepFor": "rivera",
               "anchor": false,
               "when": "08:45–09:00"
             },
             {
-              "id": "meridian",
+              "id": "rivera",
               "title": "Rivera kitchen · scope call",
               "kind": "client",
               "start": 540,
               "end": 580,
               "reason": "Earliest opening that ends before the deadline (09:00–09:40).",
-              "accountId": "meridian",
+              "accountId": "rivera",
               "anchor": false,
               "when": "09:00–09:40"
             },
             {
-              "id": "prep:northwind",
+              "id": "prep:brightspark",
               "title": "Prep · Bright Spark",
               "kind": "prep",
               "start": 580,
               "end": 595,
               "reason": "Buffer immediately before Bright Spark · date check.",
-              "accountId": "northwind",
-              "prepFor": "northwind",
+              "accountId": "brightspark",
+              "prepFor": "brightspark",
               "anchor": false,
               "when": "09:40–09:55"
             },
             {
-              "id": "northwind",
+              "id": "brightspark",
               "title": "Bright Spark · date check",
               "kind": "client",
               "start": 595,
               "end": 640,
               "reason": "Stacked as early as the fixed meetings allow.",
-              "accountId": "northwind",
+              "accountId": "brightspark",
               "anchor": false,
               "when": "09:55–10:40"
             },
@@ -492,7 +492,7 @@
               "when": "12:00–12:45"
             },
             {
-              "id": "wellness",
+              "id": "walk",
               "title": "Site walk · 123 Example Ln",
               "kind": "personal",
               "start": 780,
@@ -507,23 +507,23 @@
               "kind": "focus",
               "start": 810,
               "end": 920,
-              "reason": "Client calls were cleared first, so focus got whatever remained. The largest opening left is 110 minutes, ahead of a 90-minute alternative. The biggest hole is not a morning.",
+              "reason": "Calls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 90-minute alternative. The biggest hole is not a morning.",
               "anchor": false,
               "when": "13:30–15:20"
             },
             {
-              "id": "halcyon",
+              "id": "pinecrest",
               "title": "Pinecrest · rough-in window",
               "kind": "client",
               "start": 930,
               "end": 960,
               "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
-              "accountId": "halcyon",
+              "accountId": "pinecrest",
               "anchor": true,
               "when": "15:30–16:00"
             },
             {
-              "id": "caseflow",
+              "id": "crew",
               "title": "Crew schedule review",
               "kind": "internal",
               "start": 960,
@@ -568,25 +568,25 @@
               "when": "08:30–08:45"
             },
             {
-              "id": "prep:meridian",
+              "id": "prep:rivera",
               "title": "Prep · Rivera kitchen",
               "kind": "prep",
               "start": 525,
               "end": 540,
               "reason": "Buffer immediately before Rivera kitchen · scope call.",
-              "accountId": "meridian",
-              "prepFor": "meridian",
+              "accountId": "rivera",
+              "prepFor": "rivera",
               "anchor": false,
               "when": "08:45–09:00"
             },
             {
-              "id": "meridian",
+              "id": "rivera",
               "title": "Rivera kitchen · scope call",
               "kind": "client",
               "start": 540,
               "end": 580,
               "reason": "Earliest opening that ends before the deadline (09:00–09:40).",
-              "accountId": "meridian",
+              "accountId": "rivera",
               "anchor": false,
               "when": "09:00–09:40"
             },
@@ -621,7 +621,7 @@
               "when": "12:00–12:45"
             },
             {
-              "id": "wellness",
+              "id": "walk",
               "title": "Site walk · 123 Example Ln",
               "kind": "personal",
               "start": 780,
@@ -631,30 +631,30 @@
               "when": "13:00–13:30"
             },
             {
-              "id": "prep:northwind",
+              "id": "prep:brightspark",
               "title": "Prep · Bright Spark",
               "kind": "prep",
               "start": 810,
               "end": 825,
               "reason": "Buffer immediately before Bright Spark · date check.",
-              "accountId": "northwind",
-              "prepFor": "northwind",
+              "accountId": "brightspark",
+              "prepFor": "brightspark",
               "anchor": false,
               "when": "13:30–13:45"
             },
             {
-              "id": "northwind",
+              "id": "brightspark",
               "title": "Bright Spark · date check",
               "kind": "client",
               "start": 825,
               "end": 870,
               "reason": "Moved to the nearest open slot after focus, lunch, and the walk were held.",
-              "accountId": "northwind",
+              "accountId": "brightspark",
               "anchor": false,
               "when": "13:45–14:30"
             },
             {
-              "id": "caseflow",
+              "id": "crew",
               "title": "Crew schedule review",
               "kind": "internal",
               "start": 870,
@@ -664,13 +664,13 @@
               "when": "14:30–15:20"
             },
             {
-              "id": "halcyon",
+              "id": "pinecrest",
               "title": "Pinecrest · rough-in window",
               "kind": "client",
               "start": 930,
               "end": 960,
               "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
-              "accountId": "halcyon",
+              "accountId": "pinecrest",
               "anchor": true,
               "when": "15:30–16:00"
             },
@@ -697,7 +697,7 @@
             {
               "code": "FOCUS_BLOCK",
               "weight": 25,
-              "detail": "Focus landed at 13:30–15:20. The escalation is allowed to shift it, not to push it out of the morning. The largest open gap was the wrong gap."
+              "detail": "Focus landed at 13:30–15:20. The request is allowed to shift it, not to push it out of the morning. The largest open gap was the wrong gap."
             }
           ],
           "passed": [
@@ -707,9 +707,9 @@
             "The day stays inside 08:30–17:30",
             "Lunch still lands around noon",
             "The walk is still on the day",
-            "The escalation ends before its deadline",
-            "Client calls have a prep buffer",
-            "Fixed client windows keep a 10-minute lead-in"
+            "The request ends before its deadline",
+            "Calls have a prep buffer",
+            "Fixed meetings keep a 10-minute lead-in"
           ]
         },
         {
@@ -726,9 +726,9 @@
             "Morning focus survived",
             "Lunch still lands around noon",
             "The walk is still on the day",
-            "The escalation ends before its deadline",
-            "Client calls have a prep buffer",
-            "Fixed client windows keep a 10-minute lead-in"
+            "The request ends before its deadline",
+            "Calls have a prep buffer",
+            "Fixed meetings keep a 10-minute lead-in"
           ]
         }
       ],
@@ -756,25 +756,25 @@
             "when": "08:30–08:45"
           },
           {
-            "id": "prep:meridian",
+            "id": "prep:rivera",
             "title": "Prep · Rivera kitchen",
             "kind": "prep",
             "start": 525,
             "end": 540,
             "reason": "Buffer immediately before Rivera kitchen · scope call.",
-            "accountId": "meridian",
-            "prepFor": "meridian",
+            "accountId": "rivera",
+            "prepFor": "rivera",
             "anchor": false,
             "when": "08:45–09:00"
           },
           {
-            "id": "meridian",
+            "id": "rivera",
             "title": "Rivera kitchen · scope call",
             "kind": "client",
             "start": 540,
             "end": 580,
             "reason": "Earliest opening that ends before the deadline (09:00–09:40).",
-            "accountId": "meridian",
+            "accountId": "rivera",
             "anchor": false,
             "when": "09:00–09:40"
           },
@@ -809,7 +809,7 @@
             "when": "12:00–12:45"
           },
           {
-            "id": "wellness",
+            "id": "walk",
             "title": "Site walk · 123 Example Ln",
             "kind": "personal",
             "start": 780,
@@ -819,30 +819,30 @@
             "when": "13:00–13:30"
           },
           {
-            "id": "prep:northwind",
+            "id": "prep:brightspark",
             "title": "Prep · Bright Spark",
             "kind": "prep",
             "start": 810,
             "end": 825,
             "reason": "Buffer immediately before Bright Spark · date check.",
-            "accountId": "northwind",
-            "prepFor": "northwind",
+            "accountId": "brightspark",
+            "prepFor": "brightspark",
             "anchor": false,
             "when": "13:30–13:45"
           },
           {
-            "id": "northwind",
+            "id": "brightspark",
             "title": "Bright Spark · date check",
             "kind": "client",
             "start": 825,
             "end": 870,
             "reason": "Moved to the nearest open slot after focus, lunch, and the walk were held.",
-            "accountId": "northwind",
+            "accountId": "brightspark",
             "anchor": false,
             "when": "13:45–14:30"
           },
           {
-            "id": "caseflow",
+            "id": "crew",
             "title": "Crew schedule review",
             "kind": "internal",
             "start": 870,
@@ -852,13 +852,13 @@
             "when": "14:30–15:20"
           },
           {
-            "id": "halcyon",
+            "id": "pinecrest",
             "title": "Pinecrest · rough-in window",
             "kind": "client",
             "start": 930,
             "end": 960,
             "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
-            "accountId": "halcyon",
+            "accountId": "pinecrest",
             "anchor": true,
             "when": "15:30–16:00"
           },
@@ -877,7 +877,7 @@
       "actions": [
         {
           "type": "calendar.create",
-          "id": "prep:meridian",
+          "id": "prep:rivera",
           "title": "Prep · Rivera kitchen",
           "to": "08:45–09:00",
           "reason": "Buffer immediately before Rivera kitchen · scope call.",
@@ -885,7 +885,7 @@
         },
         {
           "type": "calendar.create",
-          "id": "meridian",
+          "id": "rivera",
           "title": "Rivera kitchen · scope call",
           "to": "09:00–09:40",
           "reason": "Earliest opening that ends before the deadline (09:00–09:40).",
@@ -902,7 +902,7 @@
         },
         {
           "type": "calendar.create",
-          "id": "prep:northwind",
+          "id": "prep:brightspark",
           "title": "Prep · Bright Spark",
           "to": "13:30–13:45",
           "reason": "Buffer immediately before Bright Spark · date check.",
@@ -910,7 +910,7 @@
         },
         {
           "type": "calendar.update",
-          "id": "northwind",
+          "id": "brightspark",
           "title": "Bright Spark · date check",
           "from": "10:30–11:15",
           "to": "13:45–14:30",
@@ -919,7 +919,7 @@
         },
         {
           "type": "calendar.update",
-          "id": "caseflow",
+          "id": "crew",
           "title": "Crew schedule review",
           "from": "14:00–15:00",
           "to": "14:30–15:20",
@@ -931,7 +931,7 @@
           "to": "sam.rivera@example.com",
           "subject": "Re: Rivera Kitchen — morning call at 09:00",
           "body": "Sam,\n\nI can talk at 09:00–09:40 today.\n\nI have J-1042 open — Kitchen remodel request, cabinets and counters. I will not give you a price or a start date on the call. I will send a written note by 12:15, and the quote waits for approval before it goes out.\n\nIf 09:00–09:40 does not work, reply before 9:30 and I will move a flexible block.\n\nMaria Alvarez\nProject manager",
-          "accountId": "meridian",
+          "accountId": "rivera",
           "sendAt": "12:15",
           "status": "draft"
         },
@@ -1044,7 +1044,7 @@
         {
           "at": "08:47:02",
           "agent": "supervisor",
-          "title": "War room is open",
+          "title": "Thursday is open",
           "detail": "Sam Rivera's kitchen email landed at 08:47. Make room for a morning call, keep the estimate block, and do not drop the site walk or move Dave.",
           "handoff": {
             "to": "intake",
@@ -1058,24 +1058,24 @@
           "detail": "Estimate block · J-1042 (09:00–11:00) overlaps Bright Spark · date check (10:30–11:15).\nSam Rivera (FAKE) wrote at 08:47: Kitchen remodel at 123 Example Ln",
           "handoff": {
             "to": "researcher",
-            "reason": "An escalation needs account context before anyone moves a meeting."
+            "reason": "The kitchen request needs the job file before anyone moves a meeting."
           }
         },
         {
           "at": "08:47:18",
           "agent": "researcher",
-          "title": "Rivera Kitchen · strategic · go-live Demo Friday, March 13",
+          "title": "Rivera Kitchen · quote needed today · Demo Friday, March 13",
           "detail": "· P0 J-1042: Kitchen remodel request, cabinets and counters (Lead since 8:47).\n· Last touch Never. This is a new lead.. Inbound email only. No site visit yet.\n· Sam wants a quote today. The $38,450 total is a draft until Maria approves it.\n· Quartz waterfall edge has no price-list match, so that line is flagged.\n· Rain is forecast for Friday. Demo and the dumpster are weather-sensitive.\nAsk first: Is the budget a ceiling or a starting hope?\nAlso today: Pinecrest County Inspections (fixed window), Bright Spark Electric (FAKE) (movable).",
           "handoff": {
             "to": "planner",
-            "reason": "The board has the constraints and the account facts. Propose a day."
+            "reason": "The board has the constraints and the job facts. Propose a day."
           }
         },
         {
           "at": "08:47:26",
           "agent": "planner",
           "title": "Revision 1 · client-first",
-          "detail": "Focus at 13:30–15:20.\nClient calls were cleared first, so focus got whatever remained. The largest opening left is 110 minutes, ahead of a 90-minute alternative. The biggest hole is not a morning.\nNew blocks: Prep · Rivera kitchen 08:45–09:00; Rivera kitchen · scope call 09:00–09:40; Prep · Bright Spark 09:40–09:55.",
+          "detail": "Focus at 13:30–15:20.\nCalls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 90-minute alternative. The biggest hole is not a morning.\nNew blocks: Prep · Rivera kitchen 08:45–09:00; Rivera kitchen · scope call 09:00–09:40; Prep · Bright Spark 09:40–09:55.",
           "handoff": {
             "to": "critic",
             "reason": "Score this proposal. Do not soften it on the way."
@@ -1085,10 +1085,10 @@
           "at": "08:47:34",
           "agent": "critic",
           "title": "75/100 · rejected",
-          "detail": "FOCUS_BLOCK. Focus landed at 13:30–15:20. The escalation is allowed to shift it, not to push it out of the morning. The largest open gap was the wrong gap.\nStill held: Every block found a home; No two blocks overlap; Fixed meetings stayed put; The day stays inside 08:30–17:30.",
+          "detail": "FOCUS_BLOCK. Focus landed at 13:30–15:20. The request is allowed to shift it, not to push it out of the morning. The largest open gap was the wrong gap.\nStill held: Every block found a home; No two blocks overlap; Fixed meetings stayed put; The day stays inside 08:30–17:30.",
           "handoff": {
             "to": "planner",
-            "reason": "Switch to protect-focus. Reserve the morning before you place non-critical clients."
+            "reason": "Switch to protect-focus. Reserve the morning before you place non-critical meetings."
           }
         },
         {
@@ -1136,7 +1136,7 @@
       ]
     },
     "morning": {
-      "runId": "tuesday-morning",
+      "runId": "thursday-morning",
       "workflow": "morning",
       "status": "approved",
       "model": "mock",
@@ -1184,7 +1184,7 @@
           "when": "09:00–11:00"
         },
         {
-          "id": "northwind",
+          "id": "brightspark",
           "title": "Bright Spark · date check",
           "kind": "client",
           "start": 630,
@@ -1196,7 +1196,7 @@
           "needsPrepMinutes": 15,
           "earliest": 525,
           "latest": 1020,
-          "accountId": "northwind",
+          "accountId": "brightspark",
           "notes": "Already overlapping the estimate block. Not an emergency.",
           "when": "10:30–11:15"
         },
@@ -1232,7 +1232,7 @@
           "when": "12:00–12:45"
         },
         {
-          "id": "wellness",
+          "id": "walk",
           "title": "Site walk · 123 Example Ln",
           "kind": "personal",
           "start": 780,
@@ -1248,7 +1248,7 @@
           "when": "13:00–13:30"
         },
         {
-          "id": "caseflow",
+          "id": "crew",
           "title": "Crew schedule review",
           "kind": "internal",
           "start": 840,
@@ -1263,7 +1263,7 @@
           "when": "14:00–15:00"
         },
         {
-          "id": "halcyon",
+          "id": "pinecrest",
           "title": "Pinecrest · rough-in window",
           "kind": "client",
           "start": 930,
@@ -1275,7 +1275,7 @@
           "needsPrepMinutes": 0,
           "earliest": 930,
           "latest": 960,
-          "accountId": "halcyon",
+          "accountId": "pinecrest",
           "notes": "The county set this window. Do not move it.",
           "when": "15:30–16:00"
         },
@@ -1299,14 +1299,14 @@
       "inbox": [],
       "accounts": [
         {
-          "id": "meridian",
+          "id": "rivera",
           "name": "Rivera Kitchen",
           "tier": "strategic",
           "owner": "Sam Rivera (FAKE)",
           "ownerRole": "Homeowner",
           "ownerEmail": "sam.rivera@example.com",
           "slackChannel": "#job-j1042",
-          "goLive": "Demo Friday, March 13",
+          "milestone": "Demo Friday, March 13",
           "lastTouch": "Never. This is a new lead.",
           "lastTouchNote": "Inbound email only. No site visit yet.",
           "summary": "Kitchen remodel at 123 Example Ln. Fictional draft total is $38,450. Two lines are flagged.",
@@ -1336,7 +1336,7 @@
           ]
         },
         {
-          "id": "northwind",
+          "id": "brightspark",
           "name": "Bright Spark Electric (FAKE)",
           "tier": "enterprise",
           "owner": "Luis Ortega (FAKE)",
@@ -1368,7 +1368,7 @@
           ]
         },
         {
-          "id": "halcyon",
+          "id": "pinecrest",
           "name": "Pinecrest County Inspections",
           "tier": "standard",
           "owner": "Priya Raman (FAKE)",
@@ -1417,22 +1417,22 @@
           "source": "researcher",
           "level": "info",
           "code": "ACCOUNT",
-          "summary": "Pinecrest County Inspections · standard · last touch Monday, March 9",
+          "summary": "Pinecrest County Inspections · last touch Monday, March 9",
           "id": "ACCOUNT-3"
         },
         {
           "source": "researcher",
           "level": "info",
           "code": "ACCOUNT",
-          "summary": "Bright Spark Electric (FAKE) · enterprise · last touch Last month",
+          "summary": "Bright Spark Electric (FAKE) · last touch Last month",
           "id": "ACCOUNT-4"
         }
       ],
       "research": [
         {
-          "accountId": "halcyon",
+          "accountId": "pinecrest",
           "name": "Pinecrest County Inspections",
-          "headline": "Pinecrest County Inspections · standard · last touch Monday, March 9",
+          "headline": "Pinecrest County Inspections · last touch Monday, March 9",
           "summary": "County inspection window. The inspector is only free at 15:30.",
           "bullets": [
             "P1 INSP-1042: Rough-in inspection window (Waiting on today's window).",
@@ -1447,9 +1447,9 @@
           ]
         },
         {
-          "accountId": "northwind",
+          "accountId": "brightspark",
           "name": "Bright Spark Electric (FAKE)",
-          "headline": "Bright Spark Electric (FAKE) · enterprise · last touch Last month",
+          "headline": "Bright Spark Electric (FAKE) · last touch Last month",
           "summary": "Preferred electrician. The date check is routine. The certificate is not.",
           "bullets": [
             "P2 COI-1042: Insurance certificate expired (Renewal not received).",
@@ -1471,7 +1471,7 @@
             "Bright Spark · date check: Stacked as early as the fixed meetings allow.",
             "Lunch: Protected block, kept as close as possible to its original time.",
             "Site walk · 123 Example Ln: Protected block, kept as close as possible to its original time.",
-            "Estimate block · J-1042: Client calls were cleared first, so focus got whatever remained. The largest opening left is 110 minutes, ahead of a 95-minute alternative. The biggest hole is not a morning.",
+            "Estimate block · J-1042: Calls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 95-minute alternative. The biggest hole is not a morning.",
             "Crew schedule review: Nearest open time that still respects the fixed county window and the lead-in before it.",
             "Daily closeout: Nearest open time that still respects the fixed county window and the lead-in before it."
           ],
@@ -1488,25 +1488,25 @@
               "when": "08:30–08:45"
             },
             {
-              "id": "prep:northwind",
+              "id": "prep:brightspark",
               "title": "Prep · Bright Spark",
               "kind": "prep",
               "start": 525,
               "end": 540,
               "reason": "Buffer immediately before Bright Spark · date check.",
-              "accountId": "northwind",
-              "prepFor": "northwind",
+              "accountId": "brightspark",
+              "prepFor": "brightspark",
               "anchor": false,
               "when": "08:45–09:00"
             },
             {
-              "id": "northwind",
+              "id": "brightspark",
               "title": "Bright Spark · date check",
               "kind": "client",
               "start": 540,
               "end": 585,
               "reason": "Stacked as early as the fixed meetings allow.",
-              "accountId": "northwind",
+              "accountId": "brightspark",
               "anchor": false,
               "when": "09:00–09:45"
             },
@@ -1531,7 +1531,7 @@
               "when": "12:00–12:45"
             },
             {
-              "id": "wellness",
+              "id": "walk",
               "title": "Site walk · 123 Example Ln",
               "kind": "personal",
               "start": 780,
@@ -1546,23 +1546,23 @@
               "kind": "focus",
               "start": 810,
               "end": 920,
-              "reason": "Client calls were cleared first, so focus got whatever remained. The largest opening left is 110 minutes, ahead of a 95-minute alternative. The biggest hole is not a morning.",
+              "reason": "Calls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 95-minute alternative. The biggest hole is not a morning.",
               "anchor": false,
               "when": "13:30–15:20"
             },
             {
-              "id": "halcyon",
+              "id": "pinecrest",
               "title": "Pinecrest · rough-in window",
               "kind": "client",
               "start": 930,
               "end": 960,
               "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
-              "accountId": "halcyon",
+              "accountId": "pinecrest",
               "anchor": true,
               "when": "15:30–16:00"
             },
             {
-              "id": "caseflow",
+              "id": "crew",
               "title": "Crew schedule review",
               "kind": "internal",
               "start": 960,
@@ -1636,7 +1636,7 @@
               "when": "12:00–12:45"
             },
             {
-              "id": "wellness",
+              "id": "walk",
               "title": "Site walk · 123 Example Ln",
               "kind": "personal",
               "start": 780,
@@ -1646,30 +1646,30 @@
               "when": "13:00–13:30"
             },
             {
-              "id": "prep:northwind",
+              "id": "prep:brightspark",
               "title": "Prep · Bright Spark",
               "kind": "prep",
               "start": 810,
               "end": 825,
               "reason": "Buffer immediately before Bright Spark · date check.",
-              "accountId": "northwind",
-              "prepFor": "northwind",
+              "accountId": "brightspark",
+              "prepFor": "brightspark",
               "anchor": false,
               "when": "13:30–13:45"
             },
             {
-              "id": "northwind",
+              "id": "brightspark",
               "title": "Bright Spark · date check",
               "kind": "client",
               "start": 825,
               "end": 870,
               "reason": "Moved to the nearest open slot after focus, lunch, and the walk were held.",
-              "accountId": "northwind",
+              "accountId": "brightspark",
               "anchor": false,
               "when": "13:45–14:30"
             },
             {
-              "id": "caseflow",
+              "id": "crew",
               "title": "Crew schedule review",
               "kind": "internal",
               "start": 870,
@@ -1679,13 +1679,13 @@
               "when": "14:30–15:20"
             },
             {
-              "id": "halcyon",
+              "id": "pinecrest",
               "title": "Pinecrest · rough-in window",
               "kind": "client",
               "start": 930,
               "end": 960,
               "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
-              "accountId": "halcyon",
+              "accountId": "pinecrest",
               "anchor": true,
               "when": "15:30–16:00"
             },
@@ -1722,9 +1722,9 @@
             "The day stays inside 08:30–17:30",
             "Lunch still lands around noon",
             "The walk is still on the day",
-            "The escalation ends before its deadline",
-            "Client calls have a prep buffer",
-            "Fixed client windows keep a 10-minute lead-in"
+            "The request ends before its deadline",
+            "Calls have a prep buffer",
+            "Fixed meetings keep a 10-minute lead-in"
           ]
         },
         {
@@ -1741,9 +1741,9 @@
             "Morning focus survived",
             "Lunch still lands around noon",
             "The walk is still on the day",
-            "The escalation ends before its deadline",
-            "Client calls have a prep buffer",
-            "Fixed client windows keep a 10-minute lead-in"
+            "The request ends before its deadline",
+            "Calls have a prep buffer",
+            "Fixed meetings keep a 10-minute lead-in"
           ]
         }
       ],
@@ -1800,7 +1800,7 @@
             "when": "12:00–12:45"
           },
           {
-            "id": "wellness",
+            "id": "walk",
             "title": "Site walk · 123 Example Ln",
             "kind": "personal",
             "start": 780,
@@ -1810,30 +1810,30 @@
             "when": "13:00–13:30"
           },
           {
-            "id": "prep:northwind",
+            "id": "prep:brightspark",
             "title": "Prep · Bright Spark",
             "kind": "prep",
             "start": 810,
             "end": 825,
             "reason": "Buffer immediately before Bright Spark · date check.",
-            "accountId": "northwind",
-            "prepFor": "northwind",
+            "accountId": "brightspark",
+            "prepFor": "brightspark",
             "anchor": false,
             "when": "13:30–13:45"
           },
           {
-            "id": "northwind",
+            "id": "brightspark",
             "title": "Bright Spark · date check",
             "kind": "client",
             "start": 825,
             "end": 870,
             "reason": "Moved to the nearest open slot after focus, lunch, and the walk were held.",
-            "accountId": "northwind",
+            "accountId": "brightspark",
             "anchor": false,
             "when": "13:45–14:30"
           },
           {
-            "id": "caseflow",
+            "id": "crew",
             "title": "Crew schedule review",
             "kind": "internal",
             "start": 870,
@@ -1843,13 +1843,13 @@
             "when": "14:30–15:20"
           },
           {
-            "id": "halcyon",
+            "id": "pinecrest",
             "title": "Pinecrest · rough-in window",
             "kind": "client",
             "start": 930,
             "end": 960,
             "reason": "Pinecrest · rough-in window stays. It was marked fixed.",
-            "accountId": "halcyon",
+            "accountId": "pinecrest",
             "anchor": true,
             "when": "15:30–16:00"
           },
@@ -1868,7 +1868,7 @@
       "actions": [
         {
           "type": "calendar.create",
-          "id": "prep:northwind",
+          "id": "prep:brightspark",
           "title": "Prep · Bright Spark",
           "to": "13:30–13:45",
           "reason": "Buffer immediately before Bright Spark · date check.",
@@ -1876,7 +1876,7 @@
         },
         {
           "type": "calendar.update",
-          "id": "northwind",
+          "id": "brightspark",
           "title": "Bright Spark · date check",
           "from": "10:30–11:15",
           "to": "13:45–14:30",
@@ -1885,7 +1885,7 @@
         },
         {
           "type": "calendar.update",
-          "id": "caseflow",
+          "id": "crew",
           "title": "Crew schedule review",
           "from": "14:00–15:00",
           "to": "14:30–15:20",
@@ -1975,24 +1975,24 @@
           "detail": "Estimate block · J-1042 (09:00–11:00) overlaps Bright Spark · date check (10:30–11:15).\nThe inbox does not change the shape of the day.",
           "handoff": {
             "to": "researcher",
-            "reason": "Name the accounts already on the day."
+            "reason": "Name the jobs already on the day."
           }
         },
         {
           "at": "08:05:18",
           "agent": "researcher",
-          "title": "Pinecrest County Inspections · standard · last touch Monday, March 9",
+          "title": "Pinecrest County Inspections · last touch Monday, March 9",
           "detail": "· P1 INSP-1042: Rough-in inspection window (Waiting on today's window).\n· Last touch Monday, March 9. Rough-in window held for Thursday at 15:30.\n· The 15:30–16:00 window is the inspector's only opening. Treat it as fixed.\nAsk first: Who on the crew meets the inspector?\nAlso today: Bright Spark Electric (FAKE) (movable).",
           "handoff": {
             "to": "planner",
-            "reason": "The board has the constraints and the account facts. Propose a day."
+            "reason": "The board has the constraints and the job facts. Propose a day."
           }
         },
         {
           "at": "08:05:26",
           "agent": "planner",
           "title": "Revision 1 · client-first",
-          "detail": "Focus at 13:30–15:20.\nClient calls were cleared first, so focus got whatever remained. The largest opening left is 110 minutes, ahead of a 95-minute alternative. The biggest hole is not a morning.\nNew blocks: Prep · Bright Spark 08:45–09:00.",
+          "detail": "Focus at 13:30–15:20.\nCalls were cleared first, so the estimate block got whatever remained. The largest opening left is 110 minutes, ahead of a 95-minute alternative. The biggest hole is not a morning.\nNew blocks: Prep · Bright Spark 08:45–09:00.",
           "handoff": {
             "to": "critic",
             "reason": "Score this proposal. Do not soften it on the way."
@@ -2005,7 +2005,7 @@
           "detail": "FOCUS_BLOCK. Focus moved to 13:30–15:20. Nothing critical happened, so the morning block should stay within 15 minutes of 09:00. A larger afternoon hole is not a better morning.\nStill held: Every block found a home; No two blocks overlap; Fixed meetings stayed put; The day stays inside 08:30–17:30.",
           "handoff": {
             "to": "planner",
-            "reason": "Switch to protect-focus. Reserve the morning before you place non-critical clients."
+            "reason": "Switch to protect-focus. Reserve the morning before you place non-critical meetings."
           }
         },
         {
