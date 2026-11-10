@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Benchmark agents</title>
+  <desc id="desc">Cards for the Benchmark supervisor and the four specialists Intake, Scheduling, Compliance, and Briefing. Each card lists the role, inputs, outputs, tools, and hand-off from the source.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1600" height="1080" fill="#f3f0e8"/>
+  <text x="48" y="52" class="serif" font-size="34" fill="#221f1a">Meet the agents</text>
+  <text x="48" y="84" font-size="16" fill="#3a342c">One lead and four specialists. They do not call each other. The critic is the lead's checklist, not a fifth agent.</text>
+  <g>
+    <rect x="48" y="124" width="1504" height="220" rx="14" fill="#2c3d86"/>
+    <g><rect x="72" y="148" width="48" height="48" rx="12" fill="#24336f"/><circle cx="96" cy="164" r="4" fill="#fffdf9"/>
+      <circle cx="84" cy="182" r="3.5" fill="#fffdf9"/>
+      <circle cx="108" cy="182" r="3.5" fill="#fffdf9"/>
+      <path d="M 96 168 L 86 179 M 96 168 L 106 179" stroke="#fffdf9" stroke-width="1.6" fill="none"/></g>
+    <text x="136" y="170" fill="#fffdf9" font-size="26" font-weight="700">Supervisor</text>
+    <text x="136" y="196" fill="#e7ebf6" font-size="15">Routes one specialist at a time. Stops at approval, or after three revisions.</text>
+    <text x="136" y="220" fill="#c9d2f2" font-size="13">orchestrator/supervisor.ts, and critic.ts for the score</text>
+    <text x="76" y="256" fill="#c9d2f2" font-size="12" font-weight="700" letter-spacing="0.08em">INPUTS</text>
+    <text x="76" y="280" fill="#e7ebf6" font-size="15">Thursday fixture and the goal</text>
+    <text x="76" y="302" fill="#e7ebf6" font-size="15">The critic score, once it exists</text><text x="446" y="256" fill="#c9d2f2" font-size="12" font-weight="700" letter-spacing="0.08em">OUTPUTS</text>
+    <text x="446" y="280" fill="#e7ebf6" font-size="15">The trace and the run status</text>
+    <text x="446" y="302" fill="#e7ebf6" font-size="15">approved, or needs_human</text><text x="816" y="256" fill="#c9d2f2" font-size="12" font-weight="700" letter-spacing="0.08em">TOOLS</text>
+    <text x="816" y="280" fill="#e7ebf6" font-size="15">None of its own</text>
+    <text x="816" y="302" fill="#e7ebf6" font-size="15">It passes the read-only toolkit in</text><text x="1186" y="256" fill="#c9d2f2" font-size="12" font-weight="700" letter-spacing="0.08em">HANDS OFF TO</text>
+    <text x="1186" y="280" fill="#e7ebf6" font-size="15">Intake, to open the day</text>
+    <text x="1186" y="302" fill="#e7ebf6" font-size="15">Then Scheduling or Compliance</text>
+  </g>
+  <g>
+        <rect x="48" y="368" width="742" height="312" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+        <g><rect x="72" y="392" width="48" height="48" rx="12" fill="#e7ebf6"/><path d="M 86 410 H 106 V 426 H 86 Z" fill="none" stroke="#2c3d86" stroke-width="1.6"/>
+      <path d="M 86 410 L 96 418 L 106 410" fill="none" stroke="#2c3d86" stroke-width="1.6"/></g>
+        <text x="136" y="414" fill="#221f1a" font-size="26" font-weight="700">Intake</text>
+        <text x="136" y="440" fill="#3a342c" font-size="15">Reads the day and the job file. Does not propose a schedule.</text>
+        <text x="72" y="480" fill="#5c564c" font-size="13">intake.ts and researcher.ts</text>
+        <text x="72" y="500" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">INPUTS</text>
+    <text x="72" y="524" fill="#3a342c" font-size="15">Calendar events and the inbox</text>
+    <text x="72" y="546" fill="#3a342c" font-size="15">Sam's email, once it arrives</text><text x="432" y="500" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">OUTPUTS</text>
+    <text x="432" y="524" fill="#3a342c" font-size="15">Findings: overlap and deadlines</text>
+    <text x="432" y="546" fill="#3a342c" font-size="15">Notes: facts, questions, limits</text><text x="72" y="604" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">TOOLS</text>
+    <text x="72" y="628" fill="#3a342c" font-size="15">listEvents and listInbox</text>
+    <text x="72" y="650" fill="#3a342c" font-size="15">lookupAccount, accountsOnCalendar</text><text x="432" y="604" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">HANDS OFF TO</text>
+    <text x="432" y="628" fill="#3a342c" font-size="15">Scheduling</text>
+    <text x="432" y="650" fill="#3a342c" font-size="15">After the job lookup finishes</text>
+      </g>
+<g>
+        <rect x="810" y="368" width="742" height="312" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+        <g><rect x="834" y="392" width="48" height="48" rx="12" fill="#e7ebf6"/><rect x="848" y="408" width="20" height="18" rx="2" fill="none" stroke="#2c3d86" stroke-width="1.6"/>
+      <path d="M 848 414 H 868 M 854 406 V 411 M 862 406 V 411" stroke="#2c3d86" stroke-width="1.6" fill="none"/></g>
+        <text x="898" y="414" fill="#221f1a" font-size="26" font-weight="700">Scheduling</text>
+        <text x="898" y="440" fill="#3a342c" font-size="15">Proposes one day. Calls early first, then the morning.</text>
+        <text x="834" y="480" fill="#5c564c" font-size="13">planner.ts and schedule/plan.ts</text>
+        <text x="834" y="500" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">INPUTS</text>
+    <text x="834" y="524" fill="#3a342c" font-size="15">Findings and the job facts</text>
+    <text x="834" y="546" fill="#3a342c" font-size="15">Critic failure codes, if any</text><text x="1194" y="500" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">OUTPUTS</text>
+    <text x="1194" y="524" fill="#3a342c" font-size="15">One plan, stored on attempts</text>
+    <text x="1194" y="546" fill="#3a342c" font-size="15">client-first or protect-focus</text><text x="834" y="604" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">TOOLS</text>
+    <text x="834" y="628" fill="#3a342c" font-size="15">No toolkit and no model</text>
+    <text x="834" y="650" fill="#3a342c" font-size="15">planSchedule is a pure function</text><text x="1194" y="604" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">HANDS OFF TO</text>
+    <text x="1194" y="628" fill="#3a342c" font-size="15">The critic, through the supervisor</text>
+    <text x="1194" y="650" fill="#3a342c" font-size="15">A rejection comes back here</text>
+      </g>
+<g>
+        <rect x="48" y="700" width="742" height="312" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+        <g><rect x="72" y="724" width="48" height="48" rx="12" fill="#e7ebf6"/><path d="M 88 738 H 101 L 106 743 V 758 H 88 Z" fill="none" stroke="#2c3d86" stroke-width="1.6"/>
+      <path d="M 92 749 H 102 M 92 754 H 99" stroke="#2c3d86" stroke-width="1.6" fill="none"/></g>
+        <text x="136" y="746" fill="#221f1a" font-size="26" font-weight="700">Compliance</text>
+        <text x="136" y="772" fill="#3a342c" font-size="15">Turns an approved plan into drafts. Never sends.</text>
+        <text x="72" y="812" fill="#5c564c" font-size="13">executor.ts and schedule/actions.ts</text>
+        <text x="72" y="832" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">INPUTS</text>
+    <text x="72" y="856" fill="#3a342c" font-size="15">The approved plan only</text>
+    <text x="72" y="878" fill="#3a342c" font-size="15">Events, jobs, and the deadline</text><text x="432" y="832" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">OUTPUTS</text>
+    <text x="432" y="856" fill="#3a342c" font-size="15">Calendar, email, and Slack drafts</text>
+    <text x="432" y="878" fill="#3a342c" font-size="15">Every action has status draft</text><text x="72" y="936" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">TOOLS</text>
+    <text x="72" y="960" fill="#3a342c" font-size="15">No live calendar, mail, or Slack</text>
+    <text x="72" y="982" fill="#3a342c" font-size="15">Prose model, optional, for wording</text><text x="432" y="936" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">HANDS OFF TO</text>
+    <text x="432" y="960" fill="#3a342c" font-size="15">Briefing</text>
+    <text x="432" y="982" fill="#3a342c" font-size="15">Drafts stay on the board</text>
+      </g>
+<g>
+        <rect x="810" y="700" width="742" height="312" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+        <g><rect x="834" y="724" width="48" height="48" rx="12" fill="#e7ebf6"/><path d="M 849 742 H 867 M 849 748 H 863 M 849 754 H 859" stroke="#2c3d86" stroke-width="1.8" stroke-linecap="round" fill="none"/></g>
+        <text x="898" y="746" fill="#221f1a" font-size="26" font-weight="700">Briefing</text>
+        <text x="898" y="772" fill="#3a342c" font-size="15">Writes three outcomes and a call card. Adds no promise.</text>
+        <text x="834" y="812" fill="#5c564c" font-size="13">briefWriter.ts</text>
+        <text x="834" y="832" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">INPUTS</text>
+    <text x="834" y="856" fill="#3a342c" font-size="15">The approved plan</text>
+    <text x="834" y="878" fill="#3a342c" font-size="15">The research notes</text><text x="1194" y="832" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">OUTPUTS</text>
+    <text x="1194" y="856" fill="#3a342c" font-size="15">Headline, outcomes, and watchouts</text>
+    <text x="1194" y="878" fill="#3a342c" font-size="15">Call card: ask, and do not promise</text><text x="834" y="936" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">TOOLS</text>
+    <text x="834" y="960" fill="#3a342c" font-size="15">No schedule function</text>
+    <text x="834" y="982" fill="#3a342c" font-size="15">Prose model, optional, for the headline</text><text x="1194" y="936" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">HANDS OFF TO</text>
+    <text x="1194" y="960" fill="#3a342c" font-size="15">No further specialist</text>
+    <text x="1194" y="982" fill="#3a342c" font-size="15">The supervisor then closes</text>
+      </g>
+</svg>

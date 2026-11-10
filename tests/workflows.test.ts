@@ -8,9 +8,9 @@ import { range } from "../src/time.js";
 
 const mock = resolveModel(false);
 
-describe("war room", () => {
+describe("thursday", () => {
   it("rejects the greedy morning, then approves a rewrite", async () => {
-    const state = await runWorkflow({ workflow: "war-room", model: mock });
+    const state = await runWorkflow({ workflow: "thursday", model: mock });
     assert.equal(state.status, "approved");
     assert.equal(state.modelName, "mock");
     assert.equal(state.critiques.length, 2);
@@ -21,10 +21,10 @@ describe("war room", () => {
     assert.equal(state.critiques[1]?.strategy, "protect-focus");
 
     const focus = state.plan?.blocks.find((block) => block.id === "focus");
-    const meridian = state.plan?.blocks.find((block) => block.id === "meridian");
-    assert.ok(focus && meridian);
+    const rivera = state.plan?.blocks.find((block) => block.id === "rivera");
+    assert.ok(focus && rivera);
     assert.equal(range(focus.start, focus.end), "09:40–11:20");
-    assert.ok(meridian.end <= 13 * 60);
+    assert.ok(rivera.end <= 13 * 60);
 
     const email = state.actions.find((action) => action.type === "email.draft");
     const slack = state.actions.find((action) => action.type === "slack.draft");
@@ -46,7 +46,7 @@ describe("war room", () => {
 });
 
 describe("morning", () => {
-  it("gives the focus block back and does not invent an escalation", async () => {
+  it("gives the focus block back and does not invent a kitchen request", async () => {
     const state = await runWorkflow({ workflow: "morning", model: mock });
     assert.equal(state.status, "approved");
     assert.equal(state.inbox.length, 0);
@@ -54,15 +54,15 @@ describe("morning", () => {
     const focus = state.plan?.blocks.find((block) => block.id === "focus");
     assert.equal(focus && range(focus.start, focus.end), "09:00–11:00");
     assert.match(state.brief?.headline ?? "", /09:00–11:00/);
-    assert.ok(state.actions.some((action) => action.type === "calendar.update" && action.id === "northwind"));
+    assert.ok(state.actions.some((action) => action.type === "calendar.update" && action.id === "brightspark"));
   });
 });
 
 describe("cli", () => {
   it("runs the hero demo in mock mode", () => {
-    const result = spawnSync(process.execPath, ["--import", "tsx", "src/cli.ts", "war-room"], {
+    const result = spawnSync(process.execPath, ["--import", "tsx", "src/cli.ts", "thursday"], {
       encoding: "utf8",
-      env: { ...process.env, NO_COLOR: "1", ATLAS_PROVIDER: "mock" },
+      env: { ...process.env, NO_COLOR: "1", BENCHMARK_PROVIDER: "mock" },
     });
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /Rivera/);

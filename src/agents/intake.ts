@@ -44,7 +44,9 @@ export async function runIntake(state: RunState, tools: Toolkit): Promise<void> 
     detail: `${conflictLine}\n${mailLine}`,
     handoff: handoff(
       "researcher",
-      urgent.length > 0 ? "An escalation needs account context before anyone moves a meeting." : "Name the accounts already on the day.",
+      urgent.length > 0
+        ? "The kitchen request needs the job file before anyone moves a meeting."
+        : "Name the jobs already on the day.",
     ),
   });
 }

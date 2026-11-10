@@ -86,9 +86,9 @@ function emailDraft(persona: string, account: Account, meeting: PlanBlock, deadl
 
 function slackDraft(account: Account, plan: Plan, meeting: PlanBlock, deadline: number): Action {
   const focus = plan.blocks.find((block) => block.kind === "focus");
-  const northwind = plan.blocks.find((block) => block.id === "northwind");
+  const brightspark = plan.blocks.find((block) => block.id === "brightspark");
   const focusLine = focus ? `Estimate block stays ${range(focus.start, focus.end)}.` : "";
-  const moveLine = northwind ? `Bright Spark moves to ${hm(northwind.start)}.` : "";
+  const moveLine = brightspark ? `Bright Spark moves to ${hm(brightspark.start)}.` : "";
   const text = [
     `${account.owner} is drafted onto the calendar at ${range(meeting.start, meeting.end)}.`,
     focusLine,

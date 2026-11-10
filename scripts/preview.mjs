@@ -32,5 +32,5 @@ createServer(async (req, res) => {
     res.end("Not found");
   }
 }).listen(port, "127.0.0.1", () => {
-  process.stdout.write(`Atlas demo at http://127.0.0.1:${port}\n`);
+  process.stdout.write(`Benchmark demo at http://127.0.0.1:${port}\n`);
 });

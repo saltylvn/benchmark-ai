@@ -21,14 +21,14 @@ export const PRIORITIES = [
 
 export const ACCOUNTS: Account[] = [
   {
-    id: "meridian",
+    id: "rivera",
     name: "Rivera Kitchen",
     tier: "strategic",
     owner: "Sam Rivera (FAKE)",
     ownerRole: "Homeowner",
     ownerEmail: "sam.rivera@example.com",
     slackChannel: "#job-j1042",
-    goLive: "Demo Friday, March 13",
+    milestone: "Demo Friday, March 13",
     lastTouch: "Never. This is a new lead.",
     lastTouchNote: "Inbound email only. No site visit yet.",
     summary: "Kitchen remodel at 123 Example Ln. Fictional draft total is $38,450. Two lines are flagged.",
@@ -58,7 +58,7 @@ export const ACCOUNTS: Account[] = [
     ],
   },
   {
-    id: "northwind",
+    id: "brightspark",
     name: "Bright Spark Electric (FAKE)",
     tier: "enterprise",
     owner: "Luis Ortega (FAKE)",
@@ -90,7 +90,7 @@ export const ACCOUNTS: Account[] = [
     ],
   },
   {
-    id: "halcyon",
+    id: "pinecrest",
     name: "Pinecrest County Inspections",
     tier: "standard",
     owner: "Priya Raman (FAKE)",
@@ -148,7 +148,7 @@ export const EVENTS: CalendarEvent[] = [
     notes: "Build time. Floor is 90 minutes. The original block is two hours.",
   },
   {
-    id: "northwind",
+    id: "brightspark",
     title: "Bright Spark · date check",
     kind: "client",
     start: 10 * 60 + 30,
@@ -160,7 +160,7 @@ export const EVENTS: CalendarEvent[] = [
     needsPrepMinutes: 15,
     earliest: 8 * 60 + 45,
     latest: 17 * 60,
-    accountId: "northwind",
+    accountId: "brightspark",
     notes: "Already overlapping the estimate block. Not an emergency.",
   },
   {
@@ -193,7 +193,7 @@ export const EVENTS: CalendarEvent[] = [
     latest: 14 * 60,
   },
   {
-    id: "wellness",
+    id: "walk",
     title: "Site walk · 123 Example Ln",
     kind: "personal",
     start: 13 * 60,
@@ -208,7 +208,7 @@ export const EVENTS: CalendarEvent[] = [
     notes: "May slide within the afternoon. May not be deleted.",
   },
   {
-    id: "caseflow",
+    id: "crew",
     title: "Crew schedule review",
     kind: "internal",
     start: 14 * 60,
@@ -222,7 +222,7 @@ export const EVENTS: CalendarEvent[] = [
     latest: 17 * 60 + 30,
   },
   {
-    id: "halcyon",
+    id: "pinecrest",
     title: "Pinecrest · rough-in window",
     kind: "client",
     start: 15 * 60 + 30,
@@ -234,7 +234,7 @@ export const EVENTS: CalendarEvent[] = [
     needsPrepMinutes: 0,
     earliest: 15 * 60 + 30,
     latest: 16 * 60,
-    accountId: "halcyon",
+    accountId: "pinecrest",
     notes: "The county set this window. Do not move it.",
   },
   {
@@ -253,15 +253,15 @@ export const EVENTS: CalendarEvent[] = [
   },
 ];
 
-export const ESCALATION: Email = {
-  id: "mail-meridian-0847",
+export const REQUEST: Email = {
+  id: "mail-rivera-0847",
   at: "08:47",
   from: "Sam Rivera (FAKE)",
   fromRole: "Homeowner",
   to: "Maria Alvarez",
   subject: "Kitchen remodel at 123 Example Ln",
   urgent: true,
-  accountId: "meridian",
+  accountId: "rivera",
   body: [
     "Hi Maria,",
     "",
@@ -271,10 +271,10 @@ export const ESCALATION: Email = {
   ].join("\n"),
 };
 
-export const MERIDIAN_DEMAND: Demand = {
-  id: "meridian",
+export const RIVERA_DEMAND: Demand = {
+  id: "rivera",
   title: "Rivera kitchen · scope call",
-  accountId: "meridian",
+  accountId: "rivera",
   duration: 40,
   prepMinutes: 15,
   earliest: 8 * 60 + 45,

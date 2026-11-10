@@ -4,7 +4,7 @@ import { runExecutor } from "../agents/executor.js";
 import { runIntake } from "../agents/intake.js";
 import { runPlanner } from "../agents/planner.js";
 import { runResearcher } from "../agents/researcher.js";
-import { ACCOUNTS, DAY, ESCALATION, EVENTS, MERIDIAN_DEMAND, PRIORITIES } from "../fixtures/tuesday.js";
+import { ACCOUNTS, DAY, EVENTS, PRIORITIES, REQUEST, RIVERA_DEMAND } from "../fixtures/thursday.js";
 import { handoff, record } from "../memory/state.js";
 import { createToolkit } from "../tools/toolkit.js";
 import type { ProseModel, RunState } from "../types.js";
@@ -25,7 +25,7 @@ export async function runWorkflow(input: {
 
   record(state, {
     agent: "supervisor",
-    title: input.workflow === "war-room" ? "War room is open" : "Morning planning is open",
+    title: input.workflow === "thursday" ? "Thursday is open" : "Morning planning is open",
     detail: state.goal,
     advance: 2,
     handoff: handoff("intake", "Start from the calendar and the inbox, not from a hunch."),
@@ -66,22 +66,22 @@ export async function runWorkflow(input: {
 }
 
 function createState(workflow: RunState["workflow"], modelName: string): RunState {
-  const warRoom = workflow === "war-room";
+  const request = workflow === "thursday";
   return {
-    runId: warRoom ? "tuesday-war-room" : "tuesday-morning",
+    runId: request ? "thursday-request" : "thursday-morning",
     workflow,
-    goal: warRoom
+    goal: request
       ? "Sam Rivera's kitchen email landed at 08:47. Make room for a morning call, keep the estimate block, and do not drop the site walk or move Dave."
       : "Plan Thursday before anyone leaves for a site. The calendar is already double-booked. Protect the estimate block, keep the site walk, and move only what is movable.",
     dateLabel: DAY.dateLabel,
     persona: DAY.persona,
     role: DAY.role,
-    clock: warRoom ? DAY.now : 8 * 60 + 5,
+    clock: request ? DAY.now : 8 * 60 + 5,
     traceSeconds: 0,
     events: EVENTS.map((event) => ({ ...event })),
-    demands: warRoom ? [{ ...MERIDIAN_DEMAND }] : [],
+    demands: request ? [{ ...RIVERA_DEMAND }] : [],
     accounts: ACCOUNTS.map((account) => ({ ...account, cases: account.cases.map((item) => ({ ...item })) })),
-    inbox: warRoom ? [{ ...ESCALATION }] : [],
+    inbox: request ? [{ ...REQUEST }] : [],
     priorities: [...PRIORITIES],
     findings: [],
     research: [],

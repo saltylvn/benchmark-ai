@@ -1,10 +1,10 @@
-import { DAY } from "../src/fixtures/tuesday.js";
+import { DAY } from "../src/fixtures/thursday.js";
 import { findOverlaps } from "../src/schedule/gaps.js";
 import { runWorkflow } from "../src/orchestrator/supervisor.js";
 import { range } from "../src/time.js";
 import type { CalendarEvent, CallCard, RunState, TraceEvent } from "../src/types.js";
 
-type Tab = "war" | "plan" | "brief";
+type Tab = "thursday" | "plan" | "brief";
 type BlockView = {
   id: string;
   title: string;
@@ -17,7 +17,7 @@ type BlockView = {
 };
 
 const PIPELINE = ["intake", "researcher", "planner", "critic", "executor", "brief"] as const;
-const THEME_KEY = "atlas-theme";
+const THEME_KEY = "benchmark-theme";
 
 const SHORT: Record<string, string> = {
   "Morning huddle": "Huddle",
@@ -39,12 +39,12 @@ const mock = {
   polish: async (input: { draft: string }) => input.draft,
 };
 
-const war = await runWorkflow({ workflow: "war-room", model: mock });
+const thursdayRun = await runWorkflow({ workflow: "thursday", model: mock });
 const morning = await runWorkflow({ workflow: "morning", model: mock });
 
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-let tab: Tab = "war";
-let cursor = reduced ? war.trace.length : 0;
+let tab: Tab = "thursday";
+let cursor = reduced ? thursdayRun.trace.length : 0;
 let playing = false;
 let timer = 0;
 let pickedStep: number | null = null;
@@ -53,15 +53,15 @@ let pickedBlock: string | null = null;
 const app = document.querySelector<HTMLElement>("#app");
 if (!app) throw new Error("Missing #app");
 
-app.innerHTML = shell(war);
+app.innerHTML = shell(thursdayRun);
 bind();
 renderPlan(morning);
 renderBrief(morning);
 const initial = tabFromHash();
-if (initial && initial !== "war") show(initial, false);
+if (initial && initial !== "thursday") show(initial, false);
 frame();
 window.scrollTo(0, 0);
-if (!reduced && tab === "war") play();
+if (!reduced && tab === "thursday") play();
 
 function team(): { id: string; name: string; role: string; job: string }[] {
   return [
@@ -119,7 +119,7 @@ function shell(state: RunState): string {
           ${connectorIcons()}
         </div>
         <nav class="tabs" aria-label="Demos">
-          <button type="button" data-tab="war" aria-pressed="true">War room</button>
+          <button type="button" data-tab="thursday" aria-pressed="true">Thursday</button>
           <button type="button" data-tab="plan" aria-pressed="false">Day plan</button>
           <button type="button" data-tab="brief" aria-pressed="false">Brief</button>
         </nav>
@@ -174,7 +174,7 @@ function shell(state: RunState): string {
           <article class="org-head" data-agent="supervisor">
             <strong>Benchmark</strong>
             <span class="role">The team</span>
-            <span class="job">Routes the work. Maria approves money, dates, and anything a client would see.</span>
+            <span class="job">Routes the work. Maria approves money, dates, and anything a homeowner would see.</span>
             <span class="state">Waiting</span>
           </article>
           <div class="org-stem" aria-hidden="true"></div>
@@ -199,7 +199,7 @@ function shell(state: RunState): string {
         </ol>
         <p class="org-return">A rejected schedule comes back to Benchmark, and Scheduling tries again. Nothing goes to the homeowner or the crew until Maria approves it.</p>
       </section>
-      <section id="view-war">
+      <section id="view-thursday">
         <div class="lede">
           <div>
             <h1>A kitchen request at 8:47.</h1>
@@ -220,10 +220,10 @@ function shell(state: RunState): string {
         <div id="board"></div>
         <div class="split" id="split">
           <div>
-            <p class="column-label">The email and the swarm</p>
+            <p class="column-label">The email and the team</p>
             <article class="card ask">
               <p class="kicker">${mail ? esc(mail.at) + " · " + esc(mail.from) : "Inbox"}</p>
-              <h2>${mail ? esc(mail.subject) : "No escalation"}</h2>
+              <h2>${mail ? esc(mail.subject) : "No request"}</h2>
               <p class="letter">${mail ? esc(mail.body) : ""}</p>
             </article>
             <ol class="trace" id="trace" aria-live="polite"></ol>
@@ -252,7 +252,7 @@ function bind(): void {
   });
   byId("skip").addEventListener("click", () => {
     pause();
-    cursor = war.trace.length;
+    cursor = thursdayRun.trace.length;
     pickedStep = null;
     frame();
   });
@@ -282,7 +282,7 @@ function bind(): void {
     if (next) show(next, false);
   });
   window.addEventListener("keydown", (event) => {
-    if (tab !== "war") return;
+    if (tab !== "thursday") return;
     const target = event.target;
     if (target instanceof HTMLElement && target.closest("button, a, input, textarea")) return;
     if (event.key === " ") {
@@ -316,8 +316,8 @@ function applyTheme(choice: "light" | "dark" | "system"): void {
 
 function show(next: Tab, updateHash = true): void {
   tab = next;
-  if (next !== "war") pause();
-  for (const name of ["war", "plan", "brief"] as const) {
+  if (next !== "thursday") pause();
+  for (const name of ["thursday", "plan", "brief"] as const) {
     byId(`view-${name}`).hidden = name !== next;
     const button = document.querySelector<HTMLButtonElement>(`[data-tab="${name}"]`);
     if (!button) continue;
@@ -329,16 +329,16 @@ function show(next: Tab, updateHash = true): void {
 
 function tabFromHash(): Tab | null {
   const name = location.hash.replace("#", "");
-  if (name === "war" || name === "plan" || name === "brief") return name;
+  if (name === "thursday" || name === "plan" || name === "brief") return name;
   return null;
 }
 
 function play(): void {
-  if (cursor >= war.trace.length) cursor = 0;
+  if (cursor >= thursdayRun.trace.length) cursor = 0;
   playing = true;
   window.clearInterval(timer);
   timer = window.setInterval(() => {
-    if (cursor >= war.trace.length) {
+    if (cursor >= thursdayRun.trace.length) {
       pause();
       frame();
       return;
@@ -360,7 +360,7 @@ function toggle(): void {
 }
 
 function syncPlayButton(): void {
-  const done = !playing && cursor >= war.trace.length;
+  const done = !playing && cursor >= thursdayRun.trace.length;
   const playButton = document.querySelector<HTMLButtonElement>("#play");
   const lede = document.querySelector(".lede");
   if (playButton) playButton.textContent = playing ? "Pause" : done ? "Play demo" : "Play";
@@ -368,19 +368,19 @@ function syncPlayButton(): void {
 }
 
 function advance(): void {
-  if (cursor < war.trace.length) cursor += 1;
-  if (cursor >= war.trace.length) playing = false;
+  if (cursor < thursdayRun.trace.length) cursor += 1;
+  if (cursor >= thursdayRun.trace.length) playing = false;
   frame();
 }
 
 function frame(): void {
-  const revealed = war.trace.slice(0, cursor);
+  const revealed = thursdayRun.trace.slice(0, cursor);
   const activeIndex = pickedStep != null && pickedStep < cursor ? pickedStep : cursor - 1;
-  const active = activeIndex >= 0 ? war.trace[activeIndex] : undefined;
+  const active = activeIndex >= 0 ? thursdayRun.trace[activeIndex] : undefined;
   const approved = revealed.some((event) => event.agent === "critic" && /approved/i.test(event.title));
   const rejected = revealed.some((event) => event.agent === "critic" && /rejected/i.test(event.title));
   syncPlayButton();
-  byId("count").textContent = `${cursor} / ${war.trace.length}`;
+  byId("count").textContent = `${cursor} / ${thursdayRun.trace.length}`;
   byId("rail").innerHTML = rail(active);
   const seen = new Set<string>(revealed.map((event) => diagramId(event.agent)));
   const workingId = diagramId(active?.agent);
@@ -397,7 +397,7 @@ function frame(): void {
   });
   byId("trace").innerHTML =
     revealed.length === 0
-      ? `<li class="step"><span class="who supervisor">Supervisor</span> <strong>Waiting to open the war room.</strong></li>`
+      ? `<li class="step"><span class="who supervisor">Supervisor</span> <strong>Waiting to open Thursday.</strong></li>`
       : revealed
           .map((event, index) => stepHtml(event, index, index === activeIndex))
           .join("");
@@ -407,7 +407,7 @@ function frame(): void {
     const top = latest.offsetTop - trace.offsetTop;
     trace.scrollTo({ top: Math.max(0, top - 8) });
   }
-  const blocks = approved ? viewsFromPlan(war) : viewsFromEvents(war.events);
+  const blocks = approved ? viewsFromPlan(thursdayRun) : viewsFromEvents(thursdayRun.events);
   byId("board").innerHTML = boardHtml(blocks, approved, rejected);
   const side = sideHtml(revealed);
   byId("side").innerHTML = side;
@@ -445,7 +445,7 @@ function stepHtml(event: TraceEvent, index: number, active: boolean): string {
 }
 
 function boardHtml(blocks: BlockView[], approved: boolean, rejected: boolean): string {
-  const failure = war.critiques[0]?.failures[0];
+  const failure = thursdayRun.critiques[0]?.failures[0];
   const selected = blocks.find((block) => block.id === pickedBlock);
   return `
     <article class="card board">
@@ -455,7 +455,7 @@ function boardHtml(blocks: BlockView[], approved: boolean, rejected: boolean): s
       ${scheduleHtml(blocks)}
       ${
         rejected && !approved && failure
-          ? `<p class="callout"><strong>${esc(String(war.critiques[0]?.score ?? ""))}/100 · ${esc(failure.code)}</strong>${esc(failure.detail)}</p>`
+          ? `<p class="callout"><strong>${esc(String(thursdayRun.critiques[0]?.score ?? ""))}/100 · ${esc(failure.code)}</strong>${esc(failure.detail)}</p>`
           : ""
       }
       ${selected ? whyHtml(selected, approved) : ""}
@@ -467,8 +467,8 @@ function sideHtml(revealed: TraceEvent[]): string {
   const showDrafts = revealed.some((event) => event.agent === "executor");
   const showBrief = revealed.some((event) => event.agent === "brief");
   return `
-    ${showBrief && war.brief ? briefCard(war.brief.headline, war.brief.outcomes, war.brief.callCard) : ""}
-    ${showDrafts ? draftsHtml(war) : ""}
+    ${showBrief && thursdayRun.brief ? briefCard(thursdayRun.brief.headline, thursdayRun.brief.outcomes, thursdayRun.brief.callCard) : ""}
+    ${showDrafts ? draftsHtml(thursdayRun) : ""}
   `;
 }
 
@@ -509,12 +509,12 @@ function draftsHtml(state: RunState): string {
 }
 
 function whyHtml(block: BlockView, approved: boolean): string {
-  const original = war.events.find((event) => event.id === block.id);
+  const original = thursdayRun.events.find((event) => event.id === block.id);
   let movement = "Already on the book.";
   if (approved && original && (original.start !== block.start || original.end !== block.end)) {
     movement = `Moved from ${range(original.start, original.end)}.`;
   } else if (approved && !original) {
-    movement = "Added for the escalation.";
+    movement = "Added for the kitchen request.";
   } else if (approved && original) {
     movement = "Held.";
   }
@@ -522,7 +522,7 @@ function whyHtml(block: BlockView, approved: boolean): string {
     <div class="why">
       <strong>${esc(block.title)}</strong>
       <p class="when">${esc(range(block.start, block.end))} · ${esc(movement)}</p>
-      <p>${esc(block.reason || original?.notes || "On the calendar before the swarm runs.")}</p>
+      <p>${esc(block.reason || original?.notes || "On the calendar before the team runs.")}</p>
     </div>
   `;
 }
@@ -532,10 +532,10 @@ function renderPlan(state: RunState): void {
   const after = viewsFromPlan(state);
   const clashes = findOverlaps(state.events);
   const focusBlock = state.plan?.blocks.find((block) => block.id === "focus");
-  const northwind = state.plan?.blocks.find((block) => block.id === "northwind");
+  const brightspark = state.plan?.blocks.find((block) => block.id === "brightspark");
   const proposed =
-    focusBlock && northwind
-      ? `Estimate block stays ${range(focusBlock.start, focusBlock.end)}. Bright Spark moves to ${range(northwind.start, northwind.end)}.`
+    focusBlock && brightspark
+      ? `Estimate block stays ${range(focusBlock.start, focusBlock.end)}. Bright Spark moves to ${range(brightspark.start, brightspark.end)}.`
       : "Proposed day";
   byId("view-plan").innerHTML = `
     <div class="lede">
@@ -591,7 +591,7 @@ function renderBrief(state: RunState): void {
     <div class="lede">
       <div>
         <h1>Morning brief</h1>
-        <p>Written before the 8:47 escalation. The war room call card stays on the first tab.</p>
+        <p>Written before the 8:47 request. The call card stays on the Thursday tab.</p>
       </div>
     </div>
     <article class="paper">
@@ -660,8 +660,8 @@ function scheduleHtml(blocks: BlockView[]): string {
 
 function demoDay(): { weekday: string; date: string } {
   const match = DAY.dateLabel.match(/^(\w+),\s+\w+\s+(\d+)/);
-  const weekday = match?.[1]?.slice(0, 3) ?? "Tue";
-  const date = match?.[2] ?? "10";
+  const weekday = match?.[1]?.slice(0, 3) ?? "Thu";
+  const date = match?.[2] ?? "12";
   return { weekday, date };
 }
 
@@ -690,7 +690,7 @@ function viewsFromEvents(events: CalendarEvent[]): BlockView[] {
       kind: event.kind,
       start: event.start,
       end: event.end,
-      reason: event.notes ?? "On the calendar before the swarm runs.",
+      reason: event.notes ?? "On the calendar before the team runs.",
       lane: 0,
       clash: clashes.has(event.id),
     })),
@@ -728,7 +728,7 @@ function withLanes(blocks: BlockView[]): BlockView[] {
 }
 
 function kindOf(block: { id: string; kind: string }): string {
-  if (block.id === "meridian") return "urgent";
+  if (block.id === "rivera") return "urgent";
   if (block.kind === "prep") return "prep";
   return block.kind;
 }
