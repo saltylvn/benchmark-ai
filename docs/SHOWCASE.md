@@ -84,3 +84,17 @@ The only solid path is fixture, read-only toolkit, the supervisor routing specia
 ![One Thursday, put together](images/showcase/integrations-together.svg)
 
 Request, team, drafts, Maria. The 68 minutes belong to that path. Planned tools are drawn beside it and are not part of the ledger.
+
+## Dashboard
+
+These are the PM dashboard after it landed on `main`. Slack live-send is off by default, sends only after a PM approves. In these shots it is not connected, so Approve only previews a payload.
+
+![Dashboard, light](images/showcase/dashboard-light.png)
+
+![Dashboard, dark](images/showcase/dashboard-dark.png)
+
+![Day before and after](images/showcase/dashboard-gantt.png)
+
+![Critic scorecard](images/showcase/dashboard-scorecard.png)
+
+![Approval queue](images/showcase/dashboard-slack.png)
