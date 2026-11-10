@@ -172,6 +172,10 @@ The page's only outbound link is [github.com/saltylvn/benchmark-ai](https://gith
 
 From this repository, `npm run build:web` rewrites `docs/app.js` after a change to `web/main.ts`. If this repository is public, `.github/workflows/pages.yml` publishes `docs/` to [saltylvn.github.io/benchmark-ai](https://saltylvn.github.io/benchmark-ai/).
 
+## Working together
+
+Claude Code leads architecture and direction. Cursor handles cleanup, docs, visuals, and the showcase. See [docs/COLLABORATION.md](docs/COLLABORATION.md) and [docs/PROGRESS.md](docs/PROGRESS.md).
+
 ## License
 
 [MIT](LICENSE).
