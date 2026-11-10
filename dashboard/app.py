@@ -17,27 +17,13 @@ from typing import Any
 from flask import Flask, abort, flash, jsonify, redirect, render_template, request, session, url_for
 
 from . import auth
-from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, build_view, load_json
+from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, SnapshotError, build_view, load_json, load_snapshot
+from .store import JsonStore
 from .brief import build_brief, with_brief
 from .portfolio import build_team_view, client_view
 from .slack import SlackConfig, SlackConnector
 
 RUNS = {"thursday": "08:47 request", "morning": "Morning plan"}
-
-
-def slack_messages(run: dict[str, Any]) -> list[dict[str, str]]:
-    """Messages a PM can approve for Slack: the executor's draft, and the brief."""
-    messages = []
-    for action in run["actions"]:
-        if action["type"] == "slack.draft":
-            messages.append({"id": "slack-draft", "label": f"Crew update for {action['channel']}", "text": action["text"]})
-    brief = run.get("brief")
-    if brief:
-        lines = [f"*{brief['headline']}*"] + [f"{i}. {o}" for i, o in enumerate(brief["outcomes"], 1)]
-        if brief.get("watchouts"):
-            lines.append("_Watch:_ " + " ".join(brief["watchouts"]))
-        messages.append({"id": "brief", "label": "Morning brief", "text": "\n".join(lines)})
-    return messages
 
 
 def provider_cards(env: dict[str, str] | None = None) -> list[dict[str, Any]]:
@@ -54,13 +40,13 @@ def create_app(
     slack: SlackConnector | None = None,
     env: dict[str, str] | None = None,
     auth_opener: auth.Opener | None = None,
+    state_dir: Path | str | None = None,
 ) -> Flask:
     env = dict(os.environ if env is None else env)
     app = Flask(__name__)
     app.json.ensure_ascii = False  # show "09:00–09:40", not "–", in payload previews
     app.secret_key = env.get("DASHBOARD_SECRET") or secrets.token_hex(32)
     app.config.update(
-        FORM_TOKEN=secrets.token_urlsafe(16),
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
         SESSION_COOKIE_SECURE=env.get("PUBLIC_URL", "").startswith("https://"),
@@ -68,8 +54,42 @@ def create_app(
     )
     connector = slack or SlackConnector(SlackConfig.from_env(env))
     app.extensions["slack"] = connector
-    approvals: dict[str, dict[str, Any]] = {}
-    app.extensions["approvals"] = approvals
+    # Approvals and the Slack log survive restarts when a state dir is set (python -m dashboard sets one).
+    store = JsonStore(Path(state_dir) / "state.json" if state_dir else None)
+    app.extensions["store"] = store
+    connector.audit = store.get("slackLog", []) or connector.audit
+    connector.on_record = lambda record: store.append("slackLog", record)
+
+    def snapshot() -> dict[str, Any]:
+        return load_snapshot(Path(snapshot_path))
+
+    def approvals_for(day: str) -> dict[str, Any]:
+        # Demo visitors each start fresh: their approvals live in their own session, never the shared store.
+        user = current_user()
+        if user and user["provider"] == "demo":
+            return dict(session.get("demoApprovals", {}))
+        return store.get("approvals", {}).get(day, {})
+
+    def csrf_token() -> str:
+        if "csrf" not in session:
+            session["csrf"] = secrets.token_urlsafe(24)
+        return session["csrf"]
+
+    @app.after_request
+    def security_headers(response):
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        response.headers.setdefault("Referrer-Policy", "same-origin")
+        response.headers.setdefault(
+            "Content-Security-Policy",
+            "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        )
+        return response
+
+    @app.errorhandler(SnapshotError)
+    def snapshot_error(error):
+        return f"<h1>Benchmark needs fresh data</h1><p>{error}</p>", 503
     opener = auth_opener or auth._default_opener
 
     def view(run_key: str) -> dict[str, Any]:
@@ -77,7 +97,7 @@ def create_app(
             abort(404)
         # Re-read on every request so a fresh `npm run export:dashboard` or an
         # edited assumptions.json shows up on reload.
-        return build_view(load_json(Path(snapshot_path)), load_json(Path(assumptions_path)), run_key)
+        return build_view(snapshot(), load_json(Path(assumptions_path)), run_key)
 
     def current_user() -> dict[str, str] | None:
         return session.get("user")
@@ -105,28 +125,27 @@ def create_app(
         user = current_user()
         if not user:
             return render_template("index.html", page="welcome", providers=provider_cards(env), static_mode=False)
-        snapshot = load_json(Path(snapshot_path))
+        snap = snapshot()
         assumptions = load_json(Path(assumptions_path))
         status = connector.status()
         return render_template(
             "index.html",
             page="app",
             static_mode=False,
-            v=build_view(snapshot, assumptions, "thursday"),
-            t=with_brief(build_team_view(snapshot, assumptions), snapshot, assumptions),
+            v=build_view(snap, assumptions, "thursday"),
+            t=with_brief(build_team_view(snap, assumptions), snap, assumptions),
             brief_at=env.get("BRIEF_AT", "").strip(),
-            runs=RUNS,
             user=user,
             slack=status,
             audit=list(reversed(connector.audit))[:8],
-            approvals=approvals,
-            form_token=app.config["FORM_TOKEN"],
+            approvals=approvals_for(snap["portfolio"]["sweep"]["today"]),
+            form_token=csrf_token(),
         )
 
     @app.get("/jobs/<job_id>/client")
     @signed_in
     def client_page(job_id: str):
-        data = client_view(load_json(Path(snapshot_path)), job_id)
+        data = client_view(snapshot(), job_id)
         if data is None:
             abort(404)
         return render_template("client.html", c=data)
@@ -178,10 +197,10 @@ def create_app(
 
     def approvable(item_id: str) -> dict[str, Any] | None:
         """Find what an approval refers to: a Coordinator draft, the digest, the day rewrite, or a heads-up."""
-        snapshot = load_json(Path(snapshot_path))
-        sweep = snapshot["portfolio"]["sweep"]
+        snap = snapshot()
+        sweep = snap["portfolio"]["sweep"]
         if item_id == "digest":
-            return {"label": "Morning brief", "slack": build_brief(snapshot, load_json(Path(assumptions_path)))}
+            return {"label": "Morning brief", "slack": build_brief(snap, load_json(Path(assumptions_path)))}
         if item_id == "day-maria":
             return {"label": "Maria's rewritten day", "slack": None}
         draft = next((d for d in sweep["drafts"] if d["id"] == item_id), None)
@@ -196,7 +215,8 @@ def create_app(
     @app.post("/api/approve")
     @signed_in
     def api_approve():
-        if request.headers.get("X-Form-Token") != app.config["FORM_TOKEN"]:
+        expected = session.get("csrf")
+        if not expected or not secrets.compare_digest(request.headers.get("X-Form-Token", ""), expected):
             return jsonify({"error": "This page is out of date"}), 400
         body = request.get_json(silent=True) or {}
         item_id, act = str(body.get("id", "")), body.get("act")
@@ -217,7 +237,10 @@ def create_app(
                 return jsonify({"error": result["detail"]}), 502
         elif act == "approve":
             record["detail"] = "Saved as approved. Calendar, email, and invoices stay drafts in this demo"
-        approvals[item_id] = record
+        if user["provider"] == "demo":
+            session["demoApprovals"] = {**session.get("demoApprovals", {}), item_id: record}
+        else:
+            store.put_in(["approvals", snapshot()["portfolio"]["sweep"]["today"], item_id], record)
         return jsonify(record)
 
     # -- JSON API: the same data the page renders --------------------------
@@ -231,13 +254,13 @@ def create_app(
     @app.get("/api/team")
     @signed_in
     def api_team():
-        t = build_team_view(load_json(Path(snapshot_path)), load_json(Path(assumptions_path)))
+        t = build_team_view(snapshot(), load_json(Path(assumptions_path)))
         return jsonify({k: t[k] for k in ("queue", "board", "timeline", "counts", "team", "subs", "steps", "ledger", "digest")})
 
     @app.get("/api/snapshot")
     @signed_in
     def api_snapshot():
-        return jsonify(load_json(Path(snapshot_path)))
+        return jsonify(snapshot())
 
     @app.get("/api/slack/status")
     @signed_in

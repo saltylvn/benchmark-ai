@@ -13,14 +13,14 @@ still wait for a person to approve them.
 from __future__ import annotations
 
 import argparse
-import os
 import threading
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 
-from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, load_json
+from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, load_json, load_snapshot
 from .portfolio import build_team_view, first
 from .slack import SlackConfig, SlackConnector
 
@@ -99,7 +99,7 @@ def start_scheduler(
         current = now()
         if (current.hour, current.minute) >= (hour, minute) and state["last"] != current.date():
             state["last"] = current.date()
-            text = build_brief(load_json(snapshot_path), load_json(assumptions_path))
+            text = build_brief(load_snapshot(snapshot_path), load_json(assumptions_path))
             send_brief(connector, text, label=f"Morning brief {current:%a %b %d}")
             return True
         return False
@@ -127,7 +127,7 @@ def main(argv: list[str] | None = None) -> int:
     from .__main__ import load_dotenv
 
     load_dotenv(Path.cwd() / ".env")
-    text = build_brief(load_json(DEFAULT_SNAPSHOT), load_json(DEFAULT_ASSUMPTIONS), args.person)
+    text = build_brief(load_snapshot(DEFAULT_SNAPSHOT), load_json(DEFAULT_ASSUMPTIONS), args.person)
     print(text)
     if args.send:
         result = send_brief(SlackConnector(SlackConfig.from_env()), text)

@@ -38,7 +38,9 @@ if __name__ == "__main__":
             print(f"On an iPhone or iPad on the same Wi-Fi, open http://{address}:{port}")
     else:
         print("To open it on an iPhone or iPad on this Wi-Fi, restart with DASHBOARD_HOST=0.0.0.0")
-    app = create_app()
+    from .store import DEFAULT_STATE_DIR
+
+    app = create_app(state_dir=os.environ.get("DASHBOARD_STATE_DIR") or DEFAULT_STATE_DIR)
     brief_at = os.environ.get("BRIEF_AT", "").strip()
     if brief_at:
         from .brief import start_scheduler
