@@ -185,7 +185,8 @@ class AppTest(unittest.TestCase):
         for marker in (b'id="tab-today"', b'id="tab-jobs"', b'id="tab-team"', b'id="tab-messages"', b'id="tab-hood"', b"Critic scorecard"):
             self.assertIn(marker, page)
         self.assertIn(b"Cedar duplex", page)
-        self.assertIn(b"Team status digest", page)
+        self.assertIn(b"brief", page)
+        self.assertIn(b"Good morning", page)
 
     def test_api(self):
         data = self.client.get("/api/runs/thursday").get_json()
@@ -289,6 +290,61 @@ class SignInTest(unittest.TestCase):
         self.assertEqual(rec["detail"], "Posted to Slack")
         self.assertEqual(slack.audit[0]["result"], "sent")
         self.assertEqual(slack.audit[0]["approvedBy"], "Maria Alvarez (maria@summitridge.example)")
+
+
+class BriefTest(unittest.TestCase):
+    def test_team_brief_leads_with_blockers_and_lists_every_job(self):
+        from dashboard.brief import build_brief
+
+        text = build_brief(snapshot(), assumptions())
+        self.assertTrue(text.startswith("*Good morning. Thu, Mar 12.*"))
+        self.assertIn("*Needs you first*", text)
+        for job in ("J-1019", "J-1027", "J-1031", "J-1036", "J-1038", "J-1042", "J-1045", "J-1047"):
+            self.assertIn(job, text)
+        self.assertLess(text.index("J-1019"), text.index("J-1031"))  # behind before on track
+        self.assertIn("Tomas Reyes is at 37 of 40 h", text)
+
+    def test_personal_brief_only_shows_their_work(self):
+        from dashboard.brief import build_brief
+
+        text = build_brief(snapshot(), assumptions(), "tomas")
+        self.assertIn("Good morning, Tomas", text)
+        self.assertIn("J-1019", text)
+        self.assertNotIn("J-1031", text)
+        self.assertNotIn("Tomorrow · Tomorrow", text)
+
+    def test_scheduler_posts_once_a_day_at_the_set_time(self):
+        from datetime import datetime
+
+        from dashboard.brief import start_scheduler
+
+        clock = {"now": datetime(2026, 3, 12, 7, 0)}
+        opener = RecordingOpener(*[json.dumps({"ok": True, "channel": "C1", "ts": str(n)}) for n in range(3)])
+        slack = SlackConnector(SlackConfig(bot_token="xoxb", channel="C1", send_enabled=True), opener=opener)
+        stop = []
+        thread = start_scheduler(slack, "08:00", now=lambda: clock["now"], sleep=lambda s: stop.append(s) or (_ for _ in ()).throw(SystemExit))
+        thread.join(1)
+        tick = thread.tick
+        self.assertFalse(tick())                      # 07:00, too early
+        clock["now"] = datetime(2026, 3, 12, 8, 0)
+        self.assertTrue(tick())                       # 08:00, posts
+        clock["now"] = datetime(2026, 3, 12, 8, 30)
+        self.assertFalse(tick())                      # same day, no repeat
+        clock["now"] = datetime(2026, 3, 13, 8, 1)
+        self.assertTrue(tick())                       # next morning
+        self.assertEqual([r["result"] for r in slack.audit], ["sent", "sent"])
+        self.assertIn("Good morning", json.loads(opener.requests[0].data)["text"])
+
+    def test_scheduler_skips_a_brief_that_was_due_before_startup(self):
+        from datetime import datetime
+
+        from dashboard.brief import start_scheduler
+
+        slack = SlackConnector(SlackConfig())
+        thread = start_scheduler(slack, "08:00", now=lambda: datetime(2026, 3, 12, 9, 30), sleep=lambda s: (_ for _ in ()).throw(SystemExit))
+        thread.join(1)
+        self.assertFalse(thread.tick())
+        self.assertEqual(slack.audit, [])
 
 
 class SiteBuildTest(unittest.TestCase):

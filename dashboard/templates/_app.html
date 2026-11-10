@@ -222,9 +222,9 @@
         {% for i in g.entries %}
           {% if i.kind == 'digest' %}
             <article class="qcard digest" data-id="digest" data-owner="all" data-kind="digest" data-minutes="{{ t.ledger.lines[-1].minutesEach }}">
-              <div class="qhead"><span class="pill watch">Every morning at 8:00</span><span class="mono muted">#team</span></div>
-              <h3>Team status digest</h3>
-              <p class="why">Every job, its percent complete, status, and what's blocking it, so the whole team starts from the same page.</p>
+              <div class="qhead"><span class="pill watch">{{ 'Posts daily at ' ~ brief_at if brief_at else 'Morning brief' }}</span><span class="mono muted">#team</span></div>
+              <h3>This morning's brief</h3>
+              <p class="why">What needs the team first, then every job with its percent complete, status, and blocker, so everyone starts from the same page. {% if not brief_at and not static_mode %}Set <code>BRIEF_AT=08:00</code> to post it automatically.{% endif %}</p>
               <pre class="digest-body">{{ i.body }}</pre>
               <div class="qactions"><button type="button" class="approve" data-act="approve">Approve & send to Slack</button><span class="saves">saves ~{{ t.ledger.lines[-1].minutesEach }} min</span></div>
               <p class="result" hidden></p>

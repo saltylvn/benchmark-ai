@@ -18,6 +18,7 @@ from flask import Flask, abort, flash, jsonify, redirect, render_template, reque
 
 from . import auth
 from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, build_view, load_json
+from .brief import build_brief, with_brief
 from .portfolio import build_team_view
 from .slack import SlackConfig, SlackConnector
 
@@ -112,7 +113,8 @@ def create_app(
             page="app",
             static_mode=False,
             v=build_view(snapshot, assumptions, "thursday"),
-            t=build_team_view(snapshot, assumptions),
+            t=with_brief(build_team_view(snapshot, assumptions), snapshot, assumptions),
+            brief_at=env.get("BRIEF_AT", "").strip(),
             runs=RUNS,
             user=user,
             slack=status,
@@ -171,7 +173,7 @@ def create_app(
         snapshot = load_json(Path(snapshot_path))
         sweep = snapshot["portfolio"]["sweep"]
         if item_id == "digest":
-            return {"label": "Team status digest", "slack": sweep["digest"]}
+            return {"label": "Morning brief", "slack": build_brief(snapshot, load_json(Path(assumptions_path)))}
         if item_id == "day-maria":
             return {"label": "Maria's rewritten day", "slack": None}
         draft = next((d for d in sweep["drafts"] if d["id"] == item_id), None)

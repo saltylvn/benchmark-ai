@@ -16,6 +16,7 @@ from pathlib import Path
 from flask import render_template
 
 from .app import RUNS, create_app, provider_cards
+from .brief import with_brief
 from .portfolio import build_team_view
 from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, HERE, build_view, load_json
 
@@ -40,7 +41,8 @@ def render_static(
             "_app.html",
             static_mode=True,
             v=build_view(snapshot, assumptions, "thursday"),
-            t=build_team_view(snapshot, assumptions),
+            t=with_brief(build_team_view(snapshot, assumptions), snapshot, assumptions),
+            brief_at="08:00",
             runs=RUNS,
             user=None,
             slack=STATIC_SLACK,
