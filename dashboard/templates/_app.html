@@ -152,6 +152,7 @@
                   {% for m in j.milestones %}<li class="{{ m.state }}"><span class="m-dot {{ m.state }}"></span>{{ m.name }} <span class="muted">· {{ m.planned }}{% if m.done %} · done {{ m.done }}{% elif m.state == 'late' %} · {{ m.daysLate }} days late{% endif %}</span></li>{% endfor %}
                 </ol>
                 <p class="small muted">{{ j.address }} · ${{ '{:,.0f}'.format(j.contract) }} · <span class="mono">{{ j.channel }}</span></p>
+                {% if not static_mode %}<a class="small" href="{{ url_for('client_page', job_id=j.jobId) }}">See what {{ j.client.split(' ')[0] }} sees →</a>{% endif %}
               </details>
             </article>
           {% else %}

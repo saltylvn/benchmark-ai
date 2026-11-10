@@ -130,7 +130,9 @@ In the dashboard that becomes five tabs:
 - **Jobs**: a stage board from lead to closeout, and a timeline with every milestone on one calendar and a today line.
 - **Team**: hours against capacity per PM, the handoff proposal, sub insurance, what the Coordinator checked, and team time back.
 - **Messages**: every draft by channel (Slack, email, invoices, team changes), led by the morning brief.
-- **Under the hood**: the Thursday run, agent by agent.
+- **Under the hood**: the two agent layers, then the Thursday run, agent by agent.
+
+Every job card also links to a **client status page** (`/jobs/<id>/client`): percent complete, milestones, the next step, and the PM's name, in plain language. Internal issues (sub insurance, lien waivers, double-bookings, money) never appear there, and a test enforces it.
 
 ### The 8:00 brief
 

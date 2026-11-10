@@ -19,7 +19,7 @@ from flask import Flask, abort, flash, jsonify, redirect, render_template, reque
 from . import auth
 from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, build_view, load_json
 from .brief import build_brief, with_brief
-from .portfolio import build_team_view
+from .portfolio import build_team_view, client_view
 from .slack import SlackConfig, SlackConnector
 
 RUNS = {"thursday": "08:47 request", "morning": "Morning plan"}
@@ -122,6 +122,14 @@ def create_app(
             approvals=approvals,
             form_token=app.config["FORM_TOKEN"],
         )
+
+    @app.get("/jobs/<job_id>/client")
+    @signed_in
+    def client_page(job_id: str):
+        data = client_view(load_json(Path(snapshot_path)), job_id)
+        if data is None:
+            abort(404)
+        return render_template("client.html", c=data)
 
     @app.get("/demo")
     def demo():

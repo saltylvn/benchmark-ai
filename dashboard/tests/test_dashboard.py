@@ -216,6 +216,16 @@ class AppTest(unittest.TestCase):
         self.assertEqual(self.approve("nope").status_code, 404)
         self.assertEqual(self.approve("D1", act="delete").status_code, 400)
 
+    def test_client_page_shows_progress_but_no_internal_risks(self):
+        page = self.client.get("/jobs/J-1038/client").get_data(as_text=True)
+        self.assertIn("Pinecrest addition", page)
+        self.assertIn("40% complete", page)
+        self.assertIn("Maria Alvarez", page)
+        for internal in ("insurance", "Bright Spark", "lien waiver", "Lien", "double", "blocked", "$"):
+            self.assertNotIn(internal, page)
+        self.assertEqual(self.client.get("/jobs/J-9999/client").status_code, 404)
+        self.assertEqual(self.app.test_client().get("/jobs/J-1038/client").status_code, 302)
+
     def test_approvals_survive_a_reload(self):
         self.approve("D5")
         self.assertIn(b'"D5": {', self.client.get("/").data)

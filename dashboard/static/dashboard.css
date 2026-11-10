@@ -451,3 +451,20 @@ details summary { cursor: pointer; font-weight: 600; margin: 6px 0; min-height: 
   .layers { grid-template-columns: 1fr; }
   .arrow { transform: rotate(90deg); justify-self: center; }
 }
+
+/* Client status page */
+.client { max-width: 560px; }
+.preview-note { font-size: 13px; color: var(--muted); background: var(--warn-bg); border-radius: 10px; padding: 8px 12px; }
+.client-card { display: grid; gap: 14px; }
+.client-card h1 { margin: 0; }
+.client-progress { display: grid; gap: 6px; }
+.progress.big { height: 12px; }
+.client-next { margin: 0; font-size: 15px; }
+.client-steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; }
+.client-steps li { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.client-steps .dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--upcoming); }
+.client-steps .done .dot { background: var(--on-track); border-color: var(--on-track); }
+.client-steps .now .dot { background: var(--accent); border-color: var(--accent); }
+.client-steps .muted { font-size: 13px; }
+.client-pm { background: var(--bg); border-radius: 12px; padding: 12px 14px; }
+.client-pm p { margin: 0; }

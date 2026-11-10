@@ -435,3 +435,33 @@ def build_team_view(snapshot: dict[str, Any], assumptions: dict[str, Any]) -> di
         "ledger": team_ledger(p, assumptions),
         "people": who,
     }
+
+
+def client_view(snapshot: dict[str, Any], job_id: str) -> dict[str, Any] | None:
+    """What a homeowner sees: progress and plain next steps. No internal risks, subs, or money owed by others."""
+    p = snapshot["portfolio"]
+    job = next((j for j in p["data"]["jobs"] if j["id"] == job_id), None)
+    if job is None:
+        return None
+    status = next(s for s in p["sweep"]["statuses"] if s["jobId"] == job_id)
+    pm = people(p)[job["pm"]]
+    steps = []
+    for m in status["milestones"]:
+        if m.get("done"):
+            state, note = "done", f"Done {short(m['done'])}"
+        elif m["state"] == "late":
+            state, note = "now", "In progress"
+        else:
+            state, note = "next", f"Planned {short(m['planned'])}"
+        steps.append({"name": m["name"], "state": state, "note": note})
+    current = next((s for s in steps if s["state"] in ("now", "next")), None)
+    return {
+        "company": p["data"]["company"],
+        "job": job,
+        "percent": status["percent"],
+        "steps": steps,
+        "current": current,
+        "pm": pm,
+        "lastUpdate": short(job["lastClientUpdate"]),
+        "today": short(p["sweep"]["today"]),
+    }
