@@ -4,6 +4,7 @@ A dated log of how this repository became Benchmark. Older private names are not
 
 ## 2026-11-10
 
+- Started a second branch, `cursor/benchmark-showcase-bbab`, for a visual showcase. Assumptions for any time figures live in `docs/TIME_SAVED.md` and are labeled illustrative, not measured.
 - Removed leftover identifiers from the earlier project: the Tuesday fixture filename, the old theme key, the old provider alias, and the old screenshot.
 - The playable story is Thursday, 12 March 2026, for Maria Alvarez at Summit Ridge Builders. The workflow command is `thursday`.
 - Rewrote the README as a portfolio page and added screenshots of the static demo, including light mode, dark mode, the day plan, a paused play-through, and the terminal.
