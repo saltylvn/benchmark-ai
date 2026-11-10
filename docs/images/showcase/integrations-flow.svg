@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="780" viewBox="0 0 1600 780" role="img" aria-labelledby="title desc">
+  <title id="title">What actually moves</title>
+  <desc id="desc">Data flow of the Benchmark demo. The fixture is read through the toolkit onto the board. Drafts stay in memory. External systems are not called.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1600" height="780" fill="#f3f0e8"/>
+  
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+        <path d="M 0 1.2 L 8.5 5 L 0 8.8 Z" fill="#221f1a"/>
+      </marker>
+    </defs>
+    <text x="48" y="52" class="serif" font-size="32" fill="#221f1a">What actually moves</text>
+    <text x="48" y="86" font-size="16" fill="#3a342c">Solid arrows are the demo. A dashed border means named and not called.</text>
+    <rect x="48" y="180" width="250" height="110" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="64" y="224" fill="#221f1a" font-size="16" font-weight="700">Thursday fixture</text>
+          <text x="64" y="254" fill="#3a342c" font-size="14">Calendar, inbox, job file</text><rect x="380" y="180" width="250" height="110" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="396" y="224" fill="#221f1a" font-size="16" font-weight="700">Read-only toolkit</text>
+          <text x="396" y="254" fill="#3a342c" font-size="14">Events, inbox, and jobs</text><rect x="720" y="180" width="250" height="110" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="736" y="224" fill="#221f1a" font-size="16" font-weight="700">Supervisor routes</text>
+          <text x="736" y="254" fill="#3a342c" font-size="14">Specialists, in order</text><rect x="1060" y="180" width="250" height="110" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="1076" y="224" fill="#221f1a" font-size="16" font-weight="700">Drafts on the board</text>
+          <text x="1076" y="254" fill="#3a342c" font-size="14">status draft. No send.</text>
+    <line x1="300" y1="230" x2="370" y2="230" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/><line x1="640" y1="230" x2="710" y2="230" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/><line x1="980" y1="230" x2="1050" y2="230" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <rect x="48" y="360" width="1504" height="200" rx="14" fill="#fffdf9" stroke="#8a4e0c" stroke-dasharray="7 5"/>
+    <text x="72" y="404" fill="#8a4e0c" font-size="14" font-weight="700">NOT CALLED</text>
+    <text x="72" y="444" fill="#3a342c" font-size="16">HubSpot, Google Calendar, and Slack are named on the page or in a draft. No SDK call and no webhook.</text>
+    <text x="72" y="480" fill="#3a342c" font-size="16">Gmail, Outlook, Procore, and QuickBooks are not referenced. An email.draft is not a mailbox API.</text>
+    <text x="72" y="516" fill="#3a342c" font-size="16">OpenAI, if --live is set, may restyle prose. It does not choose times, totals, or dates.</text>
+    <text x="48" y="640" font-size="15" fill="#5c564c">If the critic never approves, the run stops at needs_human and Compliance does not write drafts.</text>
+</svg>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="820" viewBox="0 0 1640 820" role="img" aria-labelledby="title desc">
+  <title id="title">Sam Rivera's kitchen request</title>
+  <desc id="desc">Swimlane of the implemented Thursday run, from Sam's email to unsent drafts and Maria's approval gate.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1640" height="820" fill="#f3f0e8"/>
+  
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+        <path d="M 0 1.2 L 8.5 5 L 0 8.8 Z" fill="#221f1a"/>
+      </marker>
+    </defs>
+    <text x="40" y="46" class="serif" font-size="30" fill="#221f1a">Sam Rivera's kitchen request</text>
+    <text x="40" y="76" font-size="15" fill="#3a342c">Thursday 12 March 2026. Summit Ridge Builders. The critic rejects the first plan. Drafts stay in memory.</text>
+    <text x="40" y="104" font-size="14" fill="#5c564c">This path is implemented. Bright Spark moves to 13:45. Dave and the 15:30 county window stay put.</text>
+    <rect x="28" y="150" width="1584" height="78" fill="#fffdf9"/>
+        <text x="40" y="194" fill="#221f1a" font-size="14" font-weight="700">Sam Rivera</text><rect x="28" y="228" width="1584" height="78" fill="#efeae2"/>
+        <text x="40" y="272" fill="#221f1a" font-size="14" font-weight="700">Supervisor</text><rect x="28" y="306" width="1584" height="78" fill="#fffdf9"/>
+        <text x="40" y="350" fill="#221f1a" font-size="14" font-weight="700">Intake</text><rect x="28" y="384" width="1584" height="78" fill="#efeae2"/>
+        <text x="40" y="428" fill="#221f1a" font-size="14" font-weight="700">Scheduling</text><rect x="28" y="462" width="1584" height="78" fill="#fffdf9"/>
+        <text x="40" y="506" fill="#221f1a" font-size="14" font-weight="700">Compliance</text><rect x="28" y="540" width="1584" height="78" fill="#efeae2"/>
+        <text x="40" y="584" fill="#221f1a" font-size="14" font-weight="700">Briefing</text><rect x="28" y="618" width="1584" height="78" fill="#fffdf9"/>
+        <text x="40" y="662" fill="#221f1a" font-size="14" font-weight="700">Maria</text>
+    <path d="M 269 218 V 238" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/><path d="M 352 267 H 358 V 345 H 364" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/><path d="M 530 345 H 536 V 423 H 542" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/><path d="M 708 423 H 714 V 267 H 720" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/><path d="M 886 267 H 892 V 423 H 898" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/><path d="M 1064 423 H 1070 V 267 H 1076" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/><path d="M 1242 267 H 1248 V 501 H 1254" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/><path d="M 1337 530 V 550" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/><path d="M 1420 579 H 1426 V 657 H 1432" fill="none" stroke="#221f1a" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <rect x="188" y="162" width="162" height="54" rx="8" fill="#f8efe3" stroke="#8a4e0c" stroke-width="1.5"/>
+        <text x="196" y="184" fill="#221f1a" font-size="13" font-weight="700">08:47 email</text>
+        <text x="196" y="202" fill="#3a342c" font-size="12">Kitchen quote</text><rect x="188" y="240" width="162" height="54" rx="8" fill="#2c3d86" stroke="#2c3d86" stroke-width="1.5"/>
+        <text x="196" y="262" fill="#fffdf9" font-size="13" font-weight="700">Opens Thursday</text>
+        <text x="196" y="280" fill="#e7ebf6" font-size="12">Routes to Intake</text><rect x="366" y="318" width="162" height="54" rx="8" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+        <text x="374" y="340" fill="#221f1a" font-size="13" font-weight="700">Reads the day</text>
+        <text x="374" y="358" fill="#3a342c" font-size="12">Overlap, J-1042</text><rect x="544" y="396" width="162" height="54" rx="8" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+        <text x="552" y="418" fill="#221f1a" font-size="13" font-weight="700">Revision 1</text>
+        <text x="552" y="436" fill="#3a342c" font-size="12">Estimate at 13:30</text><rect x="722" y="240" width="162" height="54" rx="8" fill="#fffdf9" stroke="#9b2832" stroke-width="1.5"/>
+        <text x="730" y="262" fill="#9b2832" font-size="13" font-weight="700">Critic 75/100</text>
+        <text x="730" y="280" fill="#3a342c" font-size="12">FOCUS_BLOCK</text><rect x="900" y="396" width="162" height="54" rx="8" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+        <text x="908" y="418" fill="#221f1a" font-size="13" font-weight="700">Revision 2</text>
+        <text x="908" y="436" fill="#3a342c" font-size="12">09:40 to 11:20</text><rect x="1078" y="240" width="162" height="54" rx="8" fill="#e7f4ee" stroke="#1b754e" stroke-width="1.5"/>
+        <text x="1086" y="262" fill="#221f1a" font-size="13" font-weight="700">Critic 100/100</text>
+        <text x="1086" y="280" fill="#3a342c" font-size="12">Approved</text><rect x="1256" y="474" width="162" height="54" rx="8" fill="#e7f4ee" stroke="#1b754e" stroke-width="1.5"/>
+        <text x="1264" y="496" fill="#221f1a" font-size="13" font-weight="700">Drafts</text>
+        <text x="1264" y="514" fill="#3a342c" font-size="12">Nothing sent</text><rect x="1256" y="552" width="162" height="54" rx="8" fill="#e7f4ee" stroke="#1b754e" stroke-width="1.5"/>
+        <text x="1264" y="574" fill="#221f1a" font-size="13" font-weight="700">Call card</text>
+        <text x="1264" y="592" fill="#3a342c" font-size="12">No new promise</text><rect x="1434" y="630" width="162" height="54" rx="8" fill="#fffdf9" stroke="#221f1a" stroke-width="1.5"/>
+        <text x="1442" y="652" fill="#221f1a" font-size="13" font-weight="700">Maria's gate</text>
+        <text x="1442" y="670" fill="#3a342c" font-size="12">She has not sent it</text>
+    <text x="40" y="790" font-size="14" fill="#5c564c">Revision 2 is protect-focus: Sam at 09:00, the estimate block at 09:40–11:20. Maria has not sent the email or the Slack note.</text>
+</svg>

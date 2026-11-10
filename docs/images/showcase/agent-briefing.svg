@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="860" viewBox="0 0 1280 860" role="img" aria-labelledby="title desc">
+  <title id="title">Briefing</title>
+  <desc id="desc">Briefing for Benchmark: role, triggers, inputs, outputs, tools, hand-off, and where a person approves.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1280" height="860" fill="#f3f0e8"/>
+  
+    <text x="40" y="52" class="serif" font-size="32" fill="#221f1a">Briefing</text>
+    <text x="40" y="84" font-size="16" fill="#3a342c">Writes three outcomes and a call card. Adds no promise.</text>
+    <text x="40" y="110" font-size="13" fill="#5c564c">briefWriter.ts</text>
+    <rect x="40" y="140" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="60" y="172" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">TRIGGERS</text>
+          <text x="60" y="212" fill="#221f1a" font-size="16">Drafts are on the board</text>
+          <text x="60" y="242" fill="#3a342c" font-size="16">The plan is the approved one</text><rect x="640" y="140" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="660" y="172" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">INPUTS</text>
+          <text x="660" y="212" fill="#221f1a" font-size="16">The approved plan</text>
+          <text x="660" y="242" fill="#3a342c" font-size="16">Research notes and do-not-promise lines</text><rect x="40" y="324" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="60" y="356" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">OUTPUTS</text>
+          <text x="60" y="396" fill="#221f1a" font-size="16">Headline, outcomes, and watchouts</text>
+          <text x="60" y="426" fill="#3a342c" font-size="16">A call card for the kitchen call</text><rect x="640" y="324" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="660" y="356" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">TOOLS</text>
+          <text x="660" y="396" fill="#221f1a" font-size="16">Composition stays in code</text>
+          <text x="660" y="426" fill="#3a342c" font-size="16">Optional prose model for the headline</text><rect x="40" y="508" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="60" y="540" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">HANDS OFF TO</text>
+          <text x="60" y="580" fill="#221f1a" font-size="16">No further specialist</text>
+          <text x="60" y="610" fill="#3a342c" font-size="16">The supervisor closes the run</text><rect x="640" y="508" width="584" height="168" rx="12" fill="#fbeeee" stroke="#9b2832" stroke-width="1.5"/>
+          <text x="660" y="540" fill="#9b2832" font-size="12" font-weight="700" letter-spacing="0.08em">WHERE MARIA APPROVES</text>
+          <text x="660" y="580" fill="#221f1a" font-size="16">The card lists what not to promise</text>
+          <text x="660" y="610" fill="#3a342c" font-size="16">Maria decides what Sam may hear</text>
+</svg>

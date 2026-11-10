@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="620" viewBox="0 0 1600 620" role="img" aria-labelledby="title desc">
+  <title id="title">A project manager's day</title>
+  <desc id="desc">Morning work is what this demo runs. Midday and closeout are the cadence, not extra code.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1600" height="620" fill="#f3f0e8"/>
+  
+    <text x="48" y="52" class="serif" font-size="32" fill="#221f1a">A project manager's day</text>
+    <text x="48" y="84" font-size="16" fill="#3a342c">Morning work is what this demo runs. Midday and closeout are the cadence, not extra code.</text>
+    <rect x="48" y="112" width="490.6666666666667" height="430" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <rect x="68" y="132" width="101.2" height="22" rx="11" fill="#e7f4ee" stroke="#1b754e"/>
+    <text x="79" y="147" fill="#1b754e" font-size="12" font-weight="700">IN THE DEMO</text>
+          <text x="68" y="188" fill="#221f1a" font-size="24" font-weight="700">Morning</text>
+          <text x="68" y="240" fill="#2c3d86" font-size="13" font-weight="700">1</text>
+                 <text x="92" y="240" fill="#3a342c" font-size="15">Intake reads the calendar and the inbox.</text><text x="68" y="296" fill="#2c3d86" font-size="13" font-weight="700">2</text>
+                 <text x="92" y="296" fill="#3a342c" font-size="15">Scheduling proposes a day. The critic can reject it.</text><text x="68" y="352" fill="#2c3d86" font-size="13" font-weight="700">3</text>
+                 <text x="92" y="352" fill="#3a342c" font-size="15">Briefing writes the morning note.</text>
+          <text x="68" y="500" fill="#5c564c" font-size="14">See Thursday, and the quiet morning before 08:47.</text><rect x="554.6666666666667" y="112" width="490.6666666666667" height="430" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <rect x="574.6666666666667" y="132" width="72.4" height="22" rx="11" fill="#f8efe3" stroke="#8a4e0c"/>
+    <text x="585.6666666666667" y="147" fill="#8a4e0c" font-size="12" font-weight="700">PLANNED</text>
+          <text x="574.6666666666667" y="188" fill="#221f1a" font-size="24" font-weight="700">Midday</text>
+          <text x="574.6666666666667" y="240" fill="#2c3d86" font-size="13" font-weight="700">1</text>
+                 <text x="598.6666666666667" y="240" fill="#3a342c" font-size="15">A change order or an RFI would be a new constraint.</text><text x="574.6666666666667" y="296" fill="#2c3d86" font-size="13" font-weight="700">2</text>
+                 <text x="598.6666666666667" y="296" fill="#3a342c" font-size="15">Scheduling would propose again. The critic would score it.</text><text x="574.6666666666667" y="352" fill="#2c3d86" font-size="13" font-weight="700">3</text>
+                 <text x="598.6666666666667" y="352" fill="#3a342c" font-size="15">That loop is not a separate command today.</text>
+          <text x="574.6666666666667" y="500" fill="#5c564c" font-size="14">Not implemented. Do not treat it as a feature.</text><rect x="1061.3333333333335" y="112" width="490.6666666666667" height="430" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <rect x="1081.3333333333335" y="132" width="72.4" height="22" rx="11" fill="#f8efe3" stroke="#8a4e0c"/>
+    <text x="1092.3333333333335" y="147" fill="#8a4e0c" font-size="12" font-weight="700">PLANNED</text>
+          <text x="1081.3333333333335" y="188" fill="#221f1a" font-size="24" font-weight="700">End of day</text>
+          <text x="1081.3333333333335" y="240" fill="#2c3d86" font-size="13" font-weight="700">1</text>
+                 <text x="1105.3333333333335" y="240" fill="#3a342c" font-size="15">Client and sub updates would be drafted, not sent.</text><text x="1081.3333333333335" y="296" fill="#2c3d86" font-size="13" font-weight="700">2</text>
+                 <text x="1105.3333333333335" y="296" fill="#3a342c" font-size="15">The demo can draft one email and one Slack note.</text><text x="1081.3333333333335" y="352" fill="#2c3d86" font-size="13" font-weight="700">3</text>
+                 <text x="1105.3333333333335" y="352" fill="#3a342c" font-size="15">It does not write a closeout batch.</text>
+          <text x="1081.3333333333335" y="500" fill="#5c564c" font-size="14">The one email and Slack note are status draft.</text>
+    <text x="48" y="590" font-size="14" fill="#5c564c">Maria reviews every draft. The repository has no send path.</text>
+</svg>

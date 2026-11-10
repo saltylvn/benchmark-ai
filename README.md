@@ -57,6 +57,16 @@ Five cards, taken from the source. The supervisor is the only router. Intake, Sc
 
 ![Supervisor and the four specialists](docs/images/agents.svg)
 
+## Showcase
+
+[docs/SHOWCASE.md](docs/SHOWCASE.md) walks through the drawings in `docs/images/showcase/`. Green means the demo runs it. Amber means it is planned and not in the code. Minute counts are estimates from [docs/TIME_SAVED.md](docs/TIME_SAVED.md), not measurements.
+
+![The Benchmark team](docs/images/showcase/agents-hero.svg)
+
+![Sam Rivera's kitchen request](docs/images/showcase/workflow-request.svg)
+
+![Illustrative minutes, not measured results](docs/images/showcase/time-saved.svg)
+
 ## A Thursday at Summit Ridge
 
 Thursday, March 12, 2026. Maria Alvarez, project manager. Working hours 08:30–17:30.
