@@ -20,7 +20,8 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.web.json",
     "export:dashboard": "tsx src/export/snapshot.ts dashboard/data/snapshot.json",
     "dashboard": "npm run export:dashboard && python3 -m dashboard",
-    "test:dashboard": "python3 -m unittest discover -s dashboard/tests -t ."
+    "test:dashboard": "python3 -m unittest discover -s dashboard/tests -t .",
+    "export:static": "npm run export:dashboard && python3 -m dashboard.static_export"
   },
   "devDependencies": {
     "@types/node": "^22.19.0",

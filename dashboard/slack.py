@@ -108,6 +108,20 @@ class SlackConnector:
             ],
         }
 
+    def preview(self, text: str, *, context: str, approved_by: str) -> dict[str, Any]:
+        """Record what would be sent, without touching Slack. Used for demo visitors."""
+        record = {
+            "at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "context": context,
+            "approvedBy": approved_by,
+            "mode": "demo",
+            "payload": self.build_payload(text, context, approved_by),
+            "result": "dry-run",
+            "detail": "Demo preview. Sign in with a company account to send.",
+        }
+        self.audit.append(record)
+        return record
+
     def send(self, text: str, *, context: str, approved_by: str) -> dict[str, Any]:
         payload = self.build_payload(text, context, approved_by)
         record: dict[str, Any] = {
