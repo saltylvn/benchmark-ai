@@ -4,7 +4,7 @@ import unittest
 import urllib.parse
 import urllib.request
 
-from dashboard.app import create_app, slack_messages
+from dashboard.app import create_app
 from dashboard.insights import (
     DEFAULT_ASSUMPTIONS,
     DEFAULT_SNAPSHOT,
@@ -173,37 +173,51 @@ class AppTest(unittest.TestCase):
         self.client.get("/logout")
         self.assertIn(b"View the demo", self.client.get("/").data)
 
-    def test_pages_render(self):
-        for path in ("/", "/?run=morning"):
-            response = self.client.get(path)
-            self.assertEqual(response.status_code, 200)
-            self.assertIn(b"Critic scorecard", response.data)
-        self.assertEqual(self.client.get("/?run=nope").status_code, 404)
+    def approve(self, item_id, act="approve", token=None, client=None):
+        return (client or self.client).post(
+            "/api/approve",
+            json={"id": item_id, "act": act},
+            headers={"X-Form-Token": token or self.app.config["FORM_TOKEN"]},
+        )
+
+    def test_app_renders_all_tabs(self):
+        page = self.client.get("/").data
+        for marker in (b'id="tab-today"', b'id="tab-jobs"', b'id="tab-team"', b'id="tab-messages"', b'id="tab-hood"', b"Critic scorecard"):
+            self.assertIn(marker, page)
+        self.assertIn(b"Cedar duplex", page)
+        self.assertIn(b"Team status digest", page)
 
     def test_api(self):
         data = self.client.get("/api/runs/thursday").get_json()
         self.assertIn("insights", data)
+        team = self.client.get("/api/team").get_json()
+        self.assertEqual(team["counts"], {"on-track": 3, "at-risk": 4, "behind": 1})
         self.assertFalse(self.client.get("/api/slack/status").get_json()["connected"])
 
-    def test_slack_messages_include_draft_and_brief(self):
-        ids = [m["id"] for m in slack_messages(snapshot()["runs"]["thursday"])]
-        self.assertEqual(ids, ["slack-draft", "brief"])
-
     def test_approve_requires_form_token(self):
-        response = self.client.post("/slack/send", data={"run": "thursday", "message": "brief"})
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(self.approve("D1", token="stale").status_code, 400)
         self.assertEqual(self.slack.audit, [])
 
-    def test_approve_records_audit(self):
-        token = self.app.config["FORM_TOKEN"]
-        response = self.client.post(
-            "/slack/send",
-            data={"token": token, "run": "thursday", "message": "slack-draft"},
-        )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.slack.audit[0]["result"], "dry-run")
-        self.assertEqual(self.slack.audit[0]["approvedBy"], "Demo viewer")
-        self.assertIn("Estimate block stays", self.slack.audit[0]["payload"]["text"])
+    def test_approving_a_slack_draft_previews_for_demo(self):
+        rec = self.approve("D1").get_json()
+        self.assertEqual(rec["by"], "Demo viewer")
+        self.assertIn("Preview only", rec["detail"])
+        self.assertEqual(self.slack.audit[0]["mode"], "demo")
+        self.assertIn("#subs-brightspark", self.slack.audit[0]["payload"]["text"])
+
+    def test_approving_an_invoice_never_touches_slack(self):
+        rec = self.approve("D5").get_json()
+        self.assertIn("stay drafts", rec["detail"])
+        self.assertEqual(self.slack.audit, [])
+
+    def test_skip_and_unknown_items(self):
+        self.assertEqual(self.approve("R3", act="skip").get_json()["act"], "skip")
+        self.assertEqual(self.approve("nope").status_code, 404)
+        self.assertEqual(self.approve("D1", act="delete").status_code, 400)
+
+    def test_approvals_survive_a_reload(self):
+        self.approve("D5")
+        self.assertIn(b'"D5": {', self.client.get("/").data)
 
 
 class SignInTest(unittest.TestCase):
@@ -260,7 +274,7 @@ class SignInTest(unittest.TestCase):
         slack = SlackConnector(SlackConfig(bot_token="xoxb", channel="C1", send_enabled=True), opener=slack_opener)
         app, client = self.make(RecordingOpener(), slack=slack)
         client.get("/demo")
-        client.post("/slack/send", data={"token": app.config["FORM_TOKEN"], "run": "thursday", "message": "brief"})
+        client.post("/api/approve", json={"id": "digest", "act": "approve"}, headers={"X-Form-Token": app.config["FORM_TOKEN"]})
         self.assertEqual(slack.audit[0]["mode"], "demo")
         self.assertEqual(slack_opener.requests, [])
 
@@ -271,7 +285,8 @@ class SignInTest(unittest.TestCase):
         app, client = self.make(auth_opener, slack=slack)
         state = self.start(client)
         client.get(f"/auth/google/callback?code=abc&state={state}")
-        client.post("/slack/send", data={"token": app.config["FORM_TOKEN"], "run": "thursday", "message": "slack-draft"})
+        rec = client.post("/api/approve", json={"id": "D1", "act": "approve"}, headers={"X-Form-Token": app.config["FORM_TOKEN"]}).get_json()
+        self.assertEqual(rec["detail"], "Posted to Slack")
         self.assertEqual(slack.audit[0]["result"], "sent")
         self.assertEqual(slack.audit[0]["approvedBy"], "Maria Alvarez (maria@summitridge.example)")
 
@@ -303,8 +318,8 @@ class StaticExportTest(unittest.TestCase):
         html = render_static()
         self.assertTrue(html.lstrip().startswith("<title>"))
         self.assertIn("View the demo", html)
-        self.assertIn('id="view-thursday"', html)
-        self.assertIn('id="view-morning"', html)
+        self.assertIn('id="tab-today"', html)
+        self.assertIn('"mode": "static"', html)
         self.assertNotIn("<form", html)
         self.assertNotIn('href="/', html)
         self.assertNotIn("<link", html)

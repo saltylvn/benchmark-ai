@@ -2,8 +2,8 @@
 
     python -m dashboard.static_export [out.html]
 
-The file opens on a welcome card, then shows either run, picked by
-``#run-thursday`` or ``#run-morning``. It has no server calls, so it can be
+The file opens on a welcome card, then the team app (Today, Jobs, Team,
+Messages, Under the hood), routed by the URL hash. It has no server calls, so it can be
 hosted anywhere and opened on a phone or iPad. Approvals and sign-in stay in the
 live dashboard.
 """
@@ -15,7 +15,8 @@ from pathlib import Path
 
 from flask import render_template
 
-from .app import RUNS, create_app, provider_cards, slack_messages
+from .app import RUNS, create_app, provider_cards
+from .portfolio import build_team_view
 from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, HERE, build_view, load_json
 
 STATIC_SLACK = {
@@ -23,7 +24,7 @@ STATIC_SLACK = {
     "mode": "none",
     "sendEnabled": False,
     "channel": None,
-    "detail": "Read-only copy. Slack status and sending live in the dashboard server.",
+    "detail": "This copy runs without a server, so approvals stay in this browser.",
 }
 
 
@@ -34,32 +35,24 @@ def render_static(
 ) -> str:
     app = create_app(snapshot_path, assumptions_path, env={})
     snapshot, assumptions = load_json(snapshot_path), load_json(assumptions_path)
-    views = []
     with app.test_request_context("/"):
-        for key in RUNS:
-            v = build_view(snapshot, assumptions, key)
-            views.append(
-                {
-                    "key": key,
-                    "html": render_template(
-                        "_dashboard.html",
-                        static_mode=True,
-                        v=v,
-                        runs=RUNS,
-                        user=None,
-                        slack=STATIC_SLACK,
-                        can_send=False,
-                        messages=slack_messages(v["run"]),
-                        audit=[],
-                        form_token="",
-                    ),
-                }
-            )
+        app_html = render_template(
+            "_app.html",
+            static_mode=True,
+            v=build_view(snapshot, assumptions, "thursday"),
+            t=build_team_view(snapshot, assumptions),
+            runs=RUNS,
+            user=None,
+            slack=STATIC_SLACK,
+            audit=[],
+            approvals={},
+            form_token="",
+        )
         welcome = render_template("_welcome.html", static_mode=True, providers=provider_cards({}))
         return render_template(
             template,
             css=(HERE / "static" / "dashboard.css").read_text(encoding="utf-8"),
-            views=views,
+            app_html=app_html,
             welcome=welcome,
         )
 

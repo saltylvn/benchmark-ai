@@ -22,7 +22,8 @@
     "dashboard": "npm run export:dashboard && python3 -m dashboard",
     "test:dashboard": "python3 -m unittest discover -s dashboard/tests -t .",
     "export:static": "npm run export:dashboard && python3 -m dashboard.static_export",
-    "build:site": "npm run export:dashboard && python3 -m dashboard.static_export --site dashboard/dist/site"
+    "build:site": "npm run export:dashboard && python3 -m dashboard.static_export --site dashboard/dist/site",
+    "demo:team": "tsx src/cli.ts team"
   },
   "devDependencies": {
     "@types/node": "^22.19.0",

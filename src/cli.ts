@@ -1,6 +1,8 @@
 import { pathToFileURL } from "node:url";
 
 import { runWorkflow } from "./orchestrator/supervisor.js";
+import { sweepPortfolio } from "./agents/coordinator.js";
+import { PORTFOLIO } from "./fixtures/portfolio.js";
 import { resolveModel } from "./providers/model.js";
 import { renderBrief, renderPlan, renderThursday, renderTraceJson, type RenderOptions } from "./render/terminal.js";
 
@@ -12,6 +14,7 @@ Usage
   npm run demo:brief      Morning brief for the same Thursday, before the request.
   npm run demo:trace      Thursday as JSON.
   npm run demo:all        Plan, brief, then Thursday.
+  npm run demo:team       Coordinator sweep across every job, PM, and sub.
   npm run demo:live       Same as demo, but polish prose if a provider is configured.
 
 Mock mode is the default. Pass --live with BENCHMARK_PROVIDER=openai and
@@ -54,6 +57,11 @@ export async function main(argv: string[]): Promise<number> {
       const state = await runWorkflow({ workflow: "thursday", model });
       process.stdout.write(`${renderTraceJson(state)}\n`);
       return state.status === "approved" ? 0 : 1;
+    }
+    case "team": {
+      const sweep = sweepPortfolio(PORTFOLIO);
+      process.stdout.write(`${sweep.digest}\n\n${sweep.drafts.length} drafts staged. Nothing was sent.\n`);
+      return 0;
     }
     case "all": {
       const morning = await runWorkflow({ workflow: "morning", model });

@@ -2052,5 +2052,1162 @@
         }
       ]
     }
+  },
+  "portfolio": {
+    "data": {
+      "company": "Summit Ridge Builders",
+      "today": "2026-03-12",
+      "people": [
+        {
+          "id": "maria",
+          "name": "Maria Alvarez",
+          "role": "Project manager",
+          "slack": "@maria",
+          "capacityHours": 40
+        },
+        {
+          "id": "jordan",
+          "name": "Jordan Pike",
+          "role": "Project manager",
+          "slack": "@jordan",
+          "capacityHours": 40
+        },
+        {
+          "id": "renee",
+          "name": "Renee Walsh",
+          "role": "Project manager",
+          "slack": "@renee",
+          "capacityHours": 40
+        },
+        {
+          "id": "tomas",
+          "name": "Tomas Reyes",
+          "role": "Project manager",
+          "slack": "@tomas",
+          "capacityHours": 40
+        },
+        {
+          "id": "dave",
+          "name": "Dave Chen",
+          "role": "Owner",
+          "slack": "@dave",
+          "capacityHours": 0
+        }
+      ],
+      "jobs": [
+        {
+          "id": "J-1042",
+          "name": "Rivera kitchen",
+          "address": "123 Example Ln",
+          "client": "Sam Rivera (FAKE)",
+          "clientEmail": "sam.rivera@example.com",
+          "pm": "maria",
+          "stage": "quote",
+          "contract": 38450,
+          "hoursThisWeek": 9,
+          "lastClientUpdate": "2026-03-12",
+          "quoteDue": "2026-03-12",
+          "slackChannel": "#job-j1042",
+          "milestones": [
+            {
+              "id": "walk",
+              "name": "Site walk",
+              "planned": "2026-03-12",
+              "done": null
+            },
+            {
+              "id": "quote",
+              "name": "Quote approved",
+              "planned": "2026-03-13",
+              "done": null
+            }
+          ]
+        },
+        {
+          "id": "J-1031",
+          "name": "Hayes basement",
+          "address": "48 Sample Ct",
+          "client": "Morgan Hayes (FAKE)",
+          "clientEmail": "m.hayes@example.com",
+          "pm": "maria",
+          "stage": "in-progress",
+          "contract": 62000,
+          "hoursThisWeek": 14,
+          "lastClientUpdate": "2026-03-05",
+          "slackChannel": "#job-j1031",
+          "milestones": [
+            {
+              "id": "demo",
+              "name": "Demo",
+              "planned": "2026-02-16",
+              "done": "2026-02-16",
+              "billPct": 0.2,
+              "invoiced": true
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-02-27",
+              "done": "2026-02-26",
+              "billPct": 0.2,
+              "invoiced": true
+            },
+            {
+              "id": "drywall",
+              "name": "Drywall",
+              "planned": "2026-03-11",
+              "done": "2026-03-11",
+              "billPct": 0.2,
+              "invoiced": false
+            },
+            {
+              "id": "finish",
+              "name": "Finish carpentry",
+              "planned": "2026-03-25",
+              "done": null,
+              "billPct": 0.25
+            },
+            {
+              "id": "punch",
+              "name": "Punch list",
+              "planned": "2026-04-03",
+              "done": null,
+              "billPct": 0.15
+            }
+          ]
+        },
+        {
+          "id": "J-1038",
+          "name": "Pinecrest addition",
+          "address": "9 Pinecrest Rd",
+          "client": "Avery Lin (FAKE)",
+          "clientEmail": "avery.lin@example.com",
+          "pm": "maria",
+          "stage": "in-progress",
+          "contract": 148000,
+          "hoursThisWeek": 12,
+          "lastClientUpdate": "2026-03-10",
+          "slackChannel": "#job-j1038",
+          "permit": {
+            "id": "PC-2025-0912",
+            "expires": "2026-06-30"
+          },
+          "inspection": {
+            "name": "Rough-in inspection",
+            "date": "2026-03-12"
+          },
+          "milestones": [
+            {
+              "id": "foundation",
+              "name": "Foundation",
+              "planned": "2026-01-23",
+              "done": "2026-01-26",
+              "billPct": 0.2,
+              "invoiced": true
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-02-20",
+              "done": "2026-02-24",
+              "billPct": 0.2,
+              "invoiced": true
+            },
+            {
+              "id": "rough",
+              "name": "Rough-in passed",
+              "planned": "2026-03-12",
+              "done": null,
+              "billPct": 0.2
+            },
+            {
+              "id": "drywall",
+              "name": "Insulation and drywall",
+              "planned": "2026-03-27",
+              "done": null,
+              "billPct": 0.2
+            },
+            {
+              "id": "final",
+              "name": "Final inspection",
+              "planned": "2026-04-24",
+              "done": null,
+              "billPct": 0.2
+            }
+          ]
+        },
+        {
+          "id": "J-1027",
+          "name": "Lakeview deck",
+          "address": "302 Lakeview Dr",
+          "client": "Chris Dunn (FAKE)",
+          "clientEmail": "chris.dunn@example.com",
+          "pm": "jordan",
+          "stage": "closeout",
+          "contract": 24800,
+          "hoursThisWeek": 4,
+          "lastClientUpdate": "2026-03-09",
+          "slackChannel": "#job-j1027",
+          "milestones": [
+            {
+              "id": "build",
+              "name": "Deck built",
+              "planned": "2026-02-27",
+              "done": "2026-02-27",
+              "billPct": 0.7,
+              "invoiced": true
+            },
+            {
+              "id": "final",
+              "name": "Final payment",
+              "planned": "2026-03-13",
+              "done": null,
+              "billPct": 0.3
+            }
+          ]
+        },
+        {
+          "id": "J-1045",
+          "name": "Morales bath",
+          "address": "77 Demo Ave",
+          "client": "Jesse Morales (FAKE)",
+          "clientEmail": "jesse.morales@example.com",
+          "pm": "renee",
+          "stage": "scheduled",
+          "contract": 21500,
+          "hoursThisWeek": 8,
+          "lastClientUpdate": "2026-03-11",
+          "slackChannel": "#job-j1045",
+          "permit": {
+            "id": "PC-2026-0144",
+            "expires": "2026-09-01"
+          },
+          "milestones": [
+            {
+              "id": "start",
+              "name": "Demo starts",
+              "planned": "2026-03-16",
+              "done": null,
+              "billPct": 0.3
+            },
+            {
+              "id": "tile",
+              "name": "Tile set",
+              "planned": "2026-03-27",
+              "done": null,
+              "billPct": 0.4
+            },
+            {
+              "id": "fixtures",
+              "name": "Fixtures and punch",
+              "planned": "2026-04-03",
+              "done": null,
+              "billPct": 0.3
+            }
+          ]
+        },
+        {
+          "id": "J-1036",
+          "name": "Patel garage",
+          "address": "15 Test St",
+          "client": "Nina Patel (FAKE)",
+          "clientEmail": "nina.patel@example.com",
+          "pm": "renee",
+          "stage": "in-progress",
+          "contract": 54000,
+          "hoursThisWeek": 15,
+          "lastClientUpdate": "2026-03-10",
+          "slackChannel": "#job-j1036",
+          "milestones": [
+            {
+              "id": "slab",
+              "name": "Slab poured",
+              "planned": "2026-02-20",
+              "done": "2026-02-20",
+              "billPct": 0.3,
+              "invoiced": true
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-03-13",
+              "done": null,
+              "billPct": 0.3
+            },
+            {
+              "id": "roof",
+              "name": "Roof and doors",
+              "planned": "2026-03-27",
+              "done": null,
+              "billPct": 0.4
+            }
+          ]
+        },
+        {
+          "id": "J-1019",
+          "name": "Cedar duplex",
+          "address": "200 Cedar Way",
+          "client": "Cedar Holdings (FAKE)",
+          "clientEmail": "ops@cedar.example",
+          "pm": "tomas",
+          "stage": "in-progress",
+          "contract": 410000,
+          "hoursThisWeek": 31,
+          "lastClientUpdate": "2026-03-11",
+          "slackChannel": "#job-j1019",
+          "permit": {
+            "id": "PC-2025-0533",
+            "expires": "2026-03-25"
+          },
+          "milestones": [
+            {
+              "id": "foundation",
+              "name": "Foundation",
+              "planned": "2025-12-12",
+              "done": "2025-12-15",
+              "billPct": 0.15,
+              "invoiced": true
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-02-06",
+              "done": "2026-02-13",
+              "billPct": 0.2,
+              "invoiced": true
+            },
+            {
+              "id": "dryin",
+              "name": "Dried in",
+              "planned": "2026-03-06",
+              "done": null,
+              "billPct": 0.2
+            },
+            {
+              "id": "rough",
+              "name": "Rough-ins",
+              "planned": "2026-04-03",
+              "done": null,
+              "billPct": 0.2
+            },
+            {
+              "id": "finishes",
+              "name": "Finishes",
+              "planned": "2026-05-15",
+              "done": null,
+              "billPct": 0.25
+            }
+          ]
+        },
+        {
+          "id": "J-1047",
+          "name": "Brooks roof",
+          "address": "61 Oak Example Pl",
+          "client": "Taylor Brooks (FAKE)",
+          "clientEmail": "t.brooks@example.com",
+          "pm": "tomas",
+          "stage": "lead",
+          "contract": 17800,
+          "hoursThisWeek": 6,
+          "lastClientUpdate": "2026-03-09",
+          "quoteDue": "2026-03-13",
+          "slackChannel": "#job-j1047",
+          "milestones": [
+            {
+              "id": "quote",
+              "name": "Quote sent",
+              "planned": "2026-03-13",
+              "done": null
+            }
+          ]
+        }
+      ],
+      "subs": [
+        {
+          "id": "brightspark",
+          "name": "Bright Spark Electric (FAKE)",
+          "trade": "Electrical",
+          "contact": "Luis Ortega (FAKE)",
+          "slack": "#subs-brightspark",
+          "coiExpires": "2026-02-28"
+        },
+        {
+          "id": "tilewright",
+          "name": "Tilewright Tile (FAKE)",
+          "trade": "Tile",
+          "contact": "Ana Ruiz (FAKE)",
+          "slack": "#subs-tilewright",
+          "coiExpires": "2026-03-20"
+        },
+        {
+          "id": "northfork",
+          "name": "North Fork Framing (FAKE)",
+          "trade": "Framing",
+          "contact": "Ben Cole (FAKE)",
+          "slack": "#subs-northfork",
+          "coiExpires": "2026-09-01"
+        },
+        {
+          "id": "clearline",
+          "name": "Clearline Plumbing (FAKE)",
+          "trade": "Plumbing",
+          "contact": "Rae Kim (FAKE)",
+          "slack": "#subs-clearline",
+          "coiExpires": "2026-11-15"
+        },
+        {
+          "id": "ridgeback",
+          "name": "Ridgeback Roofing (FAKE)",
+          "trade": "Roofing",
+          "contact": "Sol Diaz (FAKE)",
+          "slack": "#subs-ridgeback",
+          "coiExpires": "2026-07-01"
+        }
+      ],
+      "bookings": [
+        {
+          "subId": "brightspark",
+          "jobId": "J-1038",
+          "date": "2026-03-12",
+          "task": "Rough-in walkthrough"
+        },
+        {
+          "subId": "northfork",
+          "jobId": "J-1036",
+          "date": "2026-03-13",
+          "task": "Wall framing"
+        },
+        {
+          "subId": "northfork",
+          "jobId": "J-1019",
+          "date": "2026-03-13",
+          "task": "Roof sheathing"
+        },
+        {
+          "subId": "tilewright",
+          "jobId": "J-1045",
+          "date": "2026-03-24",
+          "task": "Shower tile"
+        },
+        {
+          "subId": "clearline",
+          "jobId": "J-1031",
+          "date": "2026-03-18",
+          "task": "Fixture set"
+        },
+        {
+          "subId": "ridgeback",
+          "jobId": "J-1036",
+          "date": "2026-03-24",
+          "task": "Roofing"
+        }
+      ],
+      "lienWaivers": [
+        {
+          "subId": "clearline",
+          "jobId": "J-1027",
+          "received": false,
+          "neededFor": "Final payment"
+        },
+        {
+          "subId": "northfork",
+          "jobId": "J-1027",
+          "received": true,
+          "neededFor": "Final payment"
+        }
+      ]
+    },
+    "sweep": {
+      "today": "2026-03-12",
+      "company": "Summit Ridge Builders",
+      "statuses": [
+        {
+          "jobId": "J-1042",
+          "name": "Rivera kitchen",
+          "pm": "maria",
+          "stage": "quote",
+          "percent": 0,
+          "status": "on-track",
+          "reason": "Next: Site walk Thu, Mar 12.",
+          "daysLate": 0,
+          "nextMilestone": {
+            "name": "Site walk",
+            "planned": "2026-03-12"
+          },
+          "milestones": [
+            {
+              "id": "walk",
+              "name": "Site walk",
+              "planned": "2026-03-12",
+              "done": null,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "quote",
+              "name": "Quote approved",
+              "planned": "2026-03-13",
+              "done": null,
+              "state": "upcoming",
+              "daysLate": 0
+            }
+          ]
+        },
+        {
+          "jobId": "J-1031",
+          "name": "Hayes basement",
+          "pm": "maria",
+          "stage": "in-progress",
+          "percent": 60,
+          "status": "on-track",
+          "reason": "Next: Finish carpentry Wed, Mar 25.",
+          "daysLate": 0,
+          "nextMilestone": {
+            "name": "Finish carpentry",
+            "planned": "2026-03-25"
+          },
+          "milestones": [
+            {
+              "id": "demo",
+              "name": "Demo",
+              "planned": "2026-02-16",
+              "done": "2026-02-16",
+              "billPct": 0.2,
+              "invoiced": true,
+              "state": "done",
+              "daysLate": 0
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-02-27",
+              "done": "2026-02-26",
+              "billPct": 0.2,
+              "invoiced": true,
+              "state": "done",
+              "daysLate": 0
+            },
+            {
+              "id": "drywall",
+              "name": "Drywall",
+              "planned": "2026-03-11",
+              "done": "2026-03-11",
+              "billPct": 0.2,
+              "invoiced": false,
+              "state": "done",
+              "daysLate": 0
+            },
+            {
+              "id": "finish",
+              "name": "Finish carpentry",
+              "planned": "2026-03-25",
+              "done": null,
+              "billPct": 0.25,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "punch",
+              "name": "Punch list",
+              "planned": "2026-04-03",
+              "done": null,
+              "billPct": 0.15,
+              "state": "upcoming",
+              "daysLate": 0
+            }
+          ]
+        },
+        {
+          "jobId": "J-1038",
+          "name": "Pinecrest addition",
+          "pm": "maria",
+          "stage": "in-progress",
+          "percent": 40,
+          "status": "at-risk",
+          "reason": "Bright Spark Electric (FAKE) insurance expired",
+          "daysLate": 0,
+          "nextMilestone": {
+            "name": "Rough-in passed",
+            "planned": "2026-03-12"
+          },
+          "milestones": [
+            {
+              "id": "foundation",
+              "name": "Foundation",
+              "planned": "2026-01-23",
+              "done": "2026-01-26",
+              "billPct": 0.2,
+              "invoiced": true,
+              "state": "done",
+              "daysLate": 3
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-02-20",
+              "done": "2026-02-24",
+              "billPct": 0.2,
+              "invoiced": true,
+              "state": "done",
+              "daysLate": 4
+            },
+            {
+              "id": "rough",
+              "name": "Rough-in passed",
+              "planned": "2026-03-12",
+              "done": null,
+              "billPct": 0.2,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "drywall",
+              "name": "Insulation and drywall",
+              "planned": "2026-03-27",
+              "done": null,
+              "billPct": 0.2,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "final",
+              "name": "Final inspection",
+              "planned": "2026-04-24",
+              "done": null,
+              "billPct": 0.2,
+              "state": "upcoming",
+              "daysLate": 0
+            }
+          ]
+        },
+        {
+          "jobId": "J-1027",
+          "name": "Lakeview deck",
+          "pm": "jordan",
+          "stage": "closeout",
+          "percent": 70,
+          "status": "at-risk",
+          "reason": "Clearline Plumbing (FAKE) lien waiver missing",
+          "daysLate": 0,
+          "nextMilestone": {
+            "name": "Final payment",
+            "planned": "2026-03-13"
+          },
+          "milestones": [
+            {
+              "id": "build",
+              "name": "Deck built",
+              "planned": "2026-02-27",
+              "done": "2026-02-27",
+              "billPct": 0.7,
+              "invoiced": true,
+              "state": "done",
+              "daysLate": 0
+            },
+            {
+              "id": "final",
+              "name": "Final payment",
+              "planned": "2026-03-13",
+              "done": null,
+              "billPct": 0.3,
+              "state": "upcoming",
+              "daysLate": 0
+            }
+          ]
+        },
+        {
+          "jobId": "J-1045",
+          "name": "Morales bath",
+          "pm": "renee",
+          "stage": "scheduled",
+          "percent": 0,
+          "status": "at-risk",
+          "reason": "Tilewright Tile (FAKE) insurance lapses before their work",
+          "daysLate": 0,
+          "nextMilestone": {
+            "name": "Demo starts",
+            "planned": "2026-03-16"
+          },
+          "milestones": [
+            {
+              "id": "start",
+              "name": "Demo starts",
+              "planned": "2026-03-16",
+              "done": null,
+              "billPct": 0.3,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "tile",
+              "name": "Tile set",
+              "planned": "2026-03-27",
+              "done": null,
+              "billPct": 0.4,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "fixtures",
+              "name": "Fixtures and punch",
+              "planned": "2026-04-03",
+              "done": null,
+              "billPct": 0.3,
+              "state": "upcoming",
+              "daysLate": 0
+            }
+          ]
+        },
+        {
+          "jobId": "J-1036",
+          "name": "Patel garage",
+          "pm": "renee",
+          "stage": "in-progress",
+          "percent": 30,
+          "status": "at-risk",
+          "reason": "North Fork Framing (FAKE) booked on two jobs Fri, Mar 13",
+          "daysLate": 0,
+          "nextMilestone": {
+            "name": "Framing",
+            "planned": "2026-03-13"
+          },
+          "milestones": [
+            {
+              "id": "slab",
+              "name": "Slab poured",
+              "planned": "2026-02-20",
+              "done": "2026-02-20",
+              "billPct": 0.3,
+              "invoiced": true,
+              "state": "done",
+              "daysLate": 0
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-03-13",
+              "done": null,
+              "billPct": 0.3,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "roof",
+              "name": "Roof and doors",
+              "planned": "2026-03-27",
+              "done": null,
+              "billPct": 0.4,
+              "state": "upcoming",
+              "daysLate": 0
+            }
+          ]
+        },
+        {
+          "jobId": "J-1019",
+          "name": "Cedar duplex",
+          "pm": "tomas",
+          "stage": "in-progress",
+          "percent": 35,
+          "status": "behind",
+          "reason": "Dried in is 6 days late.",
+          "daysLate": 6,
+          "nextMilestone": {
+            "name": "Dried in",
+            "planned": "2026-03-06"
+          },
+          "milestones": [
+            {
+              "id": "foundation",
+              "name": "Foundation",
+              "planned": "2025-12-12",
+              "done": "2025-12-15",
+              "billPct": 0.15,
+              "invoiced": true,
+              "state": "done",
+              "daysLate": 3
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-02-06",
+              "done": "2026-02-13",
+              "billPct": 0.2,
+              "invoiced": true,
+              "state": "done",
+              "daysLate": 7
+            },
+            {
+              "id": "dryin",
+              "name": "Dried in",
+              "planned": "2026-03-06",
+              "done": null,
+              "billPct": 0.2,
+              "state": "late",
+              "daysLate": 6
+            },
+            {
+              "id": "rough",
+              "name": "Rough-ins",
+              "planned": "2026-04-03",
+              "done": null,
+              "billPct": 0.2,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "finishes",
+              "name": "Finishes",
+              "planned": "2026-05-15",
+              "done": null,
+              "billPct": 0.25,
+              "state": "upcoming",
+              "daysLate": 0
+            }
+          ]
+        },
+        {
+          "jobId": "J-1047",
+          "name": "Brooks roof",
+          "pm": "tomas",
+          "stage": "lead",
+          "percent": 0,
+          "status": "on-track",
+          "reason": "Next: Quote sent Fri, Mar 13.",
+          "daysLate": 0,
+          "nextMilestone": {
+            "name": "Quote sent",
+            "planned": "2026-03-13"
+          },
+          "milestones": [
+            {
+              "id": "quote",
+              "name": "Quote sent",
+              "planned": "2026-03-13",
+              "done": null,
+              "state": "upcoming",
+              "daysLate": 0
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "kind": "insurance",
+          "level": "blocked",
+          "jobId": "J-1038",
+          "owner": "maria",
+          "title": "Bright Spark Electric (FAKE) insurance expired",
+          "detail": "Certificate expired Sat, Feb 28. Booked rough-in walkthrough on J-1038 Thu, Mar 12. Not cleared to work.",
+          "due": "2026-03-12",
+          "id": "R1"
+        },
+        {
+          "kind": "insurance",
+          "level": "blocked",
+          "jobId": "J-1045",
+          "owner": "renee",
+          "title": "Tilewright Tile (FAKE) insurance lapses before their work",
+          "detail": "Certificate ends Fri, Mar 20. Booked shower tile on J-1045 Tue, Mar 24. Not cleared to work.",
+          "due": "2026-03-24",
+          "id": "R2"
+        },
+        {
+          "kind": "inspection",
+          "level": "watch",
+          "jobId": "J-1038",
+          "owner": "maria",
+          "title": "Rough-in inspection today",
+          "detail": "Nobody is assigned to meet the inspector yet.",
+          "due": "2026-03-12",
+          "id": "R3"
+        },
+        {
+          "kind": "permit",
+          "level": "watch",
+          "jobId": "J-1019",
+          "owner": "tomas",
+          "title": "Permit PC-2025-0533 expires in 13 days",
+          "detail": "Work on Cedar duplex is planned past Wed, Mar 25. File the extension now.",
+          "due": "2026-03-25",
+          "id": "R4"
+        },
+        {
+          "kind": "lien-waiver",
+          "level": "blocked",
+          "jobId": "J-1027",
+          "owner": "jordan",
+          "title": "Clearline Plumbing (FAKE) lien waiver missing",
+          "detail": "Final payment on Lakeview deck ($7,440) cannot be collected until it arrives.",
+          "due": "2026-03-13",
+          "id": "R5"
+        },
+        {
+          "kind": "invoice",
+          "level": "watch",
+          "jobId": "J-1031",
+          "owner": "maria",
+          "title": "Hayes basement: Drywall done, not billed",
+          "detail": "20% of $62,000 = $12,400 ready to invoice.",
+          "id": "R6"
+        },
+        {
+          "kind": "client-update",
+          "level": "watch",
+          "jobId": "J-1031",
+          "owner": "maria",
+          "title": "Morgan Hayes (FAKE) has not heard from us in 7 days",
+          "detail": "Hayes basement is 60% complete. Next: Finish carpentry Wed, Mar 25.",
+          "id": "R7"
+        },
+        {
+          "kind": "double-booking",
+          "level": "blocked",
+          "jobId": "J-1036",
+          "owner": "renee",
+          "title": "North Fork Framing (FAKE) booked on two jobs Fri, Mar 13",
+          "detail": "J-1019 (Tomas Reyes) and J-1036 (Renee Walsh). Cedar duplex has the earlier milestone, so it keeps the crew.",
+          "due": "2026-03-13",
+          "id": "R8"
+        },
+        {
+          "kind": "quote-due",
+          "level": "watch",
+          "jobId": "J-1042",
+          "owner": "maria",
+          "title": "Quote for Rivera kitchen due today",
+          "detail": "$38,450 estimate for Sam Rivera (FAKE).",
+          "due": "2026-03-12",
+          "id": "R9"
+        },
+        {
+          "kind": "quote-due",
+          "level": "watch",
+          "jobId": "J-1047",
+          "owner": "tomas",
+          "title": "Quote for Brooks roof due tomorrow",
+          "detail": "$17,800 estimate for Taylor Brooks (FAKE).",
+          "due": "2026-03-13",
+          "id": "R10"
+        },
+        {
+          "kind": "late-milestone",
+          "level": "blocked",
+          "jobId": "J-1019",
+          "owner": "tomas",
+          "title": "Cedar duplex is behind",
+          "detail": "Dried in is 6 days late.",
+          "id": "R11"
+        },
+        {
+          "kind": "workload",
+          "level": "watch",
+          "owner": "tomas",
+          "jobId": "J-1047",
+          "title": "Tomas Reyes is at 37 of 40 hours",
+          "detail": "Jordan Pike has 36 hours free. Brooks roof is early-stage and easy to hand over.",
+          "id": "R12"
+        }
+      ],
+      "drafts": [
+        {
+          "kind": "slack",
+          "riskId": "R1",
+          "owner": "maria",
+          "to": "#subs-brightspark",
+          "jobId": "J-1038",
+          "task": "subNudge",
+          "subject": "Insurance certificate for J-1038",
+          "body": "Hi Luis Ortega, we need a current certificate of insurance before Thu, Mar 12 (rough-in walkthrough on J-1038). Can you send it today? Thanks.",
+          "id": "D1",
+          "status": "draft"
+        },
+        {
+          "kind": "slack",
+          "riskId": "R2",
+          "owner": "renee",
+          "to": "#subs-tilewright",
+          "jobId": "J-1045",
+          "task": "subNudge",
+          "subject": "Insurance certificate for J-1045",
+          "body": "Hi Ana Ruiz, we need a current certificate of insurance before Tue, Mar 24 (shower tile on J-1045). Can you send it today? Thanks.",
+          "id": "D2",
+          "status": "draft"
+        },
+        {
+          "kind": "email",
+          "riskId": "R4",
+          "owner": "tomas",
+          "to": "permits@county.example",
+          "jobId": "J-1019",
+          "task": "permitCheck",
+          "subject": "Extension request, permit PC-2025-0533, 200 Cedar Way",
+          "body": "Hello,\n\nWe are requesting an extension for permit PC-2025-0533 at 200 Cedar Way. It expires Wed, Mar 25 and work is scheduled through Fri, May 15.\n\nThank you,\nTomas Reyes\nSummit Ridge Builders",
+          "id": "D3",
+          "status": "draft"
+        },
+        {
+          "kind": "slack",
+          "riskId": "R5",
+          "owner": "jordan",
+          "to": "#subs-clearline",
+          "jobId": "J-1027",
+          "task": "lienChase",
+          "subject": "Lien waiver for J-1027",
+          "body": "Hi Rae Kim, we still need your final lien waiver for Lakeview deck (J-1027) so we can close out. Could you send it by tomorrow?",
+          "id": "D4",
+          "status": "draft"
+        },
+        {
+          "kind": "invoice",
+          "riskId": "R6",
+          "owner": "maria",
+          "to": "m.hayes@example.com",
+          "jobId": "J-1031",
+          "amount": 12400,
+          "task": "invoiceDraft",
+          "subject": "Invoice: Hayes basement, Drywall",
+          "body": "Drywall was completed Wed, Mar 11. Progress billing 20% of the $62,000 contract: $12,400.",
+          "id": "D5",
+          "status": "draft"
+        },
+        {
+          "kind": "email",
+          "riskId": "R7",
+          "owner": "maria",
+          "to": "m.hayes@example.com",
+          "jobId": "J-1031",
+          "task": "clientUpdate",
+          "subject": "Hayes basement update",
+          "body": "Hi Morgan,\n\nQuick update on Hayes basement: demo, framing, drywall are done, and we are 60% through the project. Next up is finish carpentry, planned for Wed, Mar 25.\n\nI will send the next update when that is complete.\n\nMaria Alvarez",
+          "id": "D6",
+          "status": "draft"
+        },
+        {
+          "kind": "slack",
+          "riskId": "R8",
+          "owner": "renee",
+          "to": "@tomas @renee",
+          "jobId": "J-1036",
+          "task": "conflictResolution",
+          "subject": "North Fork Framing (FAKE) double-booked",
+          "body": "North Fork Framing (FAKE) is booked on J-1019 and J-1036 on Fri, Mar 13. Proposal: J-1019 keeps the crew (earlier milestone), J-1036 moves to the next open day. Reply here to confirm.",
+          "id": "D7",
+          "status": "draft"
+        },
+        {
+          "kind": "reassign",
+          "riskId": "R12",
+          "owner": "tomas",
+          "to": "@tomas @jordan",
+          "jobId": "J-1047",
+          "task": "reassign",
+          "subject": "Hand J-1047 to Jordan Pike",
+          "body": "Proposal: Jordan Pike takes Brooks roof (J-1047, 6 h this week). Tomas Reyes drops to 31 h; Jordan Pike goes to 10 h.",
+          "id": "D8",
+          "status": "draft"
+        }
+      ],
+      "workload": [
+        {
+          "personId": "maria",
+          "name": "Maria Alvarez",
+          "jobs": [
+            "J-1042",
+            "J-1031",
+            "J-1038"
+          ],
+          "hours": 35,
+          "capacity": 40,
+          "openRisks": 5,
+          "load": "ok"
+        },
+        {
+          "personId": "jordan",
+          "name": "Jordan Pike",
+          "jobs": [
+            "J-1027"
+          ],
+          "hours": 4,
+          "capacity": 40,
+          "openRisks": 1,
+          "load": "light"
+        },
+        {
+          "personId": "renee",
+          "name": "Renee Walsh",
+          "jobs": [
+            "J-1045",
+            "J-1036"
+          ],
+          "hours": 23,
+          "capacity": 40,
+          "openRisks": 2,
+          "load": "ok"
+        },
+        {
+          "personId": "tomas",
+          "name": "Tomas Reyes",
+          "jobs": [
+            "J-1019",
+            "J-1047"
+          ],
+          "hours": 37,
+          "capacity": 40,
+          "openRisks": 3,
+          "load": "heavy"
+        }
+      ],
+      "steps": [
+        {
+          "agent": "coordinator",
+          "check": "Insurance certificates for booked subs",
+          "looked": 5,
+          "found": 2
+        },
+        {
+          "agent": "coordinator",
+          "check": "Permits and inspections",
+          "looked": 8,
+          "found": 2
+        },
+        {
+          "agent": "coordinator",
+          "check": "Lien waivers before final payments",
+          "looked": 2,
+          "found": 1
+        },
+        {
+          "agent": "coordinator",
+          "check": "Completed milestones not yet invoiced",
+          "looked": 8,
+          "found": 1
+        },
+        {
+          "agent": "coordinator",
+          "check": "Clients waiting on an update",
+          "looked": 8,
+          "found": 1
+        },
+        {
+          "agent": "coordinator",
+          "check": "Subs booked on two jobs the same day",
+          "looked": 6,
+          "found": 1
+        },
+        {
+          "agent": "coordinator",
+          "check": "Quotes due in the next day",
+          "looked": 8,
+          "found": 2
+        },
+        {
+          "agent": "coordinator",
+          "check": "PM workload against capacity",
+          "looked": 4,
+          "found": 1
+        }
+      ],
+      "digest": "*Summit Ridge Builders · morning status, Thu, Mar 12*\n8 jobs: 3 on track, 4 at risk, 1 behind. 8 drafts waiting for approval.\n\n_Lead_\n• J-1047 Brooks roof (Tomas) 0% · on track · Next: Quote sent Fri, Mar 13.\n_Quote_\n• J-1042 Rivera kitchen (Maria) 0% · on track · Next: Site walk Thu, Mar 12.\n_Scheduled_\n• J-1045 Morales bath (Renee) 0% · at risk · Tilewright Tile (FAKE) insurance lapses before their work\n_In progress_\n• J-1031 Hayes basement (Maria) 60% · on track · Next: Finish carpentry Wed, Mar 25.\n• J-1038 Pinecrest addition (Maria) 40% · at risk · Bright Spark Electric (FAKE) insurance expired\n• J-1036 Patel garage (Renee) 30% · at risk · North Fork Framing (FAKE) booked on two jobs Fri, Mar 13\n• J-1019 Cedar duplex (Tomas) 35% · behind · Dried in is 6 days late.\n_Closeout_\n• J-1027 Lakeview deck (Jordan) 70% · at risk · Clearline Plumbing (FAKE) lien waiver missing\n\n*Blocked*\n• Bright Spark Electric (FAKE) insurance expired → Maria\n• Tilewright Tile (FAKE) insurance lapses before their work → Renee\n• Clearline Plumbing (FAKE) lien waiver missing → Jordan\n• North Fork Framing (FAKE) booked on two jobs Fri, Mar 13 → Renee\n• Cedar duplex is behind → Tomas"
+    }
   }
 }

@@ -8,7 +8,7 @@
     {% if not static_mode %}{% with flashes = get_flashed_messages(with_categories=true) %}
       {% for cat, msg in flashes %}<div class="flash {{ cat }}" role="status">{{ msg }}</div>{% endfor %}
     {% endwith %}{% endif %}
-    <a class="btn demo" href="{{ '#run-thursday' if static_mode else url_for('demo') }}">View the demo</a>
+    <a class="btn demo" href="{{ '#today' if static_mode else url_for('demo') }}">View the demo</a>
     <p class="small">A fictional Thursday at Summit Ridge Builders. No account needed, and nothing is sent.</p>
     <div class="signin">
       <span class="signin-label">or sign in with</span>

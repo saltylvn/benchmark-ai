@@ -1,0 +1,257 @@
+{#- The team app: Today, Jobs, Team, Messages, Under the hood. Tabs switch on the URL hash, so they work with or without the server. -#}
+{% macro queue_card(i, show_owner=true) %}
+<article class="qcard {{ i.level }}" data-id="{{ i.id }}" data-owner="{{ i.owner }}" data-kind="{{ i.kind }}" data-minutes="{{ i.minutes or 0 }}">
+  <div class="qhead">
+    <span class="pill {{ i.level }}">{{ i.kindLabel or i.channel }}</span>
+    {% if i.jobId %}<span class="mono muted">{{ i.jobId }}</span>{% endif %}
+    {% if i.dueLabel %}<span class="due {{ 'hot' if i.dueLabel in ('Overdue', 'Today') }}">{{ i.dueLabel }}</span>{% endif %}
+    {% if show_owner %}<span class="owner" title="{{ i.ownerName }}">{{ i.ownerName.split(' ')[0] }}</span>{% endif %}
+  </div>
+  <h3>{{ i.title }}</h3>
+  {% if i.why %}<p class="why">{{ i.why }}</p>{% endif %}
+  {% if i.body %}
+  <details class="draft">
+    <summary>{{ 'The new plan' if i.kind == 'day' else 'Drafted ' ~ (i.channel or '').lower() }}{% if i.to %} to <span class="mono">{{ i.to }}</span>{% endif %}{% if i.amount %} · <b>${{ '{:,.0f}'.format(i.amount) }}</b>{% endif %}</summary>
+    {% if i.subject %}<p class="subject">{{ i.subject }}</p>{% endif %}
+    <pre>{{ i.body }}</pre>
+  </details>
+  {% endif %}
+  <div class="qactions">
+    <button type="button" class="approve" data-act="approve">{{ i.action }}</button>
+    <button type="button" class="skip" data-act="skip">{{ 'Later' }}</button>
+    {% if i.minutes %}<span class="saves">saves ~{{ i.minutes|round|int }} min</span>{% endif %}
+  </div>
+  <p class="result" hidden></p>
+</article>
+{% endmacro %}
+
+<header class="top">
+  <div class="brand">
+    <span class="mark">B</span>
+    <div>
+      <strong>Benchmark</strong>
+      <span class="muted">{{ t.company }} · {{ t.todayLabel }}</span>
+    </div>
+  </div>
+  <div class="integrations" aria-label="Connections">
+    <span class="chip {{ 'ok' if slack.connected else 'off' }}" title="{{ slack.detail }}"><span class="dot"></span>Slack · {{ 'live' if slack.connected and slack.sendEnabled else ('connected' if slack.connected else 'preview') }}</span>
+    <span class="chip draft" title="Calendar, email, and invoices are staged as drafts"><span class="dot"></span>Calendar, email, invoices · drafts</span>
+    {% if not static_mode and user %}<span class="chip user" title="{{ user.email or 'Demo session' }}">{{ user.name }}</span><a class="chip" href="{{ url_for('logout') }}">Sign out</a>{% endif %}
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Views">
+  <a href="#today" data-tab="today">Today <b class="count" data-count="open">{{ t.queue|length }}</b></a>
+  <a href="#jobs" data-tab="jobs">Jobs</a>
+  <a href="#team" data-tab="team">Team</a>
+  <a href="#messages" data-tab="messages">Messages</a>
+  <a href="#hood" data-tab="hood">Under the hood</a>
+</nav>
+
+<main>
+{% if not static_mode %}{% with flashes = get_flashed_messages(with_categories=true) %}
+  {% for cat, msg in flashes %}<div class="flash {{ cat }}" role="status">{{ msg }}</div>{% endfor %}
+{% endwith %}{% endif %}
+
+<!-- TODAY ----------------------------------------------------------------->
+<div class="tab" id="tab-today" data-panel="today">
+  <section class="summary">
+    <div class="summary-text">
+      <p class="eyebrow">Morning sweep · {{ t.todayLabel }}</p>
+      <h1><span data-count="blocked">{{ t.blockedCount }}</span> things are blocked. Everything else is drafted.</h1>
+      <p class="lede">The Coordinator checked {{ t.jobsTotal }} jobs, {{ t.subs|length }} subs, and {{ t.team|length }} PMs before anyone got in. Approve what's right, skip what isn't. Nothing goes out until someone approves it.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b><span data-count="open">{{ t.queue|length }}</span></b><span>waiting on the team</span></div>
+      <div class="kpi"><b><span data-count="done">0</span></b><span>approved today</span></div>
+      <div class="kpi status-kpi">
+        <b>{{ t.jobsTotal }} jobs</b>
+        <div class="stack" role="img" aria-label="{{ t.counts['on-track'] }} on track, {{ t.counts['at-risk'] }} at risk, {{ t.counts['behind'] }} behind">
+          {% for k in ['on-track', 'at-risk', 'behind'] %}{% if t.counts[k] %}<i class="s-{{ k }}" style="flex:{{ t.counts[k] }}"></i>{% endif %}{% endfor %}
+        </div>
+        <span>{{ t.counts['on-track'] }} on track · {{ t.counts['at-risk'] }} at risk · {{ t.counts['behind'] }} behind</span>
+      </div>
+      <div class="kpi accent"><b>~{{ (t.ledger.netMinutes / 60)|round(1) }} h</b><span>team admin drafted this morning (est.)</span></div>
+    </div>
+  </section>
+
+  <div class="filters" role="group" aria-label="Show work for">
+    <button type="button" class="on" data-owner-filter="all">Everyone</button>
+    {% for o in t.owners %}<button type="button" data-owner-filter="{{ o.id }}">{{ o.first }}</button>{% endfor %}
+  </div>
+
+  <div class="queue-list" data-list="open">
+    {% for i in t.queue %}{{ queue_card(i) }}{% endfor %}
+  </div>
+  <p class="empty" data-empty hidden>All clear for this view. New items land here after tomorrow's sweep.</p>
+
+  <section class="done-today">
+    <h2>Done today</h2>
+    <ol class="done-list" data-list="done"></ol>
+    <p class="muted small" data-done-empty>Approved and skipped items show up here with who did them.</p>
+  </section>
+</div>
+
+<!-- JOBS ------------------------------------------------------------------>
+<div class="tab" id="tab-jobs" data-panel="jobs" hidden>
+  <section>
+    <div class="section-head">
+      <h2>Where every job stands</h2>
+      <div class="legend"><span class="s-dot s-on-track"></span>On track <span class="s-dot s-at-risk"></span>At risk <span class="s-dot s-behind"></span>Behind</div>
+    </div>
+    <p class="swipe-hint">Swipe sideways for every stage.</p>
+    <div class="scroll-x"><div class="board">
+      {% for col in t.board %}
+        <div class="col">
+          <h3>{{ col.label }} <span class="muted">{{ col.jobs|length }}</span></h3>
+          {% for j in col.jobs %}
+            <article class="jcard {{ j.status }}">
+              <div class="jtop"><span class="mono">{{ j.jobId }}</span><span class="pill {{ j.status }}">{{ j.statusLabel }}</span></div>
+              <b>{{ j.name }}</b>
+              <span class="muted small">{{ j.pmName }} · {{ j.client }}</span>
+              <div class="progress" role="img" aria-label="{{ j.percent }}% complete"><i style="width:{{ j.percent }}%"></i></div>
+              <span class="small"><b>{{ j.percent }}%</b> · {{ j.nextLabel }}</span>
+              {% if j.status != 'on-track' %}<p class="reason">{{ j.reason }}</p>{% endif %}
+              {% if j.risks %}<div class="chips">{% for r in j.risks %}<span class="pill {{ r.level }}" title="{{ r.title }}">{{ r.label }}</span>{% endfor %}</div>{% endif %}
+            </article>
+          {% else %}
+            <p class="muted small">No jobs.</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div></div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Timeline</h2>
+      <div class="legend"><span class="m-dot done"></span>Done <span class="m-dot late"></span>Late <span class="m-dot upcoming"></span>Planned</div>
+    </div>
+    <p class="lede">Every milestone on one calendar, worst first. The line is today.</p>
+    <p class="swipe-hint">Swipe the timeline sideways.</p>
+    <div class="scroll-x"><div class="tl">
+      <div class="tl-axis">{% for w in t.timeline.weeks %}<span style="left:{{ w.left }}%">{{ w.label }}</span>{% endfor %}</div>
+      {% for r in t.timeline.rows %}
+        <div class="tl-row">
+          <div class="tl-label"><span class="s-dot s-{{ r.status }}"></span><b>{{ r.name }}</b><span class="muted small">{{ r.jobId }} · {{ r.percent }}%</span></div>
+          <div class="tl-track">
+            {% for w in t.timeline.weeks %}<i class="tl-grid" style="left:{{ w.left }}%"></i>{% endfor %}
+            <i class="tl-today" style="left:{{ t.timeline.today }}%"></i>
+            <i class="tl-bar {{ r.status }}" style="left:{{ r.barLeft }}%;width:{{ r.barWidth }}%"></i>
+            {% for m in r.points %}<span class="tl-m {{ m.state }}" style="left:{{ m.left }}%" title="{{ m.name }} · planned {{ m.when }}{% if m.done %} · done {{ m.done }}{% endif %}"></span>{% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+      <div class="tl-today-label" style="left:{{ t.timeline.today }}%">Today</div>
+    </div></div>
+  </section>
+</div>
+
+<!-- TEAM ------------------------------------------------------------------>
+<div class="tab" id="tab-team" data-panel="team" hidden>
+  <section>
+    <h2>Who's carrying what</h2>
+    <p class="lede">Hours booked this week against each PM's capacity. The tick is 100%.</p>
+    <div class="people">
+      {% for w in t.team %}
+        <article class="person {{ w.load }}">
+          <div class="phead"><b>{{ w.name }}</b><span class="pill {{ 'blocked' if w.load == 'heavy' else ('ok' if w.load == 'light' else 'watch') }}">{{ w.load }}</span></div>
+          <div class="load" role="img" aria-label="{{ w.hours }} of {{ w.capacity }} hours"><i style="width:{{ w.share }}%"></i><span class="cap" style="left:{{ w.capacityMark }}%"></span></div>
+          <span class="small"><b>{{ w.hours }} h</b> of {{ w.capacity }} · {{ w.percent }}% · {{ w.blocked }} blocked item{{ '' if w.blocked == 1 else 's' }}</span>
+          <ul class="pjobs">{% for j in w.jobCards %}<li><span class="s-dot s-{{ j.status }}"></span>{{ j.id }} {{ j.name }} <span class="muted">{{ j.hours }} h</span></li>{% endfor %}</ul>
+        </article>
+      {% endfor %}
+    </div>
+    {% for i in t.queue if i.kind == 'reassign' %}
+      <div class="callout">
+        <p class="eyebrow">Coordinator proposal</p>
+        {{ queue_card(i, false) }}
+      </div>
+    {% endfor %}
+  </section>
+
+  <div class="two">
+    <section>
+      <h2>Subcontractors</h2>
+      <div class="scroll-x"><table>
+        <thead><tr><th>Sub</th><th>Insurance</th><th>Next work</th></tr></thead>
+        <tbody>
+        {% for s in t.subs %}
+          <tr><td><b>{{ s.name }}</b><br><small class="muted">{{ s.trade }} · {{ s.contact }}</small></td><td><span class="pill {{ s.level }}">{{ s.coiLabel }}</span></td><td class="small">{{ s.next }}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table></div>
+    </section>
+    <section>
+      <h2>What the Coordinator checked</h2>
+      <ol class="steps">
+        {% for s in t.steps %}<li><span>{{ s.check }}</span><b class="{{ 'hit' if s.found else '' }}">{{ s.found }} found</b><small class="muted">of {{ s.looked }}</small></li>{% endfor %}
+      </ol>
+      <div class="scroll-x"><table class="ledger">
+        <thead><tr><th>Done by hand today</th><th class="num">×</th><th class="num">min</th></tr></thead>
+        <tbody>{% for l in t.ledger.lines %}<tr><td>{{ l.task }}</td><td class="num">{{ l.count }}</td><td class="num">{{ l.minutes|round|int }}</td></tr>{% endfor %}</tbody>
+        <tfoot>
+          <tr><td colspan="2">Review every draft</td><td class="num">−{{ t.ledger.reviewMinutes|round|int }}</td></tr>
+          <tr class="total"><td colspan="2">Team minutes back today</td><td class="num">{{ t.ledger.netMinutes|round|int }}</td></tr>
+        </tfoot>
+      </table></div>
+      <div class="projection">
+        <div><b>{{ t.ledger.weekHours }} h</b><span>per week for the team</span></div>
+        <div><b>{{ t.ledger.yearHours }} h</b><span>per year</span></div>
+      </div>
+      <p class="muted small">Counts come from this morning's sweep. Minutes per task are estimates in <code>dashboard/assumptions.json</code>.</p>
+    </section>
+  </div>
+</div>
+
+<!-- MESSAGES -------------------------------------------------------------->
+<div class="tab" id="tab-messages" data-panel="messages" hidden>
+  <section class="slack-status {{ 'ok' if slack.connected else 'off' }}">
+    <b>Slack {{ 'connected' if slack.connected else 'in preview mode' }}</b>
+    <span>{% if slack.channel %}channel {{ slack.channel }} · {% endif %}sends {{ 'on' if slack.sendEnabled else 'off' }}</span>
+    <p>{{ slack.detail }} Approving a Slack message here {{ 'posts it' if slack.connected and slack.sendEnabled else 'shows the exact message Slack would get' }}. Email and invoices stay drafts.</p>
+  </section>
+  <div class="filters" role="group" aria-label="Show messages for">
+    <button type="button" class="on" data-owner-filter="all">Everyone</button>
+    {% for o in t.owners %}<button type="button" data-owner-filter="{{ o.id }}">{{ o.first }}</button>{% endfor %}
+  </div>
+  {% for g in t.messages %}
+    <section class="mgroup">
+      <h2>{{ g.channel }} <span class="muted">{{ g.entries|length }}</span></h2>
+      <div class="queue-list">
+        {% for i in g.entries %}
+          {% if i.kind == 'digest' %}
+            <article class="qcard digest" data-id="digest" data-owner="all" data-kind="digest" data-minutes="{{ t.ledger.lines[-1].minutesEach }}">
+              <div class="qhead"><span class="pill watch">Every morning at 8:00</span><span class="mono muted">#team</span></div>
+              <h3>Team status digest</h3>
+              <p class="why">Every job, its percent complete, status, and what's blocking it, so the whole team starts from the same page.</p>
+              <pre class="digest-body">{{ i.body }}</pre>
+              <div class="qactions"><button type="button" class="approve" data-act="approve">Approve & send to Slack</button><span class="saves">saves ~{{ t.ledger.lines[-1].minutesEach }} min</span></div>
+              <p class="result" hidden></p>
+            </article>
+          {% else %}
+            {{ queue_card(i) }}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+  {% if audit %}
+    <section>
+      <h2>Slack log</h2>
+      <div class="scroll-x"><table class="audit">
+        <thead><tr><th>When (UTC)</th><th>What</th><th>By</th><th>Result</th></tr></thead>
+        <tbody>{% for r in audit %}<tr><td class="mono">{{ r.at }}</td><td>{{ r.context }}</td><td>{{ r.approvedBy }}</td><td><span class="pill {{ r.result }}">{{ r.result }}</span> {{ r.detail }}</td></tr>{% endfor %}</tbody>
+      </table></div>
+    </section>
+  {% endif %}
+</div>
+
+<!-- UNDER THE HOOD -------------------------------------------------------->
+<div class="tab" id="tab-hood" data-panel="hood" hidden>
+  {% include "_hood.html" %}
+</div>
+</main>
+
+<script id="app-state" type="application/json">{{ {'mode': 'static' if static_mode else 'server', 'approvals': approvals or {}, 'token': form_token, 'user': (user.name if user else 'You')} | tojson }}</script>
+{% include "_app_js.html" %}
