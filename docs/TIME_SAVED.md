@@ -1,42 +1,22 @@
-# Time saved, as illustrative estimates
+# Time saved, as estimates
 
-These figures are not measurements and they are not customer data. Each one is a minute count built from the assumptions below. A project manager still reads the draft and decides what, if anything, is sent.
+These figures are not measurements and they are not customer data. They use one model: `dashboard/assumptions.json` on the dashboard branch. Counts come from the Thursday run. Minutes come from that file.
 
-The Thursday demo can produce a morning plan, a rewritten day, an email draft, a Slack draft, and a certificate flag. It does not run a midday change-order loop, an end-of-day batch, or a weekly report. Those rows are marked planned.
+| Ledger line | Count on Thursday | Minutes each | Minutes |
+| --- | --- | --- | --- |
+| Triage the inbox and the overlap | 1 | 10 | 10 |
+| Pull the job file, once per record | 3 | 5 | 15 |
+| Untangle the double-booking and re-check the rules | 1 | 15 | 15 |
+| Move or create a calendar entry | 6 | 1 | 6 |
+| Write the homeowner email | 1 | 11 | 11 |
+| Write the crew Slack note | 1 | 4 | 4 |
+| Prepare the call card and the morning brief | 1 | 15 | 15 |
+| **Manual total** |  |  | **76** |
+| Review, one minute per draft | 8 | 1 | 8 |
+| **Net** |  |  | **68** |
 
-## Assumptions
+Review is `reviewMinutesPerDraft` times the number of drafts. Maria may still reject a draft. The eight drafts are three calendar creates, three calendar updates, one email, and one Slack note.
 
-| Id | Task | Manual minutes | Review minutes | Saved | How often in the week model | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| A1 | Assemble the morning from the calendar and the inbox, and write the plan | 25 | 5 | 20 | Every weekday (5) | Demo pattern |
-| A2 | Untangle one double-booked block by hand | 20 | 4 | 16 | 3 days a week | Demo pattern |
-| A3 | Write one homeowner email and one crew note | 15 | 2 | 13 | 4 days a week | Demo pattern |
-| A4 | Find one subcontractor's insurance certificate and decide if they can start | 10 | 2 | 8 | 2 days a week | Demo pattern |
-| A5 | Re-plan the afternoon after a change order or an RFI | 30 | 6 | 24 | 3 days a week | Planned |
-| A6 | Write the end-of-day notes to the client and the subs | 20 | 4 | 16 | Every weekday (5) | Planned |
-| A7 | Monday look-ahead for the coming week | 45 | 8 | 37 | Once a week | Planned |
-| A8 | Mid-week check of schedule risk | 30 | 5 | 25 | Once a week | Planned |
-| A9 | Friday report to the owner | 40 | 8 | 32 | Once a week | Planned |
+At `requestsPerPmPerWeek` of 4, 68 minutes is about **4.5 hours per project manager per week**. At six project managers and 48 weeks, that rate is about **1,300 hours a year**. Both are estimates from the same file, not a study.
 
-Review minutes are the time assumed for Maria to read the draft, reject it, or approve it. They are not a claim that she will accept the draft.
-
-## Roll-ups
-
-A day like the Thursday demo, using only A1–A4 once each:
-
-20 + 16 + 13 + 8 = **57 minutes** of illustrative savings. That is one morning plan, one rewrite, one pair of drafts, and one certificate check.
-
-A week, using only the demo patterns and the frequencies above:
-
-- A1: 20 × 5 = 100
-- A2: 16 × 3 = 48
-- A3: 13 × 4 = 52
-- A4: 8 × 2 = 16
-
-**216 minutes per week per project manager**, about three and a half hours, if those frequencies hold. They are assumptions, not a log of anyone's week.
-
-Adding the planned rows (A5–A9) would add 24×3 + 16×5 + 37 + 25 + 32 = **246 minutes**. That number is not available in this repository. The code does not run those workflows.
-
-## What the chart is allowed to say
-
-Charts in `docs/images/showcase/` that use these numbers must say they are illustrative estimates from this table. They must not say the time was measured, and they must not attribute it to a customer.
+Do not add a second per-task table. If a drawing needs a minute, it has to be one of these lines or one of these roll-ups.

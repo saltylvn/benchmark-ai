@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="860" viewBox="0 0 1280 860" role="img" aria-labelledby="title desc">
-  <title id="title">Compliance</title>
-  <desc id="desc">Compliance for Benchmark: role, triggers, inputs, outputs, tools, hand-off, and where a person approves.</desc>
+  <title id="title">Drafting</title>
+  <desc id="desc">Drafting for Benchmark: role, triggers, inputs, outputs, tools, hand-off, and where a person approves.</desc>
   <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
   <rect width="1280" height="860" fill="#f3f0e8"/>
   
-    <text x="40" y="52" class="serif" font-size="32" fill="#221f1a">Compliance</text>
+    <text x="40" y="52" class="serif" font-size="32" fill="#221f1a">Drafting</text>
     <text x="40" y="84" font-size="16" fill="#3a342c">Turns an approved plan into drafts. Never sends.</text>
     <text x="40" y="110" font-size="13" fill="#5c564c">executor.ts and schedule/actions.ts</text>
     <rect x="40" y="140" width="584" height="168" rx="12" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>

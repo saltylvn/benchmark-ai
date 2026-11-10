@@ -15,7 +15,7 @@
                  <text x="92" y="240" fill="#3a342c" font-size="15">Read the week, not only today.</text><text x="68" y="296" fill="#2c3d86" font-size="13" font-weight="700">2</text>
                  <text x="92" y="296" fill="#3a342c" font-size="15">Flag inspections, deliveries, and open quotes.</text><text x="68" y="352" fill="#2c3d86" font-size="13" font-weight="700">3</text>
                  <text x="92" y="352" fill="#3a342c" font-size="15">Maria would approve the note to the owner.</text>
-          <text x="68" y="500" fill="#5c564c" font-size="14">Assumption A7 in TIME_SAVED.md, if it were built.</text><rect x="554.6666666666667" y="112" width="490.6666666666667" height="430" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="68" y="500" fill="#5c564c" font-size="14">Not in the time ledger. No weekly command yet.</text><rect x="554.6666666666667" y="112" width="490.6666666666667" height="430" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
           <rect x="574.6666666666667" y="132" width="72.4" height="22" rx="11" fill="#f8efe3" stroke="#8a4e0c"/>
     <text x="585.6666666666667" y="147" fill="#8a4e0c" font-size="12" font-weight="700">PLANNED</text>
           <text x="574.6666666666667" y="188" fill="#221f1a" font-size="24" font-weight="700">Mid-week risk</text>
@@ -23,7 +23,7 @@
                  <text x="598.6666666666667" y="240" fill="#3a342c" font-size="15">Look for slips against the look-ahead.</text><text x="574.6666666666667" y="296" fill="#2c3d86" font-size="13" font-weight="700">2</text>
                  <text x="598.6666666666667" y="296" fill="#3a342c" font-size="15">Name the jobs that lost a day.</text><text x="574.6666666666667" y="352" fill="#2c3d86" font-size="13" font-weight="700">3</text>
                  <text x="598.6666666666667" y="352" fill="#3a342c" font-size="15">Do not quietly move a fixed inspection.</text>
-          <text x="574.6666666666667" y="500" fill="#5c564c" font-size="14">Assumption A8. Not a code path.</text><rect x="1061.3333333333335" y="112" width="490.6666666666667" height="430" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
+          <text x="574.6666666666667" y="500" fill="#5c564c" font-size="14">Not in the time ledger. Not a code path.</text><rect x="1061.3333333333335" y="112" width="490.6666666666667" height="430" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
           <rect x="1081.3333333333335" y="132" width="72.4" height="22" rx="11" fill="#f8efe3" stroke="#8a4e0c"/>
     <text x="1092.3333333333335" y="147" fill="#8a4e0c" font-size="12" font-weight="700">PLANNED</text>
           <text x="1081.3333333333335" y="188" fill="#221f1a" font-size="24" font-weight="700">Friday owner report</text>
@@ -31,6 +31,6 @@
                  <text x="1105.3333333333335" y="240" fill="#3a342c" font-size="15">What finished, what slipped, what needs a decision.</text><text x="1081.3333333333335" y="296" fill="#2c3d86" font-size="13" font-weight="700">2</text>
                  <text x="1105.3333333333335" y="296" fill="#3a342c" font-size="15">Draft only. The owner does not get it automatically.</text><text x="1081.3333333333335" y="352" fill="#2c3d86" font-size="13" font-weight="700">3</text>
                  <text x="1105.3333333333335" y="352" fill="#3a342c" font-size="15">Maria approves the wording.</text>
-          <text x="1081.3333333333335" y="500" fill="#5c564c" font-size="14">Assumption A9. Not a code path.</text>
+          <text x="1081.3333333333335" y="500" fill="#5c564c" font-size="14">Not in the time ledger. Not a code path.</text>
     <text x="48" y="590" font-size="14" fill="#5c564c">The runnable story is still one Thursday. Weekly drawings are plans, not shipped workflows.</text>
 </svg>

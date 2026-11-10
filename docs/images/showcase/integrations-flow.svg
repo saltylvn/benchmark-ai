@@ -27,5 +27,5 @@
     <text x="72" y="444" fill="#3a342c" font-size="16">HubSpot, Google Calendar, and Slack are named on the page or in a draft. No SDK call and no webhook.</text>
     <text x="72" y="480" fill="#3a342c" font-size="16">Gmail, Outlook, Procore, and QuickBooks are not referenced. An email.draft is not a mailbox API.</text>
     <text x="72" y="516" fill="#3a342c" font-size="16">OpenAI, if --live is set, may restyle prose. It does not choose times, totals, or dates.</text>
-    <text x="48" y="640" font-size="15" fill="#5c564c">If the critic never approves, the run stops at needs_human and Compliance does not write drafts.</text>
+    <text x="48" y="640" font-size="15" fill="#5c564c">If the critic never approves, the run stops at needs_human and Drafting does not write drafts.</text>
 </svg>

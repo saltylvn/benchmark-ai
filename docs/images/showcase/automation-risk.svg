@@ -8,7 +8,7 @@
     <text x="40" y="48" class="serif" font-size="30" fill="#221f1a">Mid-week schedule risk</text>
     <rect x="40" y="68" width="72.4" height="22" rx="11" fill="#f8efe3" stroke="#8a4e0c"/>
     <text x="51" y="83" fill="#8a4e0c" font-size="12" font-weight="700">PLANNED</text>
-    <text x="40" y="120" font-size="16" fill="#3a342c">Illustrative estimate A8. Manual 30 min, review 5 min, difference 25 min. Not a measurement.</text>
+    <text x="40" y="120" font-size="16" fill="#3a342c">Steps only. Minutes come from dashboard/assumptions.json, not from this picture.</text>
     <rect x="40" y="150" width="640" height="420" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
     <text x="64" y="190" fill="#d2c8b8" font-size="14" font-weight="700" letter-spacing="0.08em">BEFORE</text>
     <text x="64" y="250" fill="#221f1a" font-size="18" font-weight="700">1</text>

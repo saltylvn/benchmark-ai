@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="640" viewBox="0 0 1600 640" role="img" aria-labelledby="title desc">
   <title id="title">The Benchmark team</title>
-  <desc id="desc">Hero overview of the Benchmark supervisor and the four specialists Intake, Scheduling, Compliance, and Briefing.</desc>
+  <desc id="desc">Hero overview of the Benchmark supervisor and the four specialists Intake, Scheduling, Drafting, and Briefing.</desc>
   <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
   <rect width="1600" height="640" fill="#f3f0e8"/>
   
@@ -9,7 +9,7 @@
     <text x="48" y="88" font-size="16" fill="#3a342c">One lead routes four specialists. Maria approves money, dates, and anything a homeowner would see.</text>
     <rect x="48" y="116" width="1504" height="150" rx="14" fill="#2c3d86"/>
     <text x="72" y="158" fill="#fffdf9" font-size="26" font-weight="700">Supervisor</text>
-    <text x="72" y="188" fill="#e7ebf6" font-size="16">The only router. It calls Intake, then Scheduling, then the critic, then Compliance and Briefing.</text>
+    <text x="72" y="188" fill="#e7ebf6" font-size="16">The only router. It calls Intake, then Scheduling, then the critic, then Drafting and Briefing.</text>
     <text x="72" y="216" fill="#e7ebf6" font-size="16">A rejection returns to Scheduling. Three revisions is the cap. Nothing is sent from this demo.</text>
     <text x="72" y="244" fill="#c9d2f2" font-size="13">orchestrator/supervisor.ts. The checklist is critic.ts, not a fifth specialist.</text>
     <rect x="48" y="290" width="364" height="220" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
@@ -22,7 +22,7 @@
           <text x="448" y="400" fill="#3a342c" font-size="15">Proposes a day. Tries again if the critic rejects it.</text>
           <text x="448" y="470" fill="#5c564c" font-size="14">Hands off to the critic</text><rect x="808" y="290" width="364" height="220" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
           <text x="828" y="330" fill="#2c3d86" font-size="13" font-weight="700" letter-spacing="0.08em">SPECIALIST</text>
-          <text x="828" y="364" fill="#221f1a" font-size="24" font-weight="700">Compliance</text>
+          <text x="828" y="364" fill="#221f1a" font-size="24" font-weight="700">Drafting</text>
           <text x="828" y="400" fill="#3a342c" font-size="15">Writes calendar, email, and Slack drafts.</text>
           <text x="828" y="470" fill="#5c564c" font-size="14">Hands off to Briefing</text><rect x="1188" y="290" width="364" height="220" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
           <text x="1208" y="330" fill="#2c3d86" font-size="13" font-weight="700" letter-spacing="0.08em">SPECIALIST</text>

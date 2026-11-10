@@ -53,7 +53,7 @@ const AGENTS = [
     inputs: ["The fixture day and the goal", "Failure codes, up to three tries"],
     outputs: ["The trace and the run status", "approved, or needs_human"],
     tools: ["None of its own", "Passes the read-only toolkit to Intake"],
-    handoff: ["Intake first", "Scheduling again, or Compliance at 100"],
+    handoff: ["Intake first", "Scheduling again, or Drafting at 100"],
     human: ["Stops for a person after three misses", "Maria still approves a send"],
   },
   {
@@ -81,8 +81,8 @@ const AGENTS = [
     human: ["Does not move Dave or the county window", "Does not send the calendar change"],
   },
   {
-    id: "compliance",
-    name: "Compliance",
+    id: "drafting",
+    name: "Drafting",
     file: "executor.ts and schedule/actions.ts",
     role: "Turns an approved plan into drafts. Never sends.",
     triggers: ["The critic scores 100", "The supervisor marks the run approved"],
@@ -111,7 +111,7 @@ function agentsHero() {
   const cards = [
     ["Intake", "Reads the calendar, the inbox, and the job file.", "Hands off to Scheduling"],
     ["Scheduling", "Proposes a day. Tries again if the critic rejects it.", "Hands off to the critic"],
-    ["Compliance", "Writes calendar, email, and Slack drafts.", "Hands off to Briefing"],
+    ["Drafting", "Writes calendar, email, and Slack drafts.", "Hands off to Briefing"],
     ["Briefing", "Three outcomes and a call card.", "Then the supervisor closes"],
   ];
   const gap = 16;
@@ -121,7 +121,7 @@ function agentsHero() {
     <text x="48" y="88" font-size="16" fill="${BODY}">One lead routes four specialists. Maria approves money, dates, and anything a homeowner would see.</text>
     <rect x="48" y="116" width="${width - 96}" height="150" rx="14" fill="${BLUE}"/>
     <text x="72" y="158" fill="${PAPER}" font-size="26" font-weight="700">Supervisor</text>
-    <text x="72" y="188" fill="${BLUE_SOFT}" font-size="16">The only router. It calls Intake, then Scheduling, then the critic, then Compliance and Briefing.</text>
+    <text x="72" y="188" fill="${BLUE_SOFT}" font-size="16">The only router. It calls Intake, then Scheduling, then the critic, then Drafting and Briefing.</text>
     <text x="72" y="216" fill="${BLUE_SOFT}" font-size="16">A rejection returns to Scheduling. Three revisions is the cap. Nothing is sent from this demo.</text>
     <text x="72" y="244" fill="#c9d2f2" font-size="13">orchestrator/supervisor.ts. The checklist is critic.ts, not a fifth specialist.</text>
     ${cards
@@ -138,7 +138,7 @@ function agentsHero() {
     <text x="48" y="592" font-size="14" fill="${MUTED}">Maria's approval sits outside the agents. Drafts stay in memory with status draft.</text>`;
   return shell({
     title: "The Benchmark team",
-    desc: "Hero overview of the Benchmark supervisor and the four specialists Intake, Scheduling, Compliance, and Briefing.",
+    desc: "Hero overview of the Benchmark supervisor and the four specialists Intake, Scheduling, Drafting, and Briefing.",
     width,
     height: 640,
     body,
@@ -277,7 +277,7 @@ function workflowWeekly() {
           "Flag inspections, deliveries, and open quotes.",
           "Maria would approve the note to the owner.",
         ],
-        foot: "Assumption A7 in TIME_SAVED.md, if it were built.",
+        foot: "Not in the time ledger. No weekly command yet.",
       },
       {
         tone: "planned",
@@ -288,7 +288,7 @@ function workflowWeekly() {
           "Name the jobs that lost a day.",
           "Do not quietly move a fixed inspection.",
         ],
-        foot: "Assumption A8. Not a code path.",
+        foot: "Not in the time ledger. Not a code path.",
       },
       {
         tone: "planned",
@@ -299,7 +299,7 @@ function workflowWeekly() {
           "Draft only. The owner does not get it automatically.",
           "Maria approves the wording.",
         ],
-        foot: "Assumption A9. Not a code path.",
+        foot: "Not in the time ledger. Not a code path.",
       },
     ],
   });
@@ -308,7 +308,7 @@ function workflowWeekly() {
 function workflowRequest() {
   const width = 1640;
   const height = 820;
-  const lanes = ["Sam Rivera", "Supervisor", "Intake", "Scheduling", "Compliance", "Briefing", "Maria"];
+  const lanes = ["Sam Rivera", "Supervisor", "Intake", "Scheduling", "Drafting", "Briefing", "Maria"];
   const gutter = 180;
   const top = 150;
   const laneH = 78;
@@ -403,9 +403,9 @@ const AUTOMATIONS = [
     title: "Morning intake and plan",
     badge: "IN THE DEMO",
     tone: "demo",
-    assumption: "A1",
-    manual: 25,
-    review: 5,
+    assumption: "ledger",
+    manual: 0,
+    review: 0,
     before: ["Open the calendar and the inbox.", "Write today's plan by hand.", "Hope the overlap is obvious."],
     after: ["Intake posts the overlap and the mail.", "Scheduling proposes. The critic scores it.", "Maria reads the brief. About 5 minutes."],
   },
@@ -429,7 +429,7 @@ const AUTOMATIONS = [
     manual: 15,
     review: 2,
     before: ["Write the email from scratch.", "Write the Slack note from scratch.", "Remember what not to promise."],
-    after: ["Compliance stages both as drafts.", "The call card lists the limits.", "Maria reviews. About 2 minutes. Nothing is sent."],
+    after: ["Drafting stages both as drafts.", "The call card lists the limits.", "Maria reviews. Nothing is sent."],
   },
   {
     id: "automation-certificate",
@@ -502,7 +502,6 @@ const AUTOMATIONS = [
 function automation(item) {
   const width = 1440;
   const height = 700;
-  const saved = item.manual - item.review;
   const column = (title, steps, x, fill, stroke) => `<rect x="${x}" y="150" width="640" height="420" rx="14" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
     <text x="${x + 24}" y="190" fill="${stroke}" font-size="14" font-weight="700" letter-spacing="0.08em">${esc(title)}</text>
     ${steps
@@ -515,7 +514,7 @@ function automation(item) {
   const body = `
     <text x="40" y="48" class="serif" font-size="30" fill="${INK}">${esc(item.title)}</text>
     ${badge(40, 68, item.badge, item.tone)}
-    <text x="40" y="120" font-size="16" fill="${BODY}">Illustrative estimate ${item.assumption}. Manual ${item.manual} min, review ${item.review} min, difference ${saved} min. Not a measurement.</text>
+    <text x="40" y="120" font-size="16" fill="${BODY}">Steps only. Minutes come from dashboard/assumptions.json, not from this picture.</text>
     ${column("BEFORE", item.before, 40, PAPER, LINE)}
     ${column("AFTER", item.after, 760, item.tone === "planned" ? AMBER_SOFT : GREEN_SOFT, item.tone === "planned" ? AMBER : GREEN)}
     <text x="40" y="640" font-size="15" fill="${MUTED}">From docs/TIME_SAVED.md. Maria reviews. Nothing in this demo is sent.</text>`;
@@ -531,19 +530,22 @@ function automation(item) {
 function timeSaved() {
   const width = 1440;
   const height = 980;
-  const max = 40;
+  const max = 20;
   const barW = 640;
-  const rows = AUTOMATIONS.map((item) => ({
-    id: item.assumption,
-    title: item.title,
-    saved: item.manual - item.review,
-    tone: item.tone,
-  }));
+  const rows = [
+    { id: "1", title: "Triage the inbox and the overlap", saved: 10 },
+    { id: "2", title: "Job files for three records", saved: 15 },
+    { id: "3", title: "Untangle the double-booking once", saved: 15 },
+    { id: "4", title: "Six calendar creates and updates", saved: 6 },
+    { id: "5", title: "Homeowner email", saved: 11 },
+    { id: "6", title: "Crew Slack note", saved: 4 },
+    { id: "7", title: "Call card and morning brief", saved: 15 },
+  ];
   const bars = rows
     .map((row, index) => {
       const y = 150 + index * 62;
       const widthPx = (row.saved / max) * barW;
-      const fill = row.tone === "planned" ? AMBER : GREEN;
+      const fill = GREEN;
       return `<text x="40" y="${y + 22}" fill="${INK}" font-size="15" font-weight="700">${esc(row.id)}</text>
         <text x="90" y="${y + 22}" fill="${BODY}" font-size="15">${esc(row.title)}</text>
         <rect x="520" y="${y}" width="${barW}" height="28" rx="6" fill="#efeae2"/>
@@ -552,22 +554,22 @@ function timeSaved() {
     })
     .join("");
   const body = `
-    <text x="40" y="48" class="serif" font-size="30" fill="${INK}">Illustrative minutes, not measured results</text>
-    <text x="40" y="80" font-size="16" fill="${BODY}">Each bar is manual minutes minus review minutes, from docs/TIME_SAVED.md. Green is a demo pattern. Amber is planned.</text>
+    <text x="40" y="48" class="serif" font-size="30" fill="${INK}">Estimates from the shared ledger</text>
+    <text x="40" y="80" font-size="16" fill="${BODY}">Counts from the Thursday run. Minutes from dashboard/assumptions.json. Not a measurement.</text>
     ${bars}
     <rect x="40" y="730" width="430" height="150" rx="12" fill="${GREEN_SOFT}" stroke="${GREEN}"/>
-    <text x="60" y="766" fill="${GREEN}" font-size="13" font-weight="700">A DAY LIKE THURSDAY</text>
-    <text x="60" y="806" fill="${INK}" font-size="28" font-weight="700">57 min</text>
-    <text x="60" y="840" fill="${BODY}" font-size="14">A1+A2+A3+A4, once each. An estimate.</text>
+    <text x="60" y="766" fill="${GREEN}" font-size="13" font-weight="700">ONE HOMEOWNER REQUEST</text>
+    <text x="60" y="806" fill="${INK}" font-size="28" font-weight="700">68 min</text>
+    <text x="60" y="840" fill="${BODY}" font-size="14">76 manual minus 8 review. An estimate.</text>
     <rect x="490" y="730" width="430" height="150" rx="12" fill="${GREEN_SOFT}" stroke="${GREEN}"/>
-    <text x="510" y="766" fill="${GREEN}" font-size="13" font-weight="700">A WEEK OF DEMO PATTERNS</text>
-    <text x="510" y="806" fill="${INK}" font-size="28" font-weight="700">216 min</text>
-    <text x="510" y="840" fill="${BODY}" font-size="14">Frequencies in TIME_SAVED.md. Per PM.</text>
-    <rect x="940" y="730" width="460" height="150" rx="12" fill="${AMBER_SOFT}" stroke="${AMBER}" stroke-dasharray="7 5"/>
-    <text x="960" y="766" fill="${AMBER}" font-size="13" font-weight="700">PLANNED ROWS, NOT IN THE CODE</text>
-    <text x="960" y="806" fill="${INK}" font-size="28" font-weight="700">+246 min</text>
-    <text x="960" y="840" fill="${BODY}" font-size="14">A5 through A9. Do not add this to the demo.</text>
-    <text x="40" y="930" font-size="14" fill="${MUTED}">Not customer data. Not a study. Review time assumes Maria reads the draft and may reject it.</text>`;
+    <text x="510" y="766" fill="${GREEN}" font-size="13" font-weight="700">PER PM PER WEEK</text>
+    <text x="510" y="806" fill="${INK}" font-size="28" font-weight="700">4.5 h</text>
+    <text x="510" y="840" fill="${BODY}" font-size="14">68 min times 4 requests. An estimate.</text>
+    <rect x="940" y="730" width="460" height="150" rx="12" fill="${PAPER}" stroke="${LINE}"/>
+    <text x="960" y="766" fill="${MUTED}" font-size="13" font-weight="700">SIX PMS, 48 WEEKS</text>
+    <text x="960" y="806" fill="${INK}" font-size="28" font-weight="700">~1,300 h</text>
+    <text x="960" y="840" fill="${BODY}" font-size="14">Same rate. An estimate, not a measurement.</text>
+    <text x="40" y="930" font-size="14" fill="${MUTED}">Source: dashboard/assumptions.json on the dashboard branch. Not customer data.</text>`;
   return shell({
     title: "Illustrative minutes",
     desc: "Bar chart of illustrative time savings from documented assumptions. Green bars are demo patterns. Amber bars are planned and not implemented.",
@@ -657,7 +659,7 @@ function integrationFlow() {
     <text x="72" y="444" fill="${BODY}" font-size="16">HubSpot, Google Calendar, and Slack are named on the page or in a draft. No SDK call and no webhook.</text>
     <text x="72" y="480" fill="${BODY}" font-size="16">Gmail, Outlook, Procore, and QuickBooks are not referenced. An email.draft is not a mailbox API.</text>
     <text x="72" y="516" fill="${BODY}" font-size="16">OpenAI, if --live is set, may restyle prose. It does not choose times, totals, or dates.</text>
-    <text x="48" y="640" font-size="15" fill="${MUTED}">If the critic never approves, the run stops at needs_human and Compliance does not write drafts.</text>`;
+    <text x="48" y="640" font-size="15" fill="${MUTED}">If the critic never approves, the run stops at needs_human and Drafting does not write drafts.</text>`;
   return shell({
     title: "What actually moves",
     desc: "Data flow of the Benchmark demo. The fixture is read through the toolkit onto the board. Drafts stay in memory. External systems are not called.",
@@ -678,7 +680,7 @@ function together() {
   ];
   const body = `
     <text x="48" y="56" class="serif" font-size="32" fill="${INK}">One Thursday, put together</text>
-    <text x="48" y="92" font-size="16" fill="${BODY}">The pieces that exist, and the minutes they illustrate. Planned tools are not part of the 57.</text>
+    <text x="48" y="92" font-size="16" fill="${BODY}">The pieces that exist. The 68 minutes are the shared ledger, not a second model.</text>
     ${steps
       .map((step, index) => {
         const x = 48 + index * 380;
@@ -690,14 +692,14 @@ function together() {
       .join("")}
     <rect x="48" y="350" width="736" height="200" rx="14" fill="${GREEN_SOFT}" stroke="${GREEN}"/>
     <text x="72" y="394" fill="${GREEN}" font-size="13" font-weight="700">ILLUSTRATIVE, THIS DEMO</text>
-    <text x="72" y="444" fill="${INK}" font-size="36" font-weight="700">57 minutes</text>
-    <text x="72" y="484" fill="${BODY}" font-size="16">A1 through A4, once each. A day like Thursday.</text>
-    <text x="72" y="514" fill="${BODY}" font-size="16">A week of those patterns, at the stated frequencies, is 216 minutes.</text>
+    <text x="72" y="444" fill="${INK}" font-size="36" font-weight="700">68 minutes</text>
+    <text x="72" y="484" fill="${BODY}" font-size="16">76 manual minus 8 of review, one request.</text>
+    <text x="72" y="514" fill="${BODY}" font-size="16">About 4.5 hours per PM per week at 4 requests.</text>
     <rect x="808" y="350" width="744" height="200" rx="14" fill="${AMBER_SOFT}" stroke="${AMBER}" stroke-dasharray="7 5"/>
     <text x="832" y="394" fill="${AMBER}" font-size="13" font-weight="700">NOT ADDED IN</text>
     <text x="832" y="444" fill="${INK}" font-size="28" font-weight="700">Procore, QuickBooks, mail APIs</text>
     <text x="832" y="484" fill="${BODY}" font-size="16">They are not in the code, so they add no minutes here.</text>
-    <text x="832" y="514" fill="${BODY}" font-size="16">Planned rows A5–A9 would be a separate 246 minutes.</text>
+    <text x="832" y="514" fill="${BODY}" font-size="16">They are not in the 68 minutes.</text>
     <text x="48" y="610" font-size="16" fill="${BODY}">The team saves the illustrated time only if Maria's review is shorter than doing the task by hand, and only for the patterns the demo can run.</text>
     <text x="48" y="680" font-size="14" fill="${MUTED}">See docs/TIME_SAVED.md. These are assumptions. They are not customer data and not a measurement.</text>`;
   return shell({
@@ -772,13 +774,38 @@ async function renderPngs() {
     writeFileSync(new URL(`${name}.png`, OUT), Buffer.from(image.data, "base64"));
     console.log("rendered", name);
   }
+  const og = readFileSync(new URL("../../og.svg", OUT), "utf8");
+  writeFileSync("/tmp/showcase-og.html", `<!DOCTYPE html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:${BG}}</style></head><body>${og}</body></html>`);
+  await call("Emulation.setDeviceMetricsOverride", { width: 1200, height: 630, deviceScaleFactor: 1, mobile: false });
+  await call("Page.navigate", { url: "file:///tmp/showcase-og.html" });
+  await new Promise((resolve) => setTimeout(resolve, 250));
+  const ogImage = await call("Page.captureScreenshot", { format: "png", fromSurface: true });
+  writeFileSync(new URL("../../og.png", OUT), Buffer.from(ogImage.data, "base64"));
+  console.log("rendered og");
   await send("Target.closeTarget", { targetId: target.targetId });
   ws.close();
+}
+
+function ogCard() {
+  return shell({
+    title: "Benchmark",
+    desc: "A team of agents for a construction project manager. Mock mode. Nothing is sent.",
+    width: 1200,
+    height: 630,
+    body: `
+      <text x="72" y="180" fill="#5c564c" font-size="18" font-weight="700" letter-spacing="0.14em">BENCHMARK</text>
+      <text x="72" y="270" class="serif" font-size="64" fill="#221f1a">The day, drafted.</text>
+      <text x="72" y="340" font-size="28" fill="#3a342c">A team of agents for a construction project manager.</text>
+      <text x="72" y="400" font-size="22" fill="#3a342c">Maria approves. Nothing is sent.</text>
+      <rect x="72" y="460" width="220" height="48" rx="24" fill="#2c3d86"/>
+      <text x="182" y="492" text-anchor="middle" fill="#fffdf9" font-size="18" font-weight="700">Mock mode</text>`,
+  });
 }
 
 mkdirSync(OUT, { recursive: true });
 const files = buildAll();
 for (const [name, svg] of Object.entries(files)) writeFileSync(new URL(`${name}.svg`, OUT), svg);
+writeFileSync(new URL("../../og.svg", OUT), ogCard());
 console.log("wrote", Object.keys(files).length, "svg");
 
 if (!process.argv.includes("--svg-only")) {

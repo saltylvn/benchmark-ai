@@ -4,6 +4,7 @@ A dated log of how this repository became Benchmark. Older private names are not
 
 ## 2026-11-10
 
+- Rebased the showcase onto `main` after the cleanup merge (`b4d5879`). Dropped the separate A1–A9 minute table. The chart now uses the Thursday counts and `dashboard/assumptions.json`: 68 minutes net per request, about 4.5 hours per project manager per week. The drafting step is labeled Drafting so a later compliance-and-billing specialist can keep that name.
 - Added the visual showcase on `cursor/benchmark-showcase-bbab`: agent hero and detail cards, daily and weekly cadences, the Thursday request swimlane, before-and-after automations, an illustrative time chart, and an integration map that separates mocked connectors from planned ones. `docs/SHOWCASE.md` walks through them. `scripts/showcase.mjs` regenerates the files.
 - Started that branch for the showcase. Assumptions for any time figures live in `docs/TIME_SAVED.md` and are labeled illustrative, not measured.
 - Removed leftover identifiers from the earlier project: the Tuesday fixture filename, the old theme key, the old provider alias, and the old screenshot.

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080" role="img" aria-labelledby="title desc">
   <title id="title">Benchmark agents</title>
-  <desc id="desc">Cards for the Benchmark supervisor and the four specialists Intake, Scheduling, Compliance, and Briefing. Each card lists the role, inputs, outputs, tools, and hand-off from the source.</desc>
+  <desc id="desc">Cards for the Benchmark supervisor and the four specialists Intake, Scheduling, Drafting, and Briefing. Each card lists the role, inputs, outputs, tools, and hand-off from the source.</desc>
   <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
   <rect width="1600" height="1080" fill="#f3f0e8"/>
   <text x="48" y="52" class="serif" font-size="34" fill="#221f1a">Meet the agents</text>
@@ -23,7 +23,7 @@
     <text x="816" y="280" fill="#e7ebf6" font-size="15">None of its own</text>
     <text x="816" y="302" fill="#e7ebf6" font-size="15">It passes the read-only toolkit in</text><text x="1186" y="256" fill="#c9d2f2" font-size="12" font-weight="700" letter-spacing="0.08em">HANDS OFF TO</text>
     <text x="1186" y="280" fill="#e7ebf6" font-size="15">Intake, to open the day</text>
-    <text x="1186" y="302" fill="#e7ebf6" font-size="15">Then Scheduling or Compliance</text>
+    <text x="1186" y="302" fill="#e7ebf6" font-size="15">Then Scheduling or Drafting</text>
   </g>
   <g>
         <rect x="48" y="368" width="742" height="312" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
@@ -63,7 +63,7 @@
         <rect x="48" y="700" width="742" height="312" rx="14" fill="#fffdf9" stroke="#d2c8b8" stroke-width="1.5"/>
         <g><rect x="72" y="724" width="48" height="48" rx="12" fill="#e7ebf6"/><path d="M 88 738 H 101 L 106 743 V 758 H 88 Z" fill="none" stroke="#2c3d86" stroke-width="1.6"/>
       <path d="M 92 749 H 102 M 92 754 H 99" stroke="#2c3d86" stroke-width="1.6" fill="none"/></g>
-        <text x="136" y="746" fill="#221f1a" font-size="26" font-weight="700">Compliance</text>
+        <text x="136" y="746" fill="#221f1a" font-size="26" font-weight="700">Drafting</text>
         <text x="136" y="772" fill="#3a342c" font-size="15">Turns an approved plan into drafts. Never sends.</text>
         <text x="72" y="812" fill="#5c564c" font-size="13">executor.ts and schedule/actions.ts</text>
         <text x="72" y="832" fill="#5c564c" font-size="12" font-weight="700" letter-spacing="0.08em">INPUTS</text>

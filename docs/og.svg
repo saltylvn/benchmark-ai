@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Benchmark</title>
+  <desc id="desc">A team of agents for a construction project manager. Mock mode. Nothing is sent.</desc>
+  <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
+  <rect width="1200" height="630" fill="#f3f0e8"/>
+  
+      <text x="72" y="180" fill="#5c564c" font-size="18" font-weight="700" letter-spacing="0.14em">BENCHMARK</text>
+      <text x="72" y="270" class="serif" font-size="64" fill="#221f1a">The day, drafted.</text>
+      <text x="72" y="340" font-size="28" fill="#3a342c">A team of agents for a construction project manager.</text>
+      <text x="72" y="400" font-size="22" fill="#3a342c">Maria approves. Nothing is sent.</text>
+      <rect x="72" y="460" width="220" height="48" rx="24" fill="#2c3d86"/>
+      <text x="182" y="492" text-anchor="middle" fill="#fffdf9" font-size="18" font-weight="700">Mock mode</text>
+</svg>

@@ -5,56 +5,48 @@
   <style>text { font-family: "Liberation Sans", "Segoe UI", system-ui, sans-serif; } .serif { font-family: Georgia, "Liberation Serif", Palatino, serif; }</style>
   <rect width="1440" height="980" fill="#f3f0e8"/>
   
-    <text x="40" y="48" class="serif" font-size="30" fill="#221f1a">Illustrative minutes, not measured results</text>
-    <text x="40" y="80" font-size="16" fill="#3a342c">Each bar is manual minutes minus review minutes, from docs/TIME_SAVED.md. Green is a demo pattern. Amber is planned.</text>
-    <text x="40" y="172" fill="#221f1a" font-size="15" font-weight="700">A1</text>
-        <text x="90" y="172" fill="#3a342c" font-size="15">Morning intake and plan</text>
+    <text x="40" y="48" class="serif" font-size="30" fill="#221f1a">Estimates from the shared ledger</text>
+    <text x="40" y="80" font-size="16" fill="#3a342c">Counts from the Thursday run. Minutes from dashboard/assumptions.json. Not a measurement.</text>
+    <text x="40" y="172" fill="#221f1a" font-size="15" font-weight="700">1</text>
+        <text x="90" y="172" fill="#3a342c" font-size="15">Triage the inbox and the overlap</text>
         <rect x="520" y="150" width="640" height="28" rx="6" fill="#efeae2"/>
         <rect x="520" y="150" width="320" height="28" rx="6" fill="#1b754e"/>
-        <text x="1176" y="170" fill="#221f1a" font-size="15" font-weight="700">20 min</text><text x="40" y="234" fill="#221f1a" font-size="15" font-weight="700">A2</text>
-        <text x="90" y="234" fill="#3a342c" font-size="15">Rewrite a double-booked morning</text>
+        <text x="1176" y="170" fill="#221f1a" font-size="15" font-weight="700">10 min</text><text x="40" y="234" fill="#221f1a" font-size="15" font-weight="700">2</text>
+        <text x="90" y="234" fill="#3a342c" font-size="15">Job files for three records</text>
         <rect x="520" y="212" width="640" height="28" rx="6" fill="#efeae2"/>
-        <rect x="520" y="212" width="256" height="28" rx="6" fill="#1b754e"/>
-        <text x="1176" y="232" fill="#221f1a" font-size="15" font-weight="700">16 min</text><text x="40" y="296" fill="#221f1a" font-size="15" font-weight="700">A3</text>
-        <text x="90" y="296" fill="#3a342c" font-size="15">Homeowner email and crew note</text>
+        <rect x="520" y="212" width="480" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="232" fill="#221f1a" font-size="15" font-weight="700">15 min</text><text x="40" y="296" fill="#221f1a" font-size="15" font-weight="700">3</text>
+        <text x="90" y="296" fill="#3a342c" font-size="15">Untangle the double-booking once</text>
         <rect x="520" y="274" width="640" height="28" rx="6" fill="#efeae2"/>
-        <rect x="520" y="274" width="208" height="28" rx="6" fill="#1b754e"/>
-        <text x="1176" y="294" fill="#221f1a" font-size="15" font-weight="700">13 min</text><text x="40" y="358" fill="#221f1a" font-size="15" font-weight="700">A4</text>
-        <text x="90" y="358" fill="#3a342c" font-size="15">Insurance certificate check</text>
+        <rect x="520" y="274" width="480" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="294" fill="#221f1a" font-size="15" font-weight="700">15 min</text><text x="40" y="358" fill="#221f1a" font-size="15" font-weight="700">4</text>
+        <text x="90" y="358" fill="#3a342c" font-size="15">Six calendar creates and updates</text>
         <rect x="520" y="336" width="640" height="28" rx="6" fill="#efeae2"/>
-        <rect x="520" y="336" width="128" height="28" rx="6" fill="#1b754e"/>
-        <text x="1176" y="356" fill="#221f1a" font-size="15" font-weight="700">8 min</text><text x="40" y="420" fill="#221f1a" font-size="15" font-weight="700">A5</text>
-        <text x="90" y="420" fill="#3a342c" font-size="15">Midday change order or RFI</text>
+        <rect x="520" y="336" width="192" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="356" fill="#221f1a" font-size="15" font-weight="700">6 min</text><text x="40" y="420" fill="#221f1a" font-size="15" font-weight="700">5</text>
+        <text x="90" y="420" fill="#3a342c" font-size="15">Homeowner email</text>
         <rect x="520" y="398" width="640" height="28" rx="6" fill="#efeae2"/>
-        <rect x="520" y="398" width="384" height="28" rx="6" fill="#8a4e0c"/>
-        <text x="1176" y="418" fill="#221f1a" font-size="15" font-weight="700">24 min</text><text x="40" y="482" fill="#221f1a" font-size="15" font-weight="700">A6</text>
-        <text x="90" y="482" fill="#3a342c" font-size="15">End-of-day client and sub notes</text>
+        <rect x="520" y="398" width="352" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="418" fill="#221f1a" font-size="15" font-weight="700">11 min</text><text x="40" y="482" fill="#221f1a" font-size="15" font-weight="700">6</text>
+        <text x="90" y="482" fill="#3a342c" font-size="15">Crew Slack note</text>
         <rect x="520" y="460" width="640" height="28" rx="6" fill="#efeae2"/>
-        <rect x="520" y="460" width="256" height="28" rx="6" fill="#8a4e0c"/>
-        <text x="1176" y="480" fill="#221f1a" font-size="15" font-weight="700">16 min</text><text x="40" y="544" fill="#221f1a" font-size="15" font-weight="700">A7</text>
-        <text x="90" y="544" fill="#3a342c" font-size="15">Monday look-ahead</text>
+        <rect x="520" y="460" width="128" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="480" fill="#221f1a" font-size="15" font-weight="700">4 min</text><text x="40" y="544" fill="#221f1a" font-size="15" font-weight="700">7</text>
+        <text x="90" y="544" fill="#3a342c" font-size="15">Call card and morning brief</text>
         <rect x="520" y="522" width="640" height="28" rx="6" fill="#efeae2"/>
-        <rect x="520" y="522" width="592" height="28" rx="6" fill="#8a4e0c"/>
-        <text x="1176" y="542" fill="#221f1a" font-size="15" font-weight="700">37 min</text><text x="40" y="606" fill="#221f1a" font-size="15" font-weight="700">A8</text>
-        <text x="90" y="606" fill="#3a342c" font-size="15">Mid-week schedule risk</text>
-        <rect x="520" y="584" width="640" height="28" rx="6" fill="#efeae2"/>
-        <rect x="520" y="584" width="400" height="28" rx="6" fill="#8a4e0c"/>
-        <text x="1176" y="604" fill="#221f1a" font-size="15" font-weight="700">25 min</text><text x="40" y="668" fill="#221f1a" font-size="15" font-weight="700">A9</text>
-        <text x="90" y="668" fill="#3a342c" font-size="15">Friday owner report</text>
-        <rect x="520" y="646" width="640" height="28" rx="6" fill="#efeae2"/>
-        <rect x="520" y="646" width="512" height="28" rx="6" fill="#8a4e0c"/>
-        <text x="1176" y="666" fill="#221f1a" font-size="15" font-weight="700">32 min</text>
+        <rect x="520" y="522" width="480" height="28" rx="6" fill="#1b754e"/>
+        <text x="1176" y="542" fill="#221f1a" font-size="15" font-weight="700">15 min</text>
     <rect x="40" y="730" width="430" height="150" rx="12" fill="#e7f4ee" stroke="#1b754e"/>
-    <text x="60" y="766" fill="#1b754e" font-size="13" font-weight="700">A DAY LIKE THURSDAY</text>
-    <text x="60" y="806" fill="#221f1a" font-size="28" font-weight="700">57 min</text>
-    <text x="60" y="840" fill="#3a342c" font-size="14">A1+A2+A3+A4, once each. An estimate.</text>
+    <text x="60" y="766" fill="#1b754e" font-size="13" font-weight="700">ONE HOMEOWNER REQUEST</text>
+    <text x="60" y="806" fill="#221f1a" font-size="28" font-weight="700">68 min</text>
+    <text x="60" y="840" fill="#3a342c" font-size="14">76 manual minus 8 review. An estimate.</text>
     <rect x="490" y="730" width="430" height="150" rx="12" fill="#e7f4ee" stroke="#1b754e"/>
-    <text x="510" y="766" fill="#1b754e" font-size="13" font-weight="700">A WEEK OF DEMO PATTERNS</text>
-    <text x="510" y="806" fill="#221f1a" font-size="28" font-weight="700">216 min</text>
-    <text x="510" y="840" fill="#3a342c" font-size="14">Frequencies in TIME_SAVED.md. Per PM.</text>
-    <rect x="940" y="730" width="460" height="150" rx="12" fill="#f8efe3" stroke="#8a4e0c" stroke-dasharray="7 5"/>
-    <text x="960" y="766" fill="#8a4e0c" font-size="13" font-weight="700">PLANNED ROWS, NOT IN THE CODE</text>
-    <text x="960" y="806" fill="#221f1a" font-size="28" font-weight="700">+246 min</text>
-    <text x="960" y="840" fill="#3a342c" font-size="14">A5 through A9. Do not add this to the demo.</text>
-    <text x="40" y="930" font-size="14" fill="#5c564c">Not customer data. Not a study. Review time assumes Maria reads the draft and may reject it.</text>
+    <text x="510" y="766" fill="#1b754e" font-size="13" font-weight="700">PER PM PER WEEK</text>
+    <text x="510" y="806" fill="#221f1a" font-size="28" font-weight="700">4.5 h</text>
+    <text x="510" y="840" fill="#3a342c" font-size="14">68 min times 4 requests. An estimate.</text>
+    <rect x="940" y="730" width="460" height="150" rx="12" fill="#fffdf9" stroke="#d2c8b8"/>
+    <text x="960" y="766" fill="#5c564c" font-size="13" font-weight="700">SIX PMS, 48 WEEKS</text>
+    <text x="960" y="806" fill="#221f1a" font-size="28" font-weight="700">~1,300 h</text>
+    <text x="960" y="840" fill="#3a342c" font-size="14">Same rate. An estimate, not a measurement.</text>
+    <text x="40" y="930" font-size="14" fill="#5c564c">Source: dashboard/assumptions.json on the dashboard branch. Not customer data.</text>
 </svg>
