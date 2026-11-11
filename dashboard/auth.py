@@ -164,7 +164,7 @@ def _json(opener: Opener, request: urllib.request.Request) -> dict[str, Any]:
             body = {}
         raise AuthError(f"Sign-in request failed ({error.code} {body.get('error', '')}).".replace(" )", ")")) from error
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as error:
-        raise AuthError(f"Could not reach the sign-in provider: {error}") from error
+        raise AuthError("Could not reach the sign-in provider. Try again in a minute.") from error
 
 
 DEMO_USER = {"name": "Demo viewer", "email": "", "provider": "demo", "providerLabel": "Demo"}

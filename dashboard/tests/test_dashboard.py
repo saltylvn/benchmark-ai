@@ -332,6 +332,20 @@ class AppTest(unittest.TestCase):
         self.assertIn(b'"D5": {', self.client.get("/").data)
 
 
+    def test_demo_visitors_never_see_real_sends(self):
+        self.slack.audit.append({"at": "t", "context": "Draw", "approvedBy": "Maria Alvarez (maria@summitridge.example)", "mode": "bot", "result": "sent", "detail": "Posted to C123"})
+        self.approve("D1")
+        audit = self.client.get("/api/slack/audit").get_json()
+        self.assertTrue(audit)
+        self.assertTrue(all(r["mode"] == "demo" for r in audit))
+        self.assertNotIn(b"maria@summitridge.example", self.client.get("/").data)
+        self.assertEqual(set(self.client.get("/api/slack/status").get_json()), {"mode", "connected", "sendEnabled"})
+        with self.client.session_transaction() as sess:
+            sess["user"] = {"name": "Jordan Pike", "email": "j@summitridge.example", "provider": "google", "providerLabel": "Google"}
+        self.assertIn("maria@summitridge.example", json.dumps(self.client.get("/api/slack/audit").get_json()))
+        self.assertIn("detail", self.client.get("/api/slack/status").get_json())
+
+
 class HardeningTest(unittest.TestCase):
     def make(self, env=None):
         return create_app(slack=SlackConnector(SlackConfig()), env=env or {})
@@ -347,7 +361,7 @@ class HardeningTest(unittest.TestCase):
         page = response.get_data(as_text=True)
         import re
 
-        executable = [m for m in re.findall(r"<script([^>]*)>", page) if "application/json" not in m]
+        executable = [m for m in re.findall(r"<script([^>]*)>", page, re.IGNORECASE) if "application/json" not in m]
         self.assertTrue(executable)
         self.assertTrue(all(f'nonce="{nonce}"' in attrs for attrs in executable), executable)
         self.assertNotEqual(nonce, client.get("/").headers["Content-Security-Policy"].split("'nonce-")[1].split("'")[0])

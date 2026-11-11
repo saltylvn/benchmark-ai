@@ -154,6 +154,22 @@ def create_app(
     def current_user() -> dict[str, str] | None:
         return session.get("user")
 
+    SLACK_FAILED = "Slack did not accept the message. A teammate can see why in the Slack log."
+
+    def is_staff(user: dict[str, str] | None) -> bool:
+        """A real, signed-in teammate. Demo visitors can click around but never see team data."""
+        return bool(user) and user.get("provider") != "demo"
+
+    def visible_audit(user: dict[str, str] | None) -> list[dict[str, Any]]:
+        # Real sends name the approver and their email, so only teammates see them.
+        return list(connector.audit) if is_staff(user) else [r for r in connector.audit if r.get("mode") == "demo"]
+
+    def visible_status(user: dict[str, str] | None) -> dict[str, Any]:
+        status = connector.status()
+        if is_staff(user):
+            return status
+        return {k: status[k] for k in ("mode", "connected", "sendEnabled") if k in status}
+
     def signed_in(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
@@ -180,7 +196,7 @@ def create_app(
             return render_template("index.html", page="welcome", providers=provider_cards(env), static_mode=False, landing=landing(snap, load_json(Path(assumptions_path))))
         snap = snapshot()
         assumptions = load_json(Path(assumptions_path))
-        status = connector.status()
+        status = visible_status(user)
         return render_template(
             "index.html",
             page="app",
@@ -190,7 +206,7 @@ def create_app(
             brief_at=env.get("BRIEF_AT", "").strip(),
             user=user,
             slack=status,
-            audit=list(reversed(connector.audit))[:8],
+            audit=list(reversed(visible_audit(user)))[:8],
             approvals=approvals_for(snap["portfolio"]["sweep"]["today"]),
             form_token=csrf_token(),
         )
@@ -283,7 +299,7 @@ def create_app(
                 result = connector.send(item["slack"], context=item["label"], approved_by=f"{user['name']} ({user['email']})")
             record["detail"] = {"sent": "Posted to Slack", "dry-run": "Preview only: nothing was posted", "error": result["detail"]}[result["result"]]
             if result["result"] == "error":
-                return {"error": result["detail"]}, 502
+                return {"error": SLACK_FAILED}, 502
         elif act == "approve":
             record["detail"] = "Saved as approved. Calendar, email, and invoices stay drafts in this demo"
         day = snapshot()["portfolio"]["sweep"]["today"]
@@ -364,7 +380,7 @@ def create_app(
             return jsonify({"result": "already-sent", "date": day})
         result = send_brief(connector, build_brief(snap, load_json(Path(assumptions_path))))
         if result["result"] == "error":
-            return jsonify({"result": "error", "detail": result["detail"]}), 502
+            return jsonify({"result": "error", "detail": SLACK_FAILED}), 502
         if result["result"] == "sent":
             store.set("briefSent", day)
             hooks.emit("brief.sent", {"day": day, "channel": connector.config.channel})
@@ -380,8 +396,8 @@ def create_app(
             return jsonify({"error": "Say who approved it: by.name and by.email are required."}), 400
         try:
             auth.check_allowed(email, env)
-        except auth.AuthError as error:
-            return jsonify({"error": str(error)}), 403
+        except auth.AuthError:
+            return jsonify({"error": "That person is not on this team's sign-in list."}), 403
         record, status = record_approval(str(body.get("id", "")), body.get("act"), {"name": name[:80], "email": email[:120], "provider": "automation"}, "api")
         return jsonify(record), status
 
@@ -407,12 +423,12 @@ def create_app(
     @app.get("/api/slack/status")
     @signed_in
     def api_slack_status():
-        return jsonify(connector.status())
+        return jsonify(visible_status(current_user()))
 
     @app.get("/api/slack/audit")
     @signed_in
     def api_slack_audit():
-        return jsonify(connector.audit)
+        return jsonify(visible_audit(current_user()))
 
     @app.get("/healthz")
     def healthz():

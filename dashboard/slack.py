@@ -101,7 +101,9 @@ class SlackConnector:
         try:
             data = self._api("auth.test", {})
         except SlackError as error:
-            return {**base, "connected": False, "detail": str(error)}
+            # Only Slack's own error code is shown, never the raw exception text.
+            why = f"Slack auth.test failed: {error.code}" if error.code else "Could not reach Slack."
+            return {**base, "connected": False, "detail": why}
         if not cfg.channel:
             return {**base, "connected": False, "team": data.get("team"), "detail": "Token works. Set SLACK_CHANNEL to the channel id the bot should post in."}
         return {
@@ -184,7 +186,8 @@ class SlackConnector:
         )
         data = self._open_json(request)
         if not data.get("ok"):
-            raise SlackError(f"Slack {method} failed: {data.get('error', 'unknown_error')}")
+            code = str(data.get("error", "unknown_error"))
+            raise SlackError(f"Slack {method} failed: {code}", code=code)
         return data
 
     def _webhook(self, payload: dict[str, Any]) -> None:
@@ -213,4 +216,6 @@ class SlackConnector:
 
 
 class SlackError(RuntimeError):
-    pass
+    def __init__(self, message: str, code: str | None = None) -> None:
+        super().__init__(message)
+        self.code = code
