@@ -10,7 +10,7 @@
     <button type="button" class="tour-next" data-tour-next>Next</button>
   </div>
 </div>
-<script>
+<script nonce="{{ csp_nonce() }}">
 (function () {
   var state = JSON.parse(document.getElementById('app-state').textContent);
   var KEY = 'benchmark-tour-seen-v1';

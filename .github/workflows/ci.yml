@@ -19,6 +19,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm audit --audit-level=high
       - run: npm run typecheck
       - run: npm test
 
@@ -37,4 +38,7 @@ jobs:
           cache-dependency-path: dashboard/requirements-dev.txt
       - run: pip install -r dashboard/requirements-dev.txt
       - run: ruff check dashboard
+      - name: Audit Python dependencies
+        if: matrix.python == '3.12'
+        run: pip install pip-audit && pip-audit -r dashboard/requirements.txt
       - run: python -m unittest discover -s dashboard/tests -t . -v

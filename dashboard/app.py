@@ -14,7 +14,7 @@ from functools import wraps
 from pathlib import Path
 from typing import Any
 
-from flask import Flask, abort, flash, jsonify, redirect, render_template, request, session, url_for
+from flask import Flask, abort, flash, g, jsonify, redirect, render_template, request, session, url_for
 
 from . import auth
 from .automation import Webhooks, token_ok, token_status
@@ -54,11 +54,16 @@ def create_app(
     app = Flask(__name__)
     app.json.ensure_ascii = False  # show "09:00–09:40", not "–", in payload previews
     app.secret_key = env.get("DASHBOARD_SECRET") or secrets.token_hex(32)
+    https = public_url(env).startswith("https://")
     app.config.update(
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
-        SESSION_COOKIE_SECURE=public_url(env).startswith("https://"),
+        SESSION_COOKIE_SECURE=https,
+        # "__Host-" makes the browser refuse the cookie unless it is Secure, host-only and Path=/.
+        SESSION_COOKIE_NAME="__Host-benchmark" if https else "benchmark",
         PERMANENT_SESSION_LIFETIME=timedelta(days=14),
+        # JSON bodies here are a few hundred bytes; refuse anything large before it is parsed.
+        MAX_CONTENT_LENGTH=64 * 1024,
     )
     connector = slack or SlackConnector(SlackConfig.from_env(env))
     app.extensions["slack"] = connector
@@ -105,16 +110,33 @@ def create_app(
         # Link previews (LinkedIn, Slack, iMessage) need absolute URLs.
         return {"site_url": public_url(env) or request.url_root.rstrip("/")}
 
+    def csp_nonce() -> str:
+        """One random nonce per response; only <script> tags that carry it may run."""
+        if "csp_nonce" not in g:
+            g.csp_nonce = secrets.token_urlsafe(18)
+        return g.csp_nonce
+
+    app.jinja_env.globals["csp_nonce"] = csp_nonce
+
     @app.after_request
     def security_headers(response):
-        response.headers.setdefault("X-Content-Type-Options", "nosniff")
-        response.headers.setdefault("X-Frame-Options", "DENY")
-        response.headers.setdefault("Referrer-Policy", "same-origin")
-        response.headers.setdefault(
+        h = response.headers
+        h.setdefault("X-Content-Type-Options", "nosniff")
+        h.setdefault("X-Frame-Options", "DENY")
+        h.setdefault("Referrer-Policy", "same-origin")
+        h.setdefault("Cross-Origin-Opener-Policy", "same-origin")
+        h.setdefault("Cross-Origin-Resource-Policy", "same-origin")
+        h.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=()")
+        if https:
+            h.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+        # Inline scripts run only with this response's nonce; no 'unsafe-inline' for scripts.
+        h.setdefault(
             "Content-Security-Policy",
-            "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; "
-            "img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+            f"default-src 'self'; script-src 'self' 'nonce-{csp_nonce()}'; style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
         )
+        if request.path.startswith("/api/"):
+            h.setdefault("Cache-Control", "no-store")
         return response
 
     @app.errorhandler(SnapshotError)
@@ -221,9 +243,12 @@ def create_app(
         session["user"] = user
         return redirect(url_for("index"))
 
-    @app.get("/logout")
+    @app.post("/logout")
     def logout():
-        session.clear()
+        # POST with the page token, so another site cannot sign a person out with a link or image.
+        expected = session.get("csrf")
+        if expected and secrets.compare_digest(request.form.get("csrf", ""), expected):
+            session.clear()
         return redirect(url_for("index"))
 
     def approvable(item_id: str) -> dict[str, Any] | None:

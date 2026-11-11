@@ -830,7 +830,7 @@ section .eng { box-shadow: none; }
   .integrations { flex-wrap: nowrap; margin-left: auto; }
   .integrations .chip { white-space: nowrap; }
 }
-@media (max-width: 360px) { .integrations a.chip { display: none; } }
+@media (max-width: 360px) { .integrations .signout .chip { display: none; } }
 @media (max-width: 1180px) {
   .kpis { grid-template-columns: 1fr 1fr; }
   .kpis .status-kpi, .kpis .kpi.accent { grid-column: 1 / -1; }
@@ -838,11 +838,13 @@ section .eng { box-shadow: none; }
 }
 @media (max-width: 640px) {
   .integrations .chip.ok, .integrations .chip.off { display: none; }
-  .integrations a.chip { border: 0; background: none; padding: 6px 2px; color: var(--accent); font-weight: 600; font-size: 14px; }
+  .integrations .signout .chip { border: 0; background: none; padding: 6px 2px; color: var(--accent); font-weight: 600; font-size: 14px; }
   .brand strong { white-space: nowrap; }
 }
-@media (max-width: 360px) { .integrations a.chip { display: inline-flex; } }
+@media (max-width: 360px) { .integrations .signout .chip { display: inline-flex; } }
 @media (max-width: 640px) {
   .integrations { width: auto; flex: none; overflow: visible; }
   .brand { flex: 1 1 auto; }
 }
+.signout { display: inline; margin: 0; }
+.signout .chip { font: inherit; cursor: pointer; }
