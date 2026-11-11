@@ -345,6 +345,13 @@ class DeployTest(unittest.TestCase):
         page = client.get("/", headers={"X-Forwarded-Proto": "https", "X-Forwarded-Host": "benchmark.onrender.com"})
         self.assertEqual(page.status_code, 200)
 
+    def test_link_previews_use_absolute_urls(self):
+        app = create_app(slack=SlackConnector(SlackConfig()), env={"RENDER_EXTERNAL_URL": "https://benchmark.onrender.com"})
+        page = app.test_client().get("/").get_data(as_text=True)
+        self.assertIn('<meta property="og:image" content="https://benchmark.onrender.com/static/og.jpg">', page)
+        self.assertIn('name="twitter:card" content="summary_large_image"', page)
+        self.assertEqual(app.test_client().get("/static/og.jpg").status_code, 200)
+
     def test_render_blueprint_matches_the_app(self):
         text = (Path(__file__).resolve().parents[2] / "render.yaml").read_text(encoding="utf-8")
         self.assertIn("gunicorn dashboard.wsgi:app", text)
