@@ -58,6 +58,8 @@ flowchart LR
     ST[(JsonStore<br/>atomic writes)]
   end
   F --> Slack[(Slack)]
+  F -- "signed webhooks" --> N8N[n8n / any receiver]
+  GHA[GitHub Actions cron] -- "/api/v1 + bearer token" --> F
   F --> Users((PMs on phone,<br/>iPad, desktop))
   F -. deploy .-> Render[Render via render.yaml<br/>gunicorn, health check]
 ```
@@ -76,7 +78,11 @@ flowchart LR
 | --- | --- |
 | **Slack** | Bot token (`auth.test` for status, cached 60 s; `chat.postMessage` to send) or an incoming webhook restricted to `hooks.slack.com`. Every send and preview goes to an audit log. Two locks: `SLACK_SEND_ENABLED=1` **and** a signed-in approver. Demo sessions can never post. |
 | **Sign in with Google / Slack** | OAuth authorization-code flow with a `state` check, userinfo for name and email, refusal of unverified emails, and an `ALLOWED_EMAILS` / `ALLOWED_EMAIL_DOMAINS` allowlist. |
-| **JSON API** | `/api/team`, `/api/snapshot`, `/api/runs/<key>`, `/api/slack/status`, `/api/slack/audit`, and `POST /api/approve` (session plus per-session CSRF token). |
+| **Automation API** | `/api/v1/morning`, `/api/v1/queue`, `POST /api/v1/brief/send` (idempotent per day), and `POST /api/v1/approvals` (a named, allowlisted approver required). Bearer token, constant-time compare, off unless configured. See [docs/AUTOMATION.md](docs/AUTOMATION.md). |
+| **Signed webhooks** | `approval.recorded` and `brief.sent`, sent as canonical JSON with an HMAC-SHA256 signature and timestamp (replay window), background delivery, retries with backoff on 5xx/429/network errors, and a delivery log. Demo clicks are never sent. |
+| **GitHub Actions scheduler** | [`morning-brief.yml`](.github/workflows/morning-brief.yml) wakes the service and posts the 8:00 brief on weekdays, for free. Safe to retry. |
+| **n8n templates** | [`integrations/n8n/`](integrations/n8n): approvals → Google Sheets (with signature verification) and a 7:55 digest → Slack. A cross-language test proves Python-signed events verify in the template's JavaScript. |
+| **App JSON API** | `/api/team`, `/api/snapshot`, `/api/runs/<key>`, `/api/slack/status`, `/api/slack/audit`, and `POST /api/approve` (session plus per-session CSRF token). |
 | **Scheduled brief** | `BRIEF_AT=08:00` runs a scheduler thread that posts the team brief once a day, and skips a brief that was due before startup. |
 | **Deploy** | [`render.yaml`](render.yaml) Blueprint: gunicorn, one worker by design (file-backed state, single scheduler), `ProxyFix` for HTTPS behind Render, `/healthz` that checks the data loads, auto-deploy from `main`. |
 | **Link previews and PWA** | Open Graph and Twitter tags with absolute URLs, a web manifest, iOS icons, and versioned asset URLs so phones never keep stale CSS. |
@@ -101,8 +107,8 @@ flowchart LR
 | **Agents** | TypeScript, Node 20, `node:test` via `tsx`, esbuild |
 | **Service** | Python 3.10+, Flask 3, Jinja, gunicorn, ruff |
 | **Front end** | Server-rendered HTML, plain JavaScript, CSS tokens for light and dark, installable PWA |
-| **Infra** | Render (Blueprint), GitHub Actions |
-| **Tests** | 67 TypeScript (fixtures and property tests) and 63 Python (routes, OAuth, Slack, scheduler, security, deploy) |
+| **Infra** | Render (Blueprint), GitHub Actions (CI and a scheduled brief), n8n |
+| **Tests** | 70 TypeScript (fixtures, property tests, cross-language webhook signatures) and 81 Python (routes, OAuth, Slack, automation API, webhooks, scheduler, security, deploy) |
 
 ## Design decisions
 
@@ -137,13 +143,15 @@ dashboard/         app.py (routes, CSRF, security headers), auth.py (OAuth), sla
                    portfolio.py (view models), store.py, wsgi.py, templates/, static/
 tests/             TypeScript fixture and property tests
 dashboard/tests/   Python tests
-docs/              DEPLOY.md, PLAN.md, the original Thursday showcase (docs/index.html)
+dashboard/automation.py  bearer-token checks, canonical JSON, HMAC signing, webhook delivery with retries
+integrations/      n8n workflow templates and a signed webhook fixture
+docs/              DEPLOY.md, AUTOMATION.md, PLAN.md, the original Thursday showcase (docs/index.html)
 render.yaml        one-click deploy
 ```
 
 ## Roadmap
 
-- **Automation API:** token-protected endpoints and signed outbound webhooks, so tools like n8n can run the morning check, route approvals and log to Sheets.
+- **Approve from Slack:** interactive buttons on the same approval path, plus Gmail and Outlook drafts and SMS for blockers via n8n (see [docs/AUTOMATION.md](docs/AUTOMATION.md#7-more-automation-worth-adding)).
 - **Calendar:** a subscribable feed of the two-week look-ahead, then two-way Google Calendar.
 - **Real data in:** spreadsheet import first, then a Procore connector into the same `Portfolio` shape.
 - **Postgres** behind the `JsonStore` interface, and usage numbers (approval rate, edits before approval) to replace estimates with measurements.

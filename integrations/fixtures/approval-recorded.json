@@ -1,0 +1,7 @@
+{
+  "_note": "Signed by dashboard/automation.py. tests/webhook.test.ts checks the n8n template verifies it.",
+  "secret": "whsec_fixture_only",
+  "timestamp": 1773324300,
+  "body": "{\"at\":\"2026-03-12T14:05:00+00:00\",\"data\":{\"act\":\"approve\",\"amount\":82200,\"at\":\"7:05 AM\",\"by\":\"Renée Walsh\",\"day\":\"2026-03-12\",\"detail\":\"Saved as approved. Calendar, email, and invoices stay drafts in this demo\",\"item\":{\"id\":\"D6\",\"label\":\"Draw request: Ridgeview Lot 14, Dried in\"},\"provider\":\"automation\",\"via\":\"api\"},\"event\":\"approval.recorded\",\"id\":\"0b6f6c1e-2d6a-4c1f-9b8e-1f2a3b4c5d6e\"}",
+  "signature": "sha256=79b46d1011d7238cffbb7a161508b5b38b6c55bb1813371af7b96e5b853affd4"
+}

@@ -17,9 +17,10 @@ from typing import Any
 from flask import Flask, abort, flash, jsonify, redirect, render_template, request, session, url_for
 
 from . import auth
+from .automation import Webhooks, token_ok, token_status
 from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, SnapshotError, build_view, load_json, load_snapshot
 from .store import JsonStore
-from .brief import build_brief, with_brief
+from .brief import build_brief, send_brief, with_brief
 from .portfolio import build_team_view, client_view, landing
 from .slack import SlackConfig, SlackConnector
 
@@ -46,6 +47,8 @@ def create_app(
     env: dict[str, str] | None = None,
     auth_opener: auth.Opener | None = None,
     state_dir: Path | str | None = None,
+    webhook_opener: Any = None,
+    webhook_background: bool = True,
 ) -> Flask:
     env = dict(os.environ if env is None else env)
     app = Flask(__name__)
@@ -64,6 +67,13 @@ def create_app(
     app.extensions["store"] = store
     connector.audit = store.get("slackLog", []) or connector.audit
     connector.on_record = lambda record: store.append("slackLog", record)
+    hooks = Webhooks.from_env(
+        env,
+        opener=webhook_opener,
+        background=webhook_background,
+        on_log=lambda record: store.append("webhookLog", record, keep=100),
+    )
+    app.extensions["webhooks"] = hooks
 
     def snapshot() -> dict[str, Any]:
         return load_snapshot(Path(snapshot_path))
@@ -233,21 +243,14 @@ def create_app(
             return {"label": risk["title"], "slack": None}
         return None
 
-    @app.post("/api/approve")
-    @signed_in
-    def api_approve():
-        expected = session.get("csrf")
-        if not expected or not secrets.compare_digest(request.headers.get("X-Form-Token", ""), expected):
-            return jsonify({"error": "This page is out of date"}), 400
-        body = request.get_json(silent=True) or {}
-        item_id, act = str(body.get("id", "")), body.get("act")
+    def record_approval(item_id: str, act: Any, user: dict[str, str], via: str) -> tuple[dict[str, Any], int]:
+        """The one place an approval happens: from the page, or from an automation acting for a named person."""
         if act not in ("approve", "skip"):
-            return jsonify({"error": "Unknown action"}), 400
+            return {"error": "Unknown action"}, 400
         item = approvable(item_id)
         if item is None:
-            return jsonify({"error": "That item is no longer in today's sweep"}), 404
-        user = current_user()
-        record = {"act": act, "by": user["name"], "at": datetime.now().strftime("%-I:%M %p"), "detail": ""}
+            return {"error": "That item is no longer in today's sweep"}, 404
+        record = {"act": act, "by": user["name"], "at": datetime.now().strftime("%-I:%M %p"), "detail": "", "via": via}
         if act == "approve" and item["slack"]:
             if user["provider"] == "demo":
                 result = connector.preview(item["slack"], context=item["label"], approved_by=user["name"])
@@ -255,14 +258,107 @@ def create_app(
                 result = connector.send(item["slack"], context=item["label"], approved_by=f"{user['name']} ({user['email']})")
             record["detail"] = {"sent": "Posted to Slack", "dry-run": "Preview only: nothing was posted", "error": result["detail"]}[result["result"]]
             if result["result"] == "error":
-                return jsonify({"error": result["detail"]}), 502
+                return {"error": result["detail"]}, 502
         elif act == "approve":
             record["detail"] = "Saved as approved. Calendar, email, and invoices stay drafts in this demo"
+        day = snapshot()["portfolio"]["sweep"]["today"]
         if user["provider"] == "demo":
             session["demoApprovals"] = {**session.get("demoApprovals", {}), item_id: record}
         else:
-            store.put_in(["approvals", snapshot()["portfolio"]["sweep"]["today"], item_id], record)
-        return jsonify(record)
+            store.put_in(["approvals", day, item_id], record)
+            # Demo clicks stay private to the visitor; real approvals are announced to automations.
+            hooks.emit("approval.recorded", {"day": day, "item": {"id": item_id, "label": item["label"]}, **record, "provider": user["provider"]})
+        return record, 200
+
+    @app.post("/api/approve")
+    @signed_in
+    def api_approve():
+        expected = session.get("csrf")
+        if not expected or not secrets.compare_digest(request.headers.get("X-Form-Token", ""), expected):
+            return jsonify({"error": "This page is out of date"}), 400
+        body = request.get_json(silent=True) or {}
+        record, status = record_approval(str(body.get("id", "")), body.get("act"), current_user(), "app")
+        return jsonify(record), status
+
+    # -- Automation API (/api/v1): bearer token, for n8n, GitHub Actions, scripts ---
+
+    def machine(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            state = token_status(env)
+            if state != "ok":
+                why = "AUTOMATION_TOKEN is not set." if state == "off" else "AUTOMATION_TOKEN must be at least 32 characters."
+                return jsonify({"error": f"The automation API is off. {why}"}), 503
+            if not token_ok(env, request.headers.get("Authorization")):
+                return jsonify({"error": "Missing or wrong bearer token."}), 401
+            return fn(*args, **kwargs)
+
+        return wrapper
+
+    def queue_item(i: dict[str, Any]) -> dict[str, Any]:
+        keys = ("id", "kind", "kindLabel", "level", "owner", "ownerName", "jobId", "title", "why", "due", "dueLabel", "channel", "to", "subject", "amount", "minutes")
+        return {k: i.get(k) for k in keys}
+
+    @app.get("/api/v1/morning")
+    @machine
+    def v1_morning():
+        snap = snapshot()
+        assumptions = load_json(Path(assumptions_path))
+        t = build_team_view(snap, assumptions)
+        day = snap["portfolio"]["sweep"]["today"]
+        done = store.get("approvals", {}).get(day, {})
+        waiting = [queue_item(i) for i in t["queue"] if i["id"] not in done]
+        return jsonify({
+            "date": day,
+            "company": t["company"],
+            "jobs": t["counts"],
+            "blocked": sum(1 for i in waiting if i["level"] == "blocked"),
+            "waiting": len(waiting),
+            "estimatedMinutesDrafted": round(sum(i["minutes"] or 0 for i in waiting)),
+            "sinceYesterday": t["since"]["counts"],
+            "items": waiting,
+            "brief": build_brief(snap, assumptions),
+        })
+
+    @app.get("/api/v1/queue")
+    @machine
+    def v1_queue():
+        snap = snapshot()
+        t = build_team_view(snap, load_json(Path(assumptions_path)))
+        owner, level = request.args.get("owner"), request.args.get("level")
+        items = [queue_item(i) for i in t["queue"] if owner in (None, i["owner"]) and level in (None, i["level"])]
+        return jsonify({"date": snap["portfolio"]["sweep"]["today"], "items": items})
+
+    @app.post("/api/v1/brief/send")
+    @machine
+    def v1_brief_send():
+        body = request.get_json(silent=True) or {}
+        snap = snapshot()
+        day = snap["portfolio"]["sweep"]["today"]
+        if store.get("briefSent") == day and not body.get("force"):
+            return jsonify({"result": "already-sent", "date": day})
+        result = send_brief(connector, build_brief(snap, load_json(Path(assumptions_path))))
+        if result["result"] == "error":
+            return jsonify({"result": "error", "detail": result["detail"]}), 502
+        if result["result"] == "sent":
+            store.set("briefSent", day)
+            hooks.emit("brief.sent", {"day": day, "channel": connector.config.channel})
+        return jsonify({"result": result["result"], "detail": result["detail"], "date": day})
+
+    @app.post("/api/v1/approvals")
+    @machine
+    def v1_approve():
+        body = request.get_json(silent=True) or {}
+        by = body.get("by") or {}
+        name, email = str(by.get("name", "")).strip(), str(by.get("email", "")).strip()
+        if not name or "@" not in email:
+            return jsonify({"error": "Say who approved it: by.name and by.email are required."}), 400
+        try:
+            auth.check_allowed(email, env)
+        except auth.AuthError as error:
+            return jsonify({"error": str(error)}), 403
+        record, status = record_approval(str(body.get("id", "")), body.get("act"), {"name": name[:80], "email": email[:120], "provider": "automation"}, "api")
+        return jsonify(record), status
 
     # -- JSON API: the same data the page renders --------------------------
 
