@@ -469,3 +469,34 @@ details summary { cursor: pointer; font-weight: 600; margin: 6px 0; min-height: 
 .since-group ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .since-group li { font-size: 14px; line-height: 1.35; overflow-wrap: anywhere; }
 .jchanges { list-style: none; margin: 2px 0 0; padding: 0; display: flex; flex-direction: column; gap: 2px; font-size: 12.5px; font-weight: 600; }
+
+/* Title hierarchy: titles must read at a glance on a phone, apart from body text.
+   Section titles: bigger, bolder, with a job-site orange rule. Card titles: bold ink, one step above body. */
+:root { --title-rule: var(--client); }
+section > h2, .section-head h2, .mgroup h2 {
+  font-weight: 700; font-size: clamp(22px, 2.6vw, 26px); line-height: 1.2; letter-spacing: -.005em;
+  color: var(--ink); border-left: 4px solid var(--title-rule); padding-left: 10px; margin-bottom: 10px;
+}
+.section-head { margin-bottom: 4px; }
+.section-head h2 { margin-bottom: 0; }
+.qcard h3 { font-weight: 700; font-size: 17px; color: var(--ink); }
+.jcard > b { font: 700 16px/1.3 var(--sans); color: var(--ink); }
+.col h3 { font-weight: 700; color: var(--ink); }
+.day h3 { font: 700 15px var(--sans); color: var(--ink); padding-bottom: 4px; border-bottom: 2px solid var(--line-strong); margin-bottom: 4px; }
+.day.weekend h3 { color: var(--muted); border-bottom-color: var(--line); }
+.since-title { font-weight: 700; font-size: 20px; border-left: 4px solid var(--title-rule); padding-left: 10px; line-height: 1.2; }
+.since .since-group h3 { font-weight: 700; font-size: 12.5px; }
+.since .since-group.worse h3 { color: var(--bad); } .since .since-group.better h3 { color: var(--good); } .since .since-group.news h3 { color: var(--accent); }
+.since-group li b { font-weight: 700; }
+.layer h3 { font-weight: 700; }
+/* Small all-caps labels ("MORNING SWEEP · THU, MAR 12", "FOUND THIS MORNING", "CREW", "MILESTONE"):
+   bold, a step larger, and in colour instead of grey, so they work as signposts. */
+.eyebrow, .found-label { font-size: 13px; font-weight: 700; letter-spacing: .09em; color: var(--title-rule); }
+.ev-kind { font-size: 12px; color: var(--ink); }
+.signin-label { font-weight: 700; color: var(--ink); }
+/* Each look-ahead label keeps one colour everywhere, so a glance down the list sorts it. */
+.ev-kind.k-crew { color: var(--client); }
+.ev-kind.k-milestone { color: var(--accent); }
+.ev-kind.k-inspection { color: var(--warn); }
+.ev-kind.k-quote-due { color: var(--good); }
+.ev-kind.k-permit { color: var(--bad); }
