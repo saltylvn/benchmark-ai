@@ -85,6 +85,7 @@ export const PORTFOLIO: Portfolio = {
       clientEmail: "ops@cedar.example", pm: "tomas", stage: "in-progress", contract: 410000, hoursThisWeek: 31,
       lastClientUpdate: "2026-03-11", slackChannel: "#job-j1019",
       permit: { id: "PC-2025-0533", expires: "2026-03-25" },
+      closing: "2026-05-29",
       milestones: [
         { id: "foundation", name: "Foundation", planned: "2025-12-12", done: "2025-12-15", billPct: 0.15, invoiced: true },
         { id: "framing", name: "Framing", planned: "2026-02-06", done: "2026-02-13", billPct: 0.2, invoiced: true },
@@ -98,6 +99,52 @@ export const PORTFOLIO: Portfolio = {
       clientEmail: "t.brooks@example.com", pm: "tomas", stage: "lead", contract: 17800, hoursThisWeek: 6,
       lastClientUpdate: "2026-03-09", quoteDue: "2026-03-13", slackChannel: "#job-j1047",
       milestones: [{ id: "quote", name: "Quote sent", planned: "2026-03-13", done: null }],
+    },
+    // New homes: construction-loan draws, buyer selections, long-lead orders, and a closing date.
+    {
+      id: "J-1050", name: "Ridgeview Lot 14", address: "14 Ridgeview Ct", lot: "Lot 14 · Ridgeview", client: "Morgan Park (FAKE)",
+      clientEmail: "morgan.park@example.com", pm: "renee", stage: "in-progress", contract: 548000, hoursThisWeek: 8,
+      lastClientUpdate: "2026-03-10", slackChannel: "#job-j1050", closing: "2026-06-26",
+      lender: { name: "Granite Valley Bank (FAKE)", email: "draws@granitevalley.example" },
+      milestones: [
+        { id: "foundation", name: "Foundation", planned: "2026-01-16", done: "2026-01-16", billPct: 0.15, invoiced: true },
+        { id: "framing", name: "Framing", planned: "2026-02-13", done: "2026-02-17", billPct: 0.2, invoiced: true },
+        { id: "dryin", name: "Dried in", planned: "2026-03-06", done: "2026-03-10", billPct: 0.15, invoiced: false },
+        { id: "rough", name: "Rough-ins", planned: "2026-03-27", done: null, billPct: 0.15 },
+        { id: "drywall", name: "Insulation and drywall", planned: "2026-04-17", done: null, billPct: 0.1 },
+        { id: "finishes", name: "Finishes", planned: "2026-05-22", done: null, billPct: 0.15 },
+        { id: "final", name: "Final inspection and CO", planned: "2026-06-12", done: null, billPct: 0.1 },
+      ],
+      selections: [
+        { item: "Kitchen cabinets", due: "2026-03-10", done: false },
+        { item: "Tile and flooring", due: "2026-03-18", done: false },
+        { item: "Exterior paint", due: "2026-04-10", done: false },
+      ],
+      orders: [
+        { item: "Cabinets", vendor: "Hearthline Cabinetry (FAKE)", vendorEmail: "orders@hearthline.example", leadDays: 42, needBy: "2026-04-24", ordered: false },
+        { item: "Windows", vendor: "ClearView Windows (FAKE)", vendorEmail: "orders@clearview.example", leadDays: 42, needBy: "2026-03-02", ordered: true },
+      ],
+    },
+    {
+      id: "J-1051", name: "Oak Hollow Lot 6", address: "6 Oak Hollow Ln", lot: "Lot 6 · Oak Hollow", client: "Dana Whitfield (FAKE)",
+      clientEmail: "dana.whitfield@example.com", pm: "jordan", stage: "scheduled", contract: 465000, hoursThisWeek: 6,
+      lastClientUpdate: "2026-03-11", slackChannel: "#job-j1051", closing: "2026-08-28",
+      lender: { name: "Summit Federal Credit Union (FAKE)", email: "draws@summitfcu.example" },
+      permit: { id: "PC-2026-0201", expires: "2026-12-01" },
+      milestones: [
+        { id: "foundation", name: "Foundation", planned: "2026-03-23", done: null, billPct: 0.15 },
+        { id: "framing", name: "Framing", planned: "2026-04-17", done: null, billPct: 0.2 },
+        { id: "dryin", name: "Dried in", planned: "2026-05-08", done: null, billPct: 0.15 },
+        { id: "rough", name: "Rough-ins", planned: "2026-05-29", done: null, billPct: 0.15 },
+        { id: "drywall", name: "Insulation and drywall", planned: "2026-06-19", done: null, billPct: 0.1 },
+        { id: "finishes", name: "Finishes", planned: "2026-07-24", done: null, billPct: 0.15 },
+        { id: "final", name: "Final inspection and CO", planned: "2026-08-14", done: null, billPct: 0.1 },
+      ],
+      selections: [{ item: "Exterior colors and roofing", due: "2026-03-16", done: false }],
+      orders: [
+        { item: "Roof trusses", vendor: "Truss Works (FAKE)", vendorEmail: "orders@trussworks.example", leadDays: 35, needBy: "2026-04-06", ordered: false },
+        { item: "Windows", vendor: "ClearView Windows (FAKE)", vendorEmail: "orders@clearview.example", leadDays: 42, needBy: "2026-04-27", ordered: false },
+      ],
     },
   ],
   subs: [

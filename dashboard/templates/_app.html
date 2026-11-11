@@ -166,6 +166,7 @@
               <div class="jtop"><span class="mono">{{ j.jobId }}</span><span class="pill {{ j.status }}">{{ j.statusLabel }}</span></div>
               <b>{{ j.name }}</b>
               <span class="muted small">{{ j.pmName }} · {{ j.client }}</span>
+              {% if j.lot or j.closingLabel %}<span class="closing">{% if j.lot %}{{ j.lot }}{% endif %}{% if j.lot and j.closingLabel %} · {% endif %}{% if j.closingLabel %}Closing {{ j.closingLabel }}{% endif %}</span>{% endif %}
               <div class="progress" role="img" aria-label="{{ j.percent }}% complete"><i style="width:{{ j.percent }}%"></i></div>
               <span class="small"><b>{{ j.percent }}%</b> · {{ j.nextLabel }}</span>
               {% if j.status != 'on-track' %}<p class="reason">{{ j.reason }}</p>{% endif %}
@@ -176,7 +177,7 @@
                 <ol class="mlist">
                   {% for m in j.milestones %}<li class="{{ m.state }}"><span class="m-dot {{ m.state }}"></span>{{ m.name }} <span class="muted">· {{ m.planned }}{% if m.done %} · done {{ m.done }}{% elif m.state == 'late' %} · {{ m.daysLate }} days late{% endif %}</span></li>{% endfor %}
                 </ol>
-                <p class="small muted">{{ j.address }} · ${{ '{:,.0f}'.format(j.contract) }} · <span class="mono">{{ j.channel }}</span></p>
+                <p class="small muted">{{ j.address }} · ${{ '{:,.0f}'.format(j.contract) }} · <span class="mono">{{ j.channel }}</span>{% if j.lender %} · Lender: {{ j.lender }}{% endif %}</p>
                 {% if not static_mode %}<a class="small" href="{{ url_for('client_page', job_id=j.jobId) }}">See what {{ j.client.split(' ')[0] }} sees →</a>{% endif %}
               </details>
             </article>

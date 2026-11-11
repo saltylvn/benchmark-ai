@@ -28,7 +28,15 @@ KIND_LABEL = {
     "late-milestone": "Late",
     "quote-due": "Quote due",
     "workload": "Workload",
+    # New builds
+    "draw": "Loan draw",
+    "selections": "Selections",
+    "order": "Order",
+    "closing": "Closing",
 }
+# Drafts whose button and channel depend on the task, not just the draft kind.
+TASK_ACTION = {"drawRequest": "Approve draw request", "orderCheck": "Approve order email", "selectionNudge": "Approve email"}
+TASK_CHANNEL = {"drawRequest": "Draw request"}
 DRAFT_ACTION = {
     "slack": "Approve & send to Slack",
     "email": "Approve email",
@@ -109,12 +117,12 @@ def today_queue(p: dict[str, Any], minutes: dict[str, float], run: dict[str, Any
                 "why": r.get("detail", ""),
                 "due": due,
                 "dueLabel": "Overdue" if days is not None and days < 0 else "Today" if days == 0 else "Tomorrow" if days == 1 else short(due),
-                "channel": DRAFT_CHANNEL[d["kind"]],
+                "channel": TASK_CHANNEL.get(d["task"], DRAFT_CHANNEL[d["kind"]]),
                 "to": d["to"],
                 "subject": d["subject"],
                 "body": d["body"],
                 "amount": d.get("amount"),
-                "action": DRAFT_ACTION[d["kind"]],
+                "action": TASK_ACTION.get(d["task"], DRAFT_ACTION[d["kind"]]),
                 "minutes": minutes.get(d["task"], 0),
             }
         )
@@ -227,6 +235,9 @@ def job_cards(p: dict[str, Any]) -> list[dict[str, Any]]:
                 "nextLabel": f"{s['nextMilestone']['name']} · {short(s['nextMilestone']['planned'])}" if s.get("nextMilestone") else "All milestones done",
                 "risks": [{"label": KIND_LABEL.get(r["kind"], r["kind"]), "level": r["level"], "title": r["title"]} for r in risks_by_job.get(s["jobId"], [])],
                 "changes": changed.get(s["jobId"], []),
+                "lot": j.get("lot"),
+                "closingLabel": short(j["closing"]) if j.get("closing") else None,
+                "lender": (j.get("lender") or {}).get("name"),
             }
         )
     return cards
@@ -307,6 +318,16 @@ def lookahead(p: dict[str, Any], days: int = 14) -> list[dict[str, Any]]:
             add(j["inspection"]["date"], "Inspection", j["inspection"]["name"], j["id"], j["inspection"].get("who") or "Nobody assigned yet", None if j["inspection"].get("who") else "watch")
         if j.get("quoteDue"):
             add(j["quoteDue"], "Quote due", f"Quote to {j['client']}", j["id"])
+        # New builds: buyer selections, last day to order long-lead materials, closing.
+        for sel in j.get("selections") or []:
+            if not sel["done"]:
+                add(sel["due"], "Selections", sel["item"], j["id"], "Buyer has not chosen yet", "watch")
+        for o in j.get("orders") or []:
+            if not o["ordered"]:
+                order_by = (_d(o["needBy"]) - timedelta(days=o["leadDays"])).isoformat()
+                add(order_by, "Order by", o["item"], j["id"], f"{o['leadDays']}-day lead time · {o['vendor']}", "watch")
+        if j.get("closing"):
+            add(j["closing"], "Closing", f"Close with {j['client']}", j["id"])
     for b in data["bookings"]:
         sub = subs[b["subId"]]
         flag = None
@@ -426,6 +447,10 @@ def team_ledger(p: dict[str, Any], assumptions: dict[str, Any]) -> dict[str, Any
         "clientUpdate": "Write a client update",
         "conflictResolution": "Sort out a double-booked crew",
         "reassign": "Rebalance PM workload",
+        "drawRequest": "Assemble a construction-loan draw request",
+        "selectionNudge": "Chase a buyer for selections",
+        "orderCheck": "Check and place a long-lead order",
+        "closingCheck": "Check a closing date against the schedule",
     }
     for task, label in labels.items():
         n = sum(1 for d in drafts if d["task"] == task)

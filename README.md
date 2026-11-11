@@ -196,7 +196,18 @@ What is on it, top to bottom:
 | **Approval queue · Slack** | The executor's Slack draft and the morning brief, each with **Approve & send**. Every press is written to an audit log with the approver's name and the exact payload. |
 | **Under the hood** | The full trace and JSON endpoints: `/api/runs/thursday`, `/api/snapshot`, `/api/slack/status`, `/api/slack/audit`. |
 
-### Online with Render
+### New-home builders
+
+The main audience is PMs who build new homes. On top of the remodel checks, the morning check also:
+
+- **Loan draws:** when a milestone is done on a home with a construction lender, it drafts a draw request to the lender (not an invoice to the buyer). The amount is computed by code.
+- **Buyer selections:** cabinets, tile and colors due within a week get a drafted reminder to the buyer. Overdue selections are flagged as blocked.
+- **Long-lead orders:** windows, trusses and cabinets are checked against the last day to order them (the need-by date minus the lead time). Anything that can no longer arrive on time is blocked.
+- **Closing dates:** the last milestone, plus any slip, plus 14 days for the final inspection, certificate of occupancy (CO) and walkthrough, must land before closing.
+
+Jobs can carry `lot`, `lender`, `closing`, `selections` and `orders` (see `src/portfolio/types.ts`). The sample data includes two new homes: Ridgeview Lot 14 and Oak Hollow Lot 6.
+
+## Online with Render
 
 To put the dashboard on a public website that works on a MacBook, iPad, or iPhone, follow [docs/DEPLOY.md](docs/DEPLOY.md). It's free on Render's free plan, which sleeps when nobody is using it.
 

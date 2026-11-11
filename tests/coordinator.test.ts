@@ -81,7 +81,7 @@ describe("coordinator sweep", () => {
   });
 
   it("reports one step per check with what it looked at and found", () => {
-    assert.equal(sweep.steps.length, 8);
+    assert.equal(sweep.steps.length, 11);
     assert.equal(
       sweep.steps.reduce((n, s) => n + s.found, 0),
       sweep.risks.filter((r) => r.kind !== "late-milestone").length,
@@ -129,7 +129,7 @@ describe("helpers", () => {
 describe("digest", () => {
   it("puts every job and every blocker on one page", () => {
     for (const job of PORTFOLIO.jobs) assert.match(sweep.digest, new RegExp(job.id));
-    assert.match(sweep.digest, /8 jobs: 3 on track, 4 at risk, 1 behind/);
+    assert.match(sweep.digest, /10 jobs: 3 on track, 6 at risk, 1 behind/);
     assert.match(sweep.digest, /\*Blocked\*/);
   });
 });

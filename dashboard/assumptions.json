@@ -23,7 +23,11 @@
     "clientUpdate": 12,
     "conflictResolution": 20,
     "reassign": 10,
-    "statusDigest": 30
+    "statusDigest": 30,
+    "drawRequest": 25,
+    "selectionNudge": 10,
+    "orderCheck": 15,
+    "closingCheck": 15
   },
   "teamReviewMinutesPerDraft": 1,
   "workDaysPerWeek": 5

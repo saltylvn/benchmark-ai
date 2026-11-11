@@ -47,6 +47,33 @@ export interface Job {
   inspection?: { name: string; date: string; who?: string };
   quoteDue?: string;
   slackChannel: string;
+  /** Lot or community, for example "Lot 14 · Ridgeview". */
+  lot?: string;
+  /** Construction lender. With one, completed milestones become draw requests to the lender, not invoices to the buyer. */
+  lender?: { name: string; email: string };
+  /** Target closing date with the buyer. */
+  closing?: string;
+  /** Buyer selections (cabinets, tile, fixtures) the schedule waits on. */
+  selections?: Selection[];
+  /** Long-lead materials (windows, trusses, cabinets) that must be ordered before a phase. */
+  orders?: Order[];
+}
+
+export interface Selection {
+  item: string;
+  due: string;
+  done: boolean;
+}
+
+export interface Order {
+  item: string;
+  vendor: string;
+  vendorEmail: string;
+  /** Days from order to delivery. */
+  leadDays: number;
+  /** The date the material must be on site. */
+  needBy: string;
+  ordered: boolean;
 }
 
 export interface Sub {
@@ -92,7 +119,11 @@ export type RiskKind =
   | "double-booking"
   | "late-milestone"
   | "quote-due"
-  | "workload";
+  | "workload"
+  | "draw"
+  | "selections"
+  | "order"
+  | "closing";
 
 export interface Risk {
   id: string;
