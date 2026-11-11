@@ -68,7 +68,7 @@ MANIFEST = {
     "background_color": "#f3f0e8",
     "theme_color": "#221f1a",
     "icons": [
-        {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+        {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"},
         {"src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png"},
         {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml"},
     ],
