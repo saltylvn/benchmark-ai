@@ -14,7 +14,7 @@
     "demo:trace": "tsx src/cli.ts trace",
     "demo:all": "tsx src/cli.ts all",
     "demo:live": "tsx src/cli.ts thursday --live",
-    "build:web": "esbuild web/main.ts --bundle --minify --format=esm --target=es2022 --outfile=docs/app.js",
+    "build:web": "esbuild web/main.ts --bundle --minify --format=esm --target=es2022 --outfile=demo/app.js",
     "preview": "npm run build:web && node scripts/preview.mjs",
     "test": "tsx --test tests/*.test.ts",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.web.json",

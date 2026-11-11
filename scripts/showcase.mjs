@@ -774,13 +774,13 @@ async function renderPngs() {
     writeFileSync(new URL(`${name}.png`, OUT), Buffer.from(image.data, "base64"));
     console.log("rendered", name);
   }
-  const og = readFileSync(new URL("../../og.svg", OUT), "utf8");
+  const og = readFileSync(new URL("../../../demo/og.svg", OUT), "utf8");
   writeFileSync("/tmp/showcase-og.html", `<!DOCTYPE html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:${BG}}</style></head><body>${og}</body></html>`);
   await call("Emulation.setDeviceMetricsOverride", { width: 1200, height: 630, deviceScaleFactor: 1, mobile: false });
   await call("Page.navigate", { url: "file:///tmp/showcase-og.html" });
   await new Promise((resolve) => setTimeout(resolve, 250));
   const ogImage = await call("Page.captureScreenshot", { format: "png", fromSurface: true });
-  writeFileSync(new URL("../../og.png", OUT), Buffer.from(ogImage.data, "base64"));
+  writeFileSync(new URL("../../../demo/og.png", OUT), Buffer.from(ogImage.data, "base64"));
   console.log("rendered og");
   await send("Target.closeTarget", { targetId: target.targetId });
   ws.close();
@@ -805,7 +805,7 @@ function ogCard() {
 mkdirSync(OUT, { recursive: true });
 const files = buildAll();
 for (const [name, svg] of Object.entries(files)) writeFileSync(new URL(`${name}.svg`, OUT), svg);
-writeFileSync(new URL("../../og.svg", OUT), ogCard());
+writeFileSync(new URL("../../../demo/og.svg", OUT), ogCard());
 console.log("wrote", Object.keys(files).length, "svg");
 
 if (!process.argv.includes("--svg-only")) {
