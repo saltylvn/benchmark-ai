@@ -640,7 +640,6 @@ section, .since { border-color: var(--line); }
 .tabs a.on { background: var(--ink); color: var(--on-ink); }
 
 /* Brand mark: the house icon instead of a letter. */
-.mark { background: #1d1a16 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E %3Cdefs%3E %3ClinearGradient id='bg' x1='0' y1='0' x2='0' y2='1'%3E %3Cstop offset='0' stop-color='%232a241d'/%3E %3Cstop offset='1' stop-color='%231a1612'/%3E %3C/linearGradient%3E %3CradialGradient id='sun' cx='0.5' cy='1.02' r='0.62'%3E %3Cstop offset='0' stop-color='%23e8862c' stop-opacity='0.55'/%3E %3Cstop offset='0.55' stop-color='%23b15e10' stop-opacity='0.18'/%3E %3Cstop offset='1' stop-color='%23b15e10' stop-opacity='0'/%3E %3C/radialGradient%3E %3C/defs%3E %3Crect width='512' height='512' rx='112' fill='url%28%23bg%29'/%3E %3Crect width='512' height='512' rx='112' fill='url%28%23sun%29'/%3E %3Cpath d='M100 254 L256 118 L412 254' fill='none' stroke='%23fffdf9' stroke-width='42' stroke-linecap='round' stroke-linejoin='round'/%3E %3Cpath d='M146 232 V392 Q146 404 158 404 H354 Q366 404 366 392 V232' fill='none' stroke='%23fffdf9' stroke-width='42' stroke-linecap='round' stroke-linejoin='round'/%3E %3Cpath d='M200 316 L244 358 L318 276' fill='none' stroke='%23f0913a' stroke-width='44' stroke-linecap='round' stroke-linejoin='round'/%3E %3C/svg%3E") center / cover no-repeat; color: transparent; overflow: hidden; }
 
 /* Proof strip: flat dark panel, like a canvas. */
 .land-proof { background: var(--ink); }
@@ -897,3 +896,28 @@ section, .since, .qcard, .jcard, .kpi, .pain, .life, .eng, .faq details, .welcom
 
 /* Brand mark: the roof + check logo (flat navy), shared by the header, landing and sign-in card. */
 .mark { background: #2c3a84 url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22%3E %3Crect width=%22512%22 height=%22512%22 rx=%22116%22 fill=%22%232c3a84%22/%3E %3Cpath d=%22M116 262 L256 140 L396 262%22 fill=%22none%22 stroke=%22%23ffffff%22 stroke-width=%2236%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E %3Cpath d=%22M176 320 L232 374 L338 268%22 fill=%22none%22 stroke=%22%239fb6ff%22 stroke-width=%2238%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E %3C/svg%3E") center / cover no-repeat; color: transparent; overflow: hidden; }
+
+/* =====================================================================================
+   Consistency pass: one palette for every surface in both modes.
+   Day-plan blocks, agent cards and the workflow canvas use the same navy / green /
+   amber / slate as the rest of the app; badges keep readable contrast in dark mode.
+   ===================================================================================== */
+:root {
+  --focus: #2c3a84; --client: #a8640f; --personal: #1e7a50; --internal: #4e6a7a;
+  --standup: #6b6f7a; --admin: #8a8275; --prep: #e9dcc3; --prep-ink: #5c4a28;
+  --break: #e2dccf; --break-ink: #3f3b34; --on-bad: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --focus: #4458a8; --client: #c98636; --personal: #2f8f63; --internal: #5f8292;
+    --standup: #6d7580; --admin: #8d877d; --prep: #d9c49a; --prep-ink: #3a2e16;
+    --break: #cfc8bb; --break-ink: #2a261f; --on-bad: #1b0d10;
+  }
+}
+:root[data-theme="dark"] {
+  --focus: #4458a8; --client: #c98636; --personal: #2f8f63; --internal: #5f8292;
+  --standup: #6d7580; --admin: #8d877d; --prep: #d9c49a; --prep-ink: #3a2e16;
+  --break: #cfc8bb; --break-ink: #2a261f; --on-bad: #1b0d10;
+}
+.wf-brand { stroke: var(--accent); }
+@media (max-width: 640px) { .tabs .count, .tabs a.on .count { color: var(--on-bad); } }

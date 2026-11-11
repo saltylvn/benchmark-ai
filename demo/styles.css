@@ -1057,3 +1057,36 @@ button:focus-visible, a:focus-visible, .block:focus-visible {
   html { scroll-behavior: auto; }
   .step { animation: none; }
 }
+
+/* =====================================================================================
+   Match the main app: paper-and-ink light mode, cool navy dark mode, one navy/blue
+   accent for actions, no background glow, flat cards.
+   ===================================================================================== */
+:root {
+  --bg: #f3f0e9; --paper: #fdfcf8; --ink: #1f1d1a; --muted: #57514a; --prose: #3a342c;
+  --line: #ddd6c9; --line-strong: #c4bba9; --grid: rgba(196, 187, 169, 0.6);
+  --focus: #2c3a84; --focus-fill: #2c3a84; --urgent: #9e2a3f; --urgent-fill: #9e2a3f;
+  --client: #a8640f; --client-fill: #a8640f; --personal: #1e7a50; --internal: #4e6a7a;
+  --bad: #9e2a3f; --good: #1e7a50; --shadow: none; --glow: transparent;
+  --header: rgba(243, 240, 233, 0.95); --on-ink: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1016; --paper: #151922; --ink: #eef1f6; --muted: #a1abb9; --prose: #d7dce5;
+    --line: #232a36; --line-strong: #333c4b; --grid: rgba(238, 241, 246, 0.10);
+    --focus: #8fb0ff; --focus-fill: #4458a8; --urgent: #f08f98; --urgent-fill: #b33b45;
+    --client: #f0b46a; --client-fill: #c98636; --personal: #2f8f63; --internal: #5f8292;
+    --bad: #f08f98; --good: #8fd8b3; --shadow: none; --glow: transparent;
+    --header: rgba(13, 16, 22, 0.95); --on-ink: #0d1016; --clash: #eef1f6;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1016; --paper: #151922; --ink: #eef1f6; --muted: #a1abb9; --prose: #d7dce5;
+  --line: #232a36; --line-strong: #333c4b; --grid: rgba(238, 241, 246, 0.10);
+  --focus: #8fb0ff; --focus-fill: #4458a8; --urgent: #f08f98; --urgent-fill: #b33b45;
+  --client: #f0b46a; --client-fill: #c98636; --personal: #2f8f63; --internal: #5f8292;
+  --bad: #f08f98; --good: #8fd8b3; --shadow: none; --glow: transparent;
+  --header: rgba(13, 16, 22, 0.95); --on-ink: #0d1016; --clash: #eef1f6;
+}
+/* The play control is the main action: same navy pill as the app, not the alert red. */
+.controls .primary { background: var(--focus-fill); border-color: var(--focus-fill); color: #ffffff; }
