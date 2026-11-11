@@ -141,7 +141,7 @@
           <ul>
             {% for e in d.events %}
               <li class="ev {{ e.flag or '' }}" data-owner="{{ e.owner }}">
-                <span class="ev-kind">{{ e.kind }}</span>
+                <span class="ev-kind k-{{ e.kind|lower|replace(' ', '-') }}">{{ e.kind }}</span>
                 <span class="ev-main"><b>{{ e.title }}</b> <span class="muted">· {{ e.jobId }} {{ e.job }} · {{ e.ownerName.split(' ')[0] }}</span>{% if e.note %}<br><small class="{{ 'warn-text' if e.flag else 'muted' }}">{{ e.note }}</small>{% endif %}</span>
               </li>
             {% endfor %}

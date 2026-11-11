@@ -494,3 +494,9 @@ section > h2, .section-head h2, .mgroup h2 {
 .eyebrow, .found-label { font-size: 13px; font-weight: 700; letter-spacing: .09em; color: var(--title-rule); }
 .ev-kind { font-size: 12px; color: var(--ink); }
 .signin-label { font-weight: 700; color: var(--ink); }
+/* Each look-ahead label keeps one colour everywhere, so a glance down the list sorts it. */
+.ev-kind.k-crew { color: var(--client); }
+.ev-kind.k-milestone { color: var(--accent); }
+.ev-kind.k-inspection { color: var(--warn); }
+.ev-kind.k-quote-due { color: var(--good); }
+.ev-kind.k-permit { color: var(--bad); }
