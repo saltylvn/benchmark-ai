@@ -1,358 +1,157 @@
 # Benchmark
 
-A team of agents that gives a construction project manager the day back, and stops at drafts.
+**An agent team for new-home builders. Every morning it checks every home, trade and project manager, then drafts the follow-ups. A person approves anything before it leaves the building.**
 
 [![CI](https://github.com/saltylvn/benchmark-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/saltylvn/benchmark-ai/actions/workflows/ci.yml)
+&nbsp;**Live demo:** [benchmark-qypb.onrender.com](https://benchmark-qypb.onrender.com) (tap **View the demo**; the free host may take ~1 minute to wake)
 
-The badge points at the CI workflow on the dashboard pull request. It stays empty until that workflow is on `main`.
+<p>
+  <img src="docs/images/screens/landing-phone.jpg" width="24%" alt="Landing page on a phone">
+  <img src="docs/images/screens/today-phone.jpg" width="24%" alt="Today: what is blocked and what is already drafted">
+  <img src="docs/images/screens/draw-request-phone.jpg" width="24%" alt="A drafted construction-loan draw request waiting for approval">
+</p>
+<img src="docs/images/screens/timeline-desktop.jpg" width="74%" alt="Every milestone across the team on one timeline">
 
-Benchmark takes one fictional Thursday, reads a double-booked calendar and a homeowner email, and leaves calendar, email, and Slack drafts for Maria Alvarez to approve. Nothing is sent.
+---
 
-## Tech stack
+## The problem
 
-TypeScript on Node 20 or newer. Tests use `node:test` through `tsx`. The page is `web/main.ts` bundled by esbuild into `docs/app.js`. Schedule decisions stay in code. An optional OpenAI call can restyle prose only. A Python dashboard that reads an exported snapshot is in progress on a separate branch. This repository does not call it yet.
+A new-home PM runs 6 to 10 houses at once, each with a lender, a buyer, 15 to 25 trades and a closing date. Most of the day goes to checking things nobody else is checking: is the electrician's insurance current, were the trusses ordered in time, did the buyer pick cabinets, has the draw been requested, will we still make closing? Each miss costs real money.
 
-## What I built, and the design decisions
+## What Benchmark does
 
-The runnable piece is one Thursday for Maria Alvarez at Summit Ridge Builders. Intake reads the day, Scheduling proposes it, a checklist can reject the first plan, Drafting writes unsent drafts, and Briefing writes the call card. The supervisor is the only router. Drafts stay `status: "draft"` because there is no send path. Mock mode is the default even when an API key is present. The page in `docs/` is the same function as the CLI, and it can be copied out and published on its own.
-
-## What's next
-
-The dashboard branch owns the single time ledger in `dashboard/assumptions.json`, and a later compliance-and-billing specialist. That specialist is not the drafting step in this demo. Slack live-send is off by default, sends only after a PM approves. Screenshots of the dashboard belong here after that branch merges. A calendar connector with the same two locks is planned, not built.
-
-The playable story is one Thursday for Maria Alvarez at Summit Ridge Builders. Names, the address, and the job id are invented. Nothing in the demo is sent.
-
-![Thursday demo in light mode](docs/images/thursday-light.png)
-
-![Benchmark architecture](docs/images/architecture.svg)
-
-![Thursday workflow, from Sam's request to unsent drafts](docs/images/workflow.svg)
-
-## How it works
-
-One lead, four specialists. The lead is the supervisor. It does not price the job and it does not text the crew. It hands the work to one specialist at a time, and it is the only one that decides who goes next.
-
-| Specialist | Job on this Thursday |
+| Every morning the Coordinator agent checks | and drafts |
 | --- | --- |
-| **Intake** | Reads the calendar and the inbox, then pulls the job file: what is known, what to ask, and what not to promise. |
-| **Scheduling** | Proposes a day. The first pass clears calls early. If that pushes the estimate block out of the morning, the lead rejects it and Scheduling tries again with the morning held. |
-| **Drafting** | Turns the approved day into calendar changes, an email draft, and a Slack draft. The expired insurance certificate is already on the job file. |
-| **Briefing** | Writes the morning brief: three outcomes and a call card. |
+| Sub insurance against booked work | A Slack nudge to the sub |
+| Permits and inspections | A permit extension request; who meets the inspector |
+| Lien waivers before final payment | The waiver chase |
+| Completed milestones | A **construction-loan draw request to the lender** (or an invoice) with the amount computed by code |
+| Buyer selections due or overdue | A reminder to the buyer |
+| Long-lead orders (need-by date minus lead time) | An order email to the vendor |
+| Closing dates against the projected finish | A heads-up to the owner and PM |
+| Crews double-booked, quotes due, late milestones | A proposed resolution |
+| PM workload against capacity | A handoff proposal |
 
-The lead's check is a named checklist. It scores the plan and hands it back. It does not quietly rewrite the day. Specialists do not call each other. The header shows HubSpot, Google Calendar, and Slack. Those are the systems the day is about. Mock mode reads the Thursday fixture through the toolkit and does not call them.
+The PM gets one queue: **Approve** or **Later** on each card, a "since yesterday" diff, a two-week look-ahead, a status board and timeline, team load, an 8:00 Slack brief, and a guided tour. It works on iPhone, iPad and desktop and installs to the home screen.
+
+---
+
+## Architecture
 
 ```mermaid
 flowchart LR
-  S[Benchmark<br/>supervisor] --> I[Intake]
-  I --> P[Scheduling]
-  P --> S
-  S -->|rule broken| P
-  S -->|approved| D[Drafting]
-  D --> B[Briefing]
+  subgraph Agents["TypeScript agent layer (decides)"]
+    direction TB
+    C[Coordinator<br/>11 checks, pure function] --> D[changes.ts<br/>diff vs yesterday]
+    S[Supervisor] --> I[Intake] --> R[Researcher] --> P[Planner] --> K[Critic]
+    K -- reject --> P
+    K -- approve --> E[Executor<br/>drafts only] --> B[Brief writer]
+    G[guard.ts<br/>fact-preserving<br/>rewrite guard]
+  end
+  Agents -- "npm run export:dashboard<br/>snapshot.json (schema 1, drift-tested)" --> F
+  subgraph F["Python service (reads, presents, integrates)"]
+    direction TB
+    W[Flask app<br/>Today · Jobs · Team · Messages · Under the hood]
+    A[OAuth: Google, Slack<br/>email allowlist]
+    SL[Slack connector<br/>bot or webhook, audit log]
+    BR[8:00 brief scheduler]
+    ST[(JsonStore<br/>atomic writes)]
+  end
+  F --> Slack[(Slack)]
+  F --> Users((PMs on phone,<br/>iPad, desktop))
+  F -. deploy .-> Render[Render via render.yaml<br/>gunicorn, health check]
 ```
 
-```mermaid
-sequenceDiagram
-  participant S as Supervisor
-  participant I as Intake
-  participant P as Scheduling
-  participant D as Drafting
-  participant B as Briefing
-  S->>I: calendar and inbox
-  I->>P: conflicts and the job file
-  P->>S: first day, calls cleared early
-  S->>P: rejected, estimate block left the morning
-  P->>S: second day, morning held
-  S->>C: approved, write drafts
-  D->>B: drafts, unsent
-```
+**Two layers on purpose.** The TypeScript agents *decide*: every date, dollar amount and conflict is computed by plain, tested code. The Python service only *reads* the snapshot the agents export and handles people and integrations: sign-in, approvals, Slack and the brief. A test fails if the committed snapshot drifts from what the agents produce, so the UI can never show a plan the agents didn't make.
 
-In the source, Intake is `src/agents/intake.ts` plus the job lookup in `src/agents/researcher.ts`. Scheduling is `src/agents/planner.ts`. The checklist the lead applies is `src/agents/critic.ts` and `src/schedule/critique.ts`. Drafting is `src/agents/executor.ts`. Briefing is `src/agents/briefWriter.ts`. The supervisor in `src/orchestrator/supervisor.ts` is the only router, and it stops after three revisions. The name Drafting is the display name, so a later compliance-and-billing specialist can have its own name.
+### The agents
 
-## Meet the agents
+- **Coordinator** ([`src/agents/coordinator.ts`](src/agents/coordinator.ts)): a pure function of the portfolio and the date. It runs 11 checks across every job, sub and PM, returns `risks`, `drafts`, `statuses`, `workload` and a step log, and never sends anything. Every risk carries a stable `key`, so [`changes.ts`](src/agents/changes.ts) can diff two mornings into "slipped / moved forward / new".
+- **Supervisor team** ([`src/orchestrator/supervisor.ts`](src/orchestrator/supervisor.ts)): a request-level workflow (Intake → Researcher → Planner → **Critic** → Executor → Brief). The Critic scores each plan against the PM's rules and sends rejected plans back, so the run includes a real reject-and-retry. Only the supervisor routes, and specialists never call each other.
+- **Language models are optional and guarded.** Mock mode is the default. A live model may only restyle prose. [`guard.ts`](src/providers/guard.ts) extracts every time, dollar amount, ID, date, percent, channel and email from the draft, and rejects a rewrite that drops, changes or adds one, or grows more than 1.6×.
 
-Five cards, taken from the source. The supervisor is the only router. Intake, Scheduling, Drafting, and Briefing do not call each other. The critic is the checklist the supervisor runs between Scheduling and the next hand-off. It is not a fifth specialist.
+## Integrations and APIs
 
-![Supervisor and the four specialists](docs/images/agents.svg)
-
-## Showcase
-
-[docs/SHOWCASE.md](docs/SHOWCASE.md) walks through the drawings in `docs/images/showcase/`. Green means the demo runs it. Amber means it is planned and not in the code. Minute counts are estimates from [docs/TIME_SAVED.md](docs/TIME_SAVED.md), not measurements.
-
-![The Benchmark team](docs/images/showcase/agents-hero.svg)
-
-![Sam Rivera's kitchen request](docs/images/showcase/workflow-request.svg)
-
-![Illustrative minutes, not measured results](docs/images/showcase/time-saved.svg)
-
-## A Thursday at Summit Ridge
-
-Thursday, March 12, 2026. Maria Alvarez, project manager. Working hours 08:30–17:30.
-
-| When | What | Rule |
-| --- | --- | --- |
-| 08:30–08:45 | Morning huddle | Fixed |
-| 09:00–11:00 | Estimate block for job J-1042 | Protected, at least 90 minutes, and it stays in the morning |
-| 10:30–11:15 | Bright Spark date check | Movable, and already sitting on the estimate block |
-| 11:30–12:00 | Check-in with Dave | Fixed |
-| 12:00–12:45 | Lunch | At least 30 minutes, around noon |
-| 13:00–13:30 | Site walk at 123 Example Ln | Can slide, cannot disappear |
-| 14:00–15:00 | Crew schedule review | Movable |
-| 15:30–16:00 | Pinecrest rough-in window | Fixed county window |
-| 16:30–17:00 | Daily closeout | Movable |
-
-At 08:47 Sam Rivera (FAKE) writes about a kitchen at 123 Example Ln. Sam wants a call this morning and a written note by 12:15. The draft total on the job file is $38,450. Maria has not approved it. Bright Spark Electric's insurance certificate is expired, so the electrician is not confirmed. Rain may move Friday's demolition.
-
-Press play. Intake reads the overlap and the email. Scheduling's first day puts Sam at 09:00–09:40 and parks the estimate block at 13:30–15:20, because that afternoon hole is larger. The lead scores that plan 75/100 and rejects it: the request may shift the estimate block, not push it out of the morning. Scheduling's second day holds the block at 09:40–11:20, moves Bright Spark to 13:45–14:30, and leaves the site walk at 13:00. The lead scores that plan 100/100.
-
-Drafting then stages an email to Sam and a Slack note in `#job-j1042`. Both say they have not been sent. Briefing prints three outcomes and a call card: ask about the budget and the cabinet scope, and do not promise a price, a start date, or that the electrician is confirmed.
-
-![Play demo, partway through Thursday](docs/images/play-demo.png)
-
-The same morning, before Sam's email, is the Day plan tab. The calendar is already wrong. Bright Spark sits on the estimate block. The rewrite gives 09:00–11:00 back to the estimate and moves the date check to 13:45. No email is invented.
-
-![Day plan, before the 8:47 request](docs/images/day-plan.png)
-
-`npm test` locks those times. The quote total, when one is shown, is added by code.
-
-## Design choices
-
-**Mock mode is the default.** `npm run demo` and the page run with no API key, even if a key is sitting in the environment. A model is optional prose polish only. `npm run demo:live` can restyle the brief and the drafts when `BENCHMARK_PROVIDER=openai` and `OPENAI_API_KEY` are set. The prompt tells it to keep times, names, and job ids. If the call fails, the deterministic draft stands.
-
-**Drafts are never sent.** Calendar, email, and Slack actions are `status: "draft"`. There is no send path to wire by accident.
-
-**A person still approves the day.** The lead can reject a plan, and it can stop after three revisions. It cannot approve a price or a start date. The call card tells Maria what not to promise.
-
-**The schedule is a pure function.** Two strategies live in `src/schedule/plan.ts`. `client-first` places the new call and the other movable meetings early, keeps lunch and the site walk, then drops the estimate block into the largest hole left. `protect-focus` places the kitchen request first, reserves a morning block of at least 90 minutes, then fits everyone else. Re-running the demo prints the same day.
-
-**The constraints are the point.** The estimate block has a 90-minute floor. The site walk can move up to 90 minutes and cannot be deleted. Dave's check-in and the Pinecrest 15:30 window are fixed. Calls get a prep buffer. Fixed meetings keep a 10-minute lead-in.
-
-![Thursday demo in dark mode](docs/images/thursday-dark.png)
-
-## Tech stack
-
-TypeScript on Node 20 or newer. No agent framework. The tests use `node:test`, run through `tsx`. The page is `web/main.ts` bundled by esbuild into `docs/app.js`, with plain HTML and CSS beside it. The page and the CLI call the same `runWorkflow` function. Optional prose polish is one OpenAI chat call. Schedule decisions, quote totals, and dates stay in code.
-
-## The team view
-
-One PM's day is the hero story. Benchmark's day-to-day job is the whole team: every job, every PM, every sub.
-
-Each morning the **Coordinator** (`src/agents/coordinator.ts`) sweeps the portfolio and drafts the follow-ups a PM would otherwise chase by hand:
-
-| It checks | It drafts |
+| Integration | How |
 | --- | --- |
-| Sub insurance that has expired or lapses before booked work | A Slack ask to the sub |
-| Permits that expire before the work ends | An extension request to the county |
-| Lien waivers holding a final payment | A Slack ask to the sub, with the dollars held |
-| Milestones done but not billed | A progress invoice, amount computed in code |
-| Clients without an update in 4+ days | An update email with percent complete and the next milestone |
-| A sub booked on two jobs the same day | A resolution proposal to both PMs |
-| Quotes due, late milestones | Heads-ups in Today |
-| PM hours against capacity | A handoff of an early-stage job to the PM with room |
+| **Slack** | Bot token (`auth.test` for status, cached 60 s; `chat.postMessage` to send) or an incoming webhook restricted to `hooks.slack.com`. Every send and preview goes to an audit log. Two locks: `SLACK_SEND_ENABLED=1` **and** a signed-in approver. Demo sessions can never post. |
+| **Sign in with Google / Slack** | OAuth authorization-code flow with a `state` check, userinfo for name and email, refusal of unverified emails, and an `ALLOWED_EMAILS` / `ALLOWED_EMAIL_DOMAINS` allowlist. |
+| **JSON API** | `/api/team`, `/api/snapshot`, `/api/runs/<key>`, `/api/slack/status`, `/api/slack/audit`, and `POST /api/approve` (session plus per-session CSRF token). |
+| **Scheduled brief** | `BRIEF_AT=08:00` runs a scheduler thread that posts the team brief once a day, and skips a brief that was due before startup. |
+| **Deploy** | [`render.yaml`](render.yaml) Blueprint: gunicorn, one worker by design (file-backed state, single scheduler), `ProxyFix` for HTTPS behind Render, `/healthz` that checks the data loads, auto-deploy from `main`. |
+| **Link previews and PWA** | Open Graph and Twitter tags with absolute URLs, a web manifest, iOS icons, and versioned asset URLs so phones never keep stale CSS. |
 
-It also scores every job: **percent complete** (weighted by billing share), **status** (on track, at risk, behind), and the reason. `npm run demo:team` prints the sweep.
+## Engineering highlights
 
-In the dashboard that becomes five tabs:
+- **Evaluation by invariants.** [`tests/coordinator.properties.test.ts`](tests/coordinator.properties.test.ts) runs the Coordinator on **300 seeded random portfolios**, including new-build fields, and checks rules that must always hold:
+  - it only drafts, and every draft answers a risk
+  - it never bills past the contract
+  - draws go only to lenders
+  - client emails never mention subs, insurance or lien waivers, or quote a past date
+  - risk keys are unique
+  - the day-over-day diff is symmetric
 
-- **Today**: one queue of decisions, most urgent first, filtered by PM. Approve or push to later in one tap. A Done today log shows who handled what.
-- **Jobs**: a stage board from lead to closeout, and a timeline with every milestone on one calendar and a today line.
-- **Team**: hours against capacity per PM, the handoff proposal, sub insurance, what the Coordinator checked, and team time back.
-- **Messages**: every draft by channel (Slack, email, invoices, team changes), led by the morning brief.
-- **Under the hood**: the two agent layers, then the Thursday run, agent by agent.
+  The first run found two real bugs: a crash, and a client email that promised a date that had already passed.
+- **Security:** OAuth `state`, per-session CSRF, `HttpOnly`/`SameSite=Lax`/`Secure` cookies, CSP with `frame-ancestors 'none'`, `nosniff`, `X-Frame-Options: DENY`, and secrets only in environment variables. The git history was scanned for keys before publishing.
+- **Reliability:** atomic JSON writes under a lock (a corrupt file is set aside, not fatal), a schema check on the snapshot that returns a helpful 503 instead of crashing, and JSON loads cached per file change.
+- **CI:** typecheck and the Node tests, then ruff and the Python tests on 3.10 and 3.12.
 
-Every job card also links to a **client status page** (`/jobs/<id>/client`): percent complete, milestones, the next step, and the PM's name, in plain language. Internal issues (sub insurance, lien waivers, double-bookings, money) never appear there, and a test enforces it.
-
-### The 8:00 brief
-
-```bash
-npm run brief                      # the team brief
-python3 -m dashboard.brief --for tomas   # one PM's brief
-python3 -m dashboard.brief --send        # post it to Slack now
-BRIEF_AT=08:00 npm run dashboard         # post it every day at 8:00
-```
-
-The brief leads with what's blocked, then lists every job worst-first with percent complete and the blocker, then flags overloaded PMs. It is the one post Benchmark makes on its own, and it only goes to the team's internal channel. Client emails, sub nudges and invoices still wait for a person.
-
-## PM dashboard (Python)
-
-The Thursday demo shows the argument. The dashboard shows a project manager **what the agent team did, why, and what it is waiting on them for**, on one page.
-
-```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r dashboard/requirements.txt
-npm run dashboard        # exports the latest agent run, then serves http://127.0.0.1:5050
-```
-
-What is on it, top to bottom:
-
-| Panel | What a PM learns |
+| | |
 | --- | --- |
-| **Insights** | Computed from the run, not written by hand: the plan the critic rejected and what it would have cost, which compliance item blocks a sub, how many fixed commitments moved (none), how many drafts wait for approval. |
-| **How the team worked** | Each specialist's role card, step count, and the full handoff log. The critic's send-back to the planner is highlighted. |
-| **The day, before and after** | A Gantt of the original calendar (double-booking hatched), every rejected revision, and the approved plan, plus a moved / added / held diff. |
-| **Critic scorecard** | Every named rule, pass or fail, per revision. |
-| **Compliance and job risk** | Insurance certificates, inspections, and jobs ranked blocked → watch → ok, plus the do-not-promise list for the call. |
-| **Time ledger** | Manual tasks the run replaced, counted from the run's own output, minus the PM's review time. Minutes per task live in `dashboard/assumptions.json` as editable estimates. |
-| **Approval queue · Slack** | The executor's Slack draft and the morning brief, each with **Approve & send**. Every press is written to an audit log with the approver's name and the exact payload. |
-| **Under the hood** | The full trace and JSON endpoints: `/api/runs/thursday`, `/api/snapshot`, `/api/slack/status`, `/api/slack/audit`. |
+| **Agents** | TypeScript, Node 20, `node:test` via `tsx`, esbuild |
+| **Service** | Python 3.10+, Flask 3, Jinja, gunicorn, ruff |
+| **Front end** | Server-rendered HTML, plain JavaScript, CSS tokens for light and dark, installable PWA |
+| **Infra** | Render (Blueprint), GitHub Actions |
+| **Tests** | 67 TypeScript (fixtures and property tests) and 63 Python (routes, OAuth, Slack, scheduler, security, deploy) |
 
-### Ask Benchmark and the guided tour
+## Design decisions
 
-- **Ask Benchmark** (Today tab): ask about this morning in plain language, for example "Which homes could miss closing?" Claude (`claude-opus-5-5`, low effort) answers from the morning check only, and cites job numbers. `dashboard/ask.py` checks every dollar amount, date, percentage and job number against the data and withholds any answer that has one it can't find, so the model can't invent or add up figures. Usage is capped per session and per day. It's off until `ANTHROPIC_API_KEY` is set.
-- **Guided tour:** six stops covering the morning check, since yesterday, one-tap approval, Ask, the next two weeks, and why it can be trusted. It starts once for demo visitors, and **Take the 1-minute tour** replays it.
+1. **Drafts only, a named person approves.** Construction teams trust automation with buyers, lenders and subs only if nothing leaves without a person. The code has no send path for email or invoices, and Slack sends need two locks.
+2. **Code computes, models phrase.** Dates, dollars and schedule logic are deterministic and tested. A model may only reword, and the guard enforces that.
+3. **Contract between layers.** One versioned snapshot (`schema: 1`), a drift test, and a schema check. The Python side never re-plans.
+4. **Honest numbers.** Time saved comes from per-task minutes in [`dashboard/assumptions.json`](dashboard/assumptions.json) and is always labeled an estimate. The landing page shows the demo's own numbers, not invented customer counts.
+5. **One worker, file-backed state.** It's the right size for a demo and a small team. The `JsonStore` interface is the seam for moving to Postgres.
 
-## New-home builders
-
-The main audience is PMs who build new homes. On top of the remodel checks, the morning check also:
-
-- **Loan draws:** when a milestone is done on a home with a construction lender, it drafts a draw request to the lender (not an invoice to the buyer). The amount is computed by code.
-- **Buyer selections:** cabinets, tile and colors due within a week get a drafted reminder to the buyer. Overdue selections are flagged as blocked.
-- **Long-lead orders:** windows, trusses and cabinets are checked against the last day to order them (the need-by date minus the lead time). Anything that can no longer arrive on time is blocked.
-- **Closing dates:** the last milestone, plus any slip, plus 14 days for the final inspection, certificate of occupancy (CO) and walkthrough, must land before closing.
-
-Jobs can carry `lot`, `lender`, `closing`, `selections` and `orders` (see `src/portfolio/types.ts`). The sample data includes two new homes: Ridgeview Lot 14 and Oak Hollow Lot 6.
-
-## Online with Render
-
-To put the dashboard on a public website that works on a MacBook, iPad, or iPhone, follow [docs/DEPLOY.md](docs/DEPLOY.md). It's free on Render's free plan, which sleeps when nobody is using it.
-
-## On iPhone and iPad
-
-The dashboard is built for the job site as much as the office.
-
-- **Phone layout.** A pinned section bar (Insights, Team, Day, Checklist, Risk, Time, Approvals, Trace), two-up KPI tiles, a day chart you swipe sideways, and tap targets of at least 44px. iPad portrait keeps the header pinned and pairs the approval cards.
-- **Add to Home Screen.** A web app manifest and an iOS icon make it open full screen like an app.
-- **On your Wi-Fi.** `DASHBOARD_HOST=0.0.0.0 npm run dashboard` prints a `http://192.168.x.x:5050` address to open on any device on the same network.
-- **Installable site.** `npm run build:site` writes `dashboard/dist/site/`: `index.html`, a manifest, iOS and Android icons, and an offline service worker. Host that folder on any HTTPS static host and it saves to the home screen as its own app, opens full screen, works without signal after the first visit, and shows iPhone visitors a one-time tip with the Add to Home Screen steps.
-- **A link that works anywhere.** `npm run export:static` writes `dashboard/dist/benchmark-dashboard.html`, a single read-only file with both runs and no server calls. Host it on any static host, or share it as a page.
-
-### Sign-in
-
-The first screen offers **View the demo** (no account, nothing ever posts) or sign-in with the accounts construction teams already have:
-
-| Provider | Why it fits | Keys |
-| --- | --- | --- |
-| Google | Google Workspace offices and field crews on Gmail | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` |
-| Slack | The workspace the crew already talks in, same as the approval channel | `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET` |
-
-Each provider uses the OAuth authorization-code flow with a `state` check, then reads only name and email (`dashboard/auth.py`). `ALLOWED_EMAIL_DOMAINS` limits sign-in to company accounts. A signed-in person's name and email become the approver on every Slack send. Demo visitors can press Approve and see the exact payload, but their approvals never post, even with `SLACK_SEND_ENABLED=1`. Providers that aren't configured still show on the welcome screen and say which keys to add.
-
-### Slack
-
-The dashboard talks to the Slack Web API directly (`dashboard/slack.py`, standard library only).
+## Run it locally
 
 ```bash
-# .env (gitignored)
-SLACK_BOT_TOKEN=xoxb-...      # a Slack app with chat:write, invited to the channel
-SLACK_CHANNEL=C0123456789     # the channel id
-SLACK_SEND_ENABLED=1          # without this, Approve & send is a dry run
-# or: SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+npm install && npm test && npm run typecheck          # agents
+python3 -m venv .venv && .venv/bin/pip install -r dashboard/requirements-dev.txt
+npm run dashboard                                     # export the snapshot, serve http://127.0.0.1:5050
+.venv/bin/python -m unittest discover -s dashboard/tests -t .
+npm run demo:team                                     # the morning check in the terminal
 ```
 
-- Status is a real `auth.test` call, shown as the Slack chip in the header.
-- Sends use `chat.postMessage` (or the webhook) with Block Kit and an "approved by" footer.
-- Two locks: nothing posts unless `SLACK_SEND_ENABLED=1` **and** a person presses the button. The agents never call Slack.
-- With no token the page still works and shows the exact payload it would have sent.
+Configuration lives in [`.env.example`](.env.example). Deployment, Google and Slack setup are in [`docs/DEPLOY.md`](docs/DEPLOY.md).
 
-### Why the dashboard is built this way
-
-- **The TypeScript team decides, Python only reads.** `npm run export:dashboard` writes `dashboard/data/snapshot.json`. A test fails if that file drifts from what the agents produce, so the page cannot show a day the agents did not plan.
-- **Time savings are counted, then priced.** Counts (calendar moves, drafts, revisions, accounts researched) come from the run. Minutes per task are the team's own assumption, kept in one file. Change them and reload.
-- **Approval is the product.** The PM sees every draft, approves with their name, and gets an audit trail. That is what lets a construction team trust automation with homeowners and subs.
-
-## Engineering notes
-
-How the pieces are kept honest, for anyone extending Benchmark.
-
-- **Contract between the agents and the dashboard.** TypeScript writes `dashboard/data/snapshot.json` (`schema: 1`). Python loads it through `load_snapshot`, which checks the keys it depends on and answers with a 503 page that says to run `npm run export:dashboard` instead of crashing. `tests/snapshot.test.ts` fails when the committed file drifts from the agents.
-- **Model guardrail.** A live model may only restyle prose. `src/providers/guard.ts` extracts every time, dollar amount, job or case id, date, percent, channel and email from the deterministic draft, and rejects a rewrite that drops one, changes one, adds one, or grows past 1.6× in length. The draft then stands. `resolveModel` wraps every live model in it.
-- **Agent evaluation.** `tests/coordinator.properties.test.ts` runs the Coordinator on 300 seeded random portfolios. It checks that the Coordinator only drafts, that every draft answers a risk, and that it never bills past the contract. Status must match late milestones. Client emails must never mention subs, insurance or lien details, and must never quote a date that has passed. Each double booking is flagged once, and every hour and job is counted. It found two real bugs on its first run.
-- **State.** Approvals and the Slack log persist to `dashboard/var/state.json` (gitignored; `DASHBOARD_STATE_DIR` to move it). Writes are atomic under a lock, and a damaged file is set aside rather than crashing the server.
-- **Security.** OAuth with `state`, a per-session CSRF token on `/api/approve`, `HttpOnly` / `SameSite=Lax` cookies (`Secure` behind https), CSP with `frame-ancestors 'none'`, `nosniff`, and `X-Frame-Options: DENY`. Demo sessions can never post.
-- **Performance.** JSON loads are cached per file change, and the Slack status check is cached for 60 seconds, so page loads don't call Slack.
-- **CI.** Typecheck plus Node tests, then ruff and the Python tests on 3.10 and 3.12.
-
-## Run it
-
-Node 20 or newer, and Python 3.10+ for the dashboard.
-
-```bash
-npm install
-npm test
-npm run typecheck
-npm run preview
-```
-
-`npm run preview` rebuilds the page and serves it at [http://127.0.0.1:4173](http://127.0.0.1:4173). The page follows the system light or dark setting. The switch at the top right flips between them. Play, pause, or step Thursday. When the run finishes, the button reads **Play demo**. Deep links: `#thursday`, `#plan`, `#brief`.
-
-| Script | What you get |
-| --- | --- |
-| `npm test` | Scheduler checks and both workflows. |
-| `npm run typecheck` | `tsc --noEmit` for the CLI and the page. |
-| `npm run preview` | The static demo on port 4173. |
-| `npm run demo` | Thursday in the terminal. |
-| `npm run demo:plan` | The morning before Sam's email. |
-| `npm run demo:brief` | That same morning as a brief. |
-| `npm run demo:trace` | Thursday as JSON, including unsent drafts. |
-| `npm run demo:all` | Plan, brief, then Thursday. |
-| `npm run demo:live` | Thursday, with optional prose polish. |
-| `npm run build:web` | Rebuild `docs/app.js`. |
-| `npm run export:dashboard` | Write the agent run to `dashboard/data/snapshot.json`. |
-| `npm run dashboard` | Export, then serve the PM dashboard on port 5050. |
-| `npm run test:dashboard` | Python dashboard, sign-in, and Slack connector tests. |
-| `npm run export:static` | Read-only single-file dashboard for phones, tablets, and static hosts. |
-
-![Thursday in the terminal](docs/images/cli-thursday.png)
-
-Mock mode is the default. Live polish is opt-in:
-
-```bash
-cp .env.example .env
-# BENCHMARK_PROVIDER=openai
-# OPENAI_API_KEY=...
-npm run demo:live
-```
-
-`.env` is gitignored. The example file has empty values. Fixture addresses use `example` domains.
-
-Color follows the terminal. Set `NO_COLOR=1` for plain text.
-
-## Project structure
+## Repository map
 
 ```text
-src/
-  agents/            Intake, job lookup, Scheduling, the lead's checklist, Drafting, Briefing
-  orchestrator/      supervisor loop
-  memory/            trace and finding helpers
-  schedule/          the two strategies, the checklist, the draft builder
-  tools/             read-only calendar, inbox, and job lookup
-  providers/         mock model, optional OpenAI prose polish
-  fixtures/          Thursday for Maria Alvarez
-  render/            terminal layout
-  export/            snapshot for the Python dashboard
-  cli.ts             thursday | plan | brief | trace | all
-web/main.ts          browser shell around the same team
-dashboard/           Python PM dashboard, insights, Slack connector
-docs/                static demo: index.html, styles.css, app.js, images/
-tests/               node:test, via tsx
+src/agents/        coordinator.ts (morning check), changes.ts (day-over-day diff), intake, researcher,
+                   planner, critic, executor, briefWriter
+src/orchestrator/  supervisor loop (the only router)
+src/providers/     model.ts (mock by default), guard.ts (fact-preserving rewrite guard)
+src/fixtures/      Summit Ridge Builders: 10 jobs including two new homes, plus yesterday's state
+src/export/        snapshot.ts → dashboard/data/snapshot.json
+dashboard/         app.py (routes, CSRF, security headers), auth.py (OAuth), slack.py, brief.py,
+                   portfolio.py (view models), store.py, wsgi.py, templates/, static/
+tests/             TypeScript fixture and property tests
+dashboard/tests/   Python tests
+docs/              DEPLOY.md, PLAN.md, the original Thursday showcase (docs/index.html)
+render.yaml        one-click deploy
 ```
 
-A useful reading order is `src/orchestrator/supervisor.ts`, `src/schedule/plan.ts`, `src/schedule/critique.ts`, then `src/fixtures/thursday.ts`.
+## Roadmap
 
-## Publish the static demo
+- **Automation API:** token-protected endpoints and signed outbound webhooks, so tools like n8n can run the morning check, route approvals and log to Sheets.
+- **Calendar:** a subscribable feed of the two-week look-ahead, then two-way Google Calendar.
+- **Real data in:** spreadsheet import first, then a Procore connector into the same `Portfolio` shape.
+- **Postgres** behind the `JsonStore` interface, and usage numbers (approval rate, edits before approval) to replace estimates with measurements.
 
-`docs/` is a site by itself: `index.html`, `styles.css`, `app.js`, and `images/`. It does not import the rest of this repository and it does not need an API key. Copy that folder to a public repository or any static host and serve it as the site root. Keep `.nojekyll` in the folder so GitHub Pages serves the files as they are.
+## How this was built
 
-The page's only outbound link is [github.com/saltylvn/benchmark-ai](https://github.com/saltylvn/benchmark-ai).
-
-From this repository, `npm run build:web` rewrites `docs/app.js` after a change to `web/main.ts`.
-
-`.github/workflows/pages.yml` does not run on push. This repository is private and does not have GitHub Pages turned on, so a push trigger fails before it can publish. Run that workflow by hand only after Benchmark has a public home and Pages is enabled for it. Until then, copy `docs/` yourself. The workflow keeps `.nojekyll` in the upload.
-
-## Working together
-
-Claude Code leads architecture and direction. Cursor handles cleanup, docs, visuals, and the showcase. See [docs/COLLABORATION.md](docs/COLLABORATION.md) and [docs/PROGRESS.md](docs/PROGRESS.md).
+I designed the product, the architecture and the guardrails, and directed and reviewed the work. The implementation was pair-programmed with AI coding agents (Claude Code and Cursor), as the commit history shows. That is a deliberate part of the project: shipping a tested, deployed system quickly with AI tools, while keeping humans in charge of design decisions, review and what the software is allowed to do.
 
 ## License
 
-[MIT](LICENSE).
+MIT. All people, companies, addresses and amounts in the demo are fictional.

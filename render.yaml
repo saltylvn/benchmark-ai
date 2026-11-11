@@ -16,11 +16,6 @@ services:
       # Session key, generated once by Render so sign-ins survive restarts.
       - key: DASHBOARD_SECRET
         generateValue: true
-      # Ask Benchmark (Claude). Off until the key is set. The daily cap protects the bill on a public link.
-      - key: ANTHROPIC_API_KEY
-        sync: false
-      - key: ASK_DAILY_LIMIT
-        value: "300"
       # Nothing posts to Slack unless this is 1 AND a signed-in PM approves.
       - key: SLACK_SEND_ENABLED
         value: "0"
