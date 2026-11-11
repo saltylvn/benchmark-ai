@@ -665,3 +665,108 @@ section, .since { border-color: var(--line); }
 .wf-line { fill: none; stroke: var(--muted); stroke-width: 1.8; }
 .wf-dash { stroke-dasharray: 5 5; }
 .wf-arrow { fill: var(--muted); }
+
+/* =====================================================================================
+   Final look. Clean and calm for a PM between site visits, confident for a client demo:
+   friendly blue for actions, white cards with soft shadows on a quiet surface, sentence-case
+   pill buttons, tinted stages, pastel icon tiles, widget-style metrics. Monospace stays only
+   inside the workflow canvas. Flat colours throughout.
+   ===================================================================================== */
+:root {
+  --bg: #f6f7f9; --paper: #ffffff; --ink: #111827; --muted: #4b5563;
+  --line: #e5e7eb; --line-strong: #d1d5db; --dot: #e2e5ea;
+  --accent: #1f5ae0; --accent-bg: #e8efff; --stage: #eef3ff; --on-accent: #ffffff;
+  --header: rgba(246, 247, 249, 0.92); --title-rule: var(--accent);
+  --shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 6px 20px rgba(17, 24, 39, 0.05);
+  --tile-blue: #e8efff; --tile-blue-ink: #1f5ae0; --tile-green: #e6f6ee; --tile-green-ink: #1b754e;
+  --tile-amber: #fdf1e1; --tile-amber-ink: #a8590f;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1016; --paper: #151922; --ink: #eef1f6; --muted: #a1abb9;
+    --line: #232a36; --line-strong: #333c4b; --dot: #1d2330;
+    --accent: #8fb0ff; --accent-bg: #1a2440; --stage: #121a2c; --on-accent: #0d1016;
+    --header: rgba(13, 16, 22, 0.92); --shadow: none;
+    --tile-blue: #1a2440; --tile-blue-ink: #8fb0ff; --tile-green: #13281f; --tile-green-ink: #8fd8b3;
+    --tile-amber: #2b2114; --tile-amber-ink: #f0b46a;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1016; --paper: #151922; --ink: #eef1f6; --muted: #a1abb9;
+  --line: #232a36; --line-strong: #333c4b; --dot: #1d2330;
+  --accent: #8fb0ff; --accent-bg: #1a2440; --stage: #121a2c; --on-accent: #0d1016;
+  --header: rgba(13, 16, 22, 0.92); --shadow: none;
+  --tile-blue: #1a2440; --tile-blue-ink: #8fb0ff; --tile-green: #13281f; --tile-green-ink: #8fd8b3;
+  --tile-amber: #2b2114; --tile-amber-ink: #f0b46a;
+}
+body { background: var(--bg); background-image: none; }
+.wf-dot { fill: var(--dot); }
+
+/* Surfaces */
+section, .since, .qcard, .jcard, .kpi, .pain, .life, .eng, .faq details, .welcome-card, .land-final, .check-feed, .proof {
+  border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow);
+}
+.kpi { background: var(--paper); }
+.qcard { border-left-width: 4px; }
+
+/* Labels: readable caps in sans, not code. */
+.eyebrow, .found-label, .land-kicker, .land-eyebrow, .tour .tour-step, .ev-kind, .pill, .since-group h3, .col h3, .signin-label {
+  font-family: var(--sans); letter-spacing: .07em; font-weight: 700;
+}
+.tabs a { font-family: var(--sans); font-size: 14px; letter-spacing: 0; font-weight: 600; }
+
+/* Buttons: one solid blue for the main action, outlined pills for the rest. Sentence case. */
+.btn.demo, .land-bar-cta, .qactions .approve {
+  background: var(--accent); color: var(--on-accent); border: 0; border-radius: 999px;
+  font: 600 15px var(--sans); text-transform: none; letter-spacing: 0;
+}
+.btn.demo:hover, .land-bar-cta:hover, .qactions .approve:hover { filter: brightness(1.06); }
+.tour-start, .qactions .skip {
+  background: transparent; color: var(--accent); border: 1.5px solid var(--accent); border-radius: 999px;
+  font: 600 14px var(--sans); text-transform: none; letter-spacing: 0;
+}
+.qactions .skip { color: var(--ink); border-color: var(--line-strong); }
+
+/* Brand: italic serif accent word, as a quiet signature. */
+.land-title em { font-family: Georgia, "Iowan Old Style", serif; font-style: italic; font-weight: 600; color: var(--accent); }
+
+/* Landing: tinted hero stage, KPI cards, icon tiles, engineering grid */
+.land-stage { background: var(--stage); border-radius: 28px; padding: 28px 22px; margin-top: 8px; }
+.land-stage .welcome-card { box-shadow: var(--shadow); }
+.land-proof { background: none; color: var(--ink); padding: 0; border: 0; box-shadow: none; }
+.land-proof .land-kicker { color: var(--accent); } .land-proof .land-kicker span { color: var(--muted); opacity: 1; }
+.proof { background: var(--paper); padding: 16px; }
+.proof span { opacity: 1; color: var(--muted); }
+.proof.hi { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.proof.hi span { color: var(--on-accent); opacity: .9; }
+.icon-tile { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; margin-bottom: 10px; }
+.icon-tile svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.icon-tile.blue { background: var(--tile-blue); color: var(--tile-blue-ink); }
+.icon-tile.green { background: var(--tile-green); color: var(--tile-green-ink); }
+.icon-tile.amber { background: var(--tile-amber); color: var(--tile-amber-ink); }
+.pain-fix { border-top-style: solid; border-top-color: var(--line); }
+.pain-fix b { color: var(--accent); }
+.eng-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.eng { background: var(--paper); padding: 16px; min-width: 0; }
+.eng h3 { margin: 0 0 6px; font-size: 16.5px; }
+.eng p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+section .eng { box-shadow: none; }
+.life-n { background: var(--accent); color: var(--on-accent); }
+.land-final { border-top: 1px solid var(--line); background: var(--stage); }
+
+/* Today: widget-style metrics with a donut for job status */
+.status-kpi { display: flex; align-items: center; gap: 14px; }
+.status-kpi .stack { display: none; }
+.donut { width: 84px; height: 84px; flex: none; transform: rotate(-90deg); }
+.donut circle { fill: none; stroke-width: 11; }
+.donut-track { stroke: var(--line); }
+.donut-seg { stroke-linecap: butt; }
+.donut-seg.s-on-track { stroke: var(--on-track); } .donut-seg.s-at-risk { stroke: var(--at-risk); } .donut-seg.s-behind { stroke: var(--behind); }
+.donut-num { transform: rotate(90deg); transform-origin: 42px 42px; font: 700 22px var(--sans); fill: var(--ink); }
+.donut-legend { display: grid; gap: 2px; font-size: 13px; color: var(--muted); }
+.donut-legend b { font: 700 16px var(--sans); color: var(--ink); }
+.donut-legend .s-dot { margin-right: 6px; }
+.kpi.accent { background: var(--accent); border-color: var(--accent); }
+.kpi.accent b, .kpi.accent span { color: var(--on-accent); }
+/* Landing sections sit on the page; only their cards are panels. */
+.landing section.land-section, .landing section.land-proof { border: 0; box-shadow: none; background: none; }
