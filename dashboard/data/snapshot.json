@@ -2359,6 +2359,7 @@
             "id": "PC-2025-0533",
             "expires": "2026-03-25"
           },
+          "closing": "2026-05-29",
           "milestones": [
             {
               "id": "foundation",
@@ -2418,6 +2419,213 @@
               "name": "Quote sent",
               "planned": "2026-03-13",
               "done": null
+            }
+          ]
+        },
+        {
+          "id": "J-1050",
+          "name": "Ridgeview Lot 14",
+          "address": "14 Ridgeview Ct",
+          "lot": "Lot 14 · Ridgeview",
+          "client": "Morgan Park (FAKE)",
+          "clientEmail": "morgan.park@example.com",
+          "pm": "renee",
+          "stage": "in-progress",
+          "contract": 548000,
+          "hoursThisWeek": 8,
+          "lastClientUpdate": "2026-03-10",
+          "slackChannel": "#job-j1050",
+          "closing": "2026-06-26",
+          "lender": {
+            "name": "Granite Valley Bank (FAKE)",
+            "email": "draws@granitevalley.example"
+          },
+          "milestones": [
+            {
+              "id": "foundation",
+              "name": "Foundation",
+              "planned": "2026-01-16",
+              "done": "2026-01-16",
+              "billPct": 0.15,
+              "invoiced": true
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-02-13",
+              "done": "2026-02-17",
+              "billPct": 0.2,
+              "invoiced": true
+            },
+            {
+              "id": "dryin",
+              "name": "Dried in",
+              "planned": "2026-03-06",
+              "done": "2026-03-10",
+              "billPct": 0.15,
+              "invoiced": false
+            },
+            {
+              "id": "rough",
+              "name": "Rough-ins",
+              "planned": "2026-03-27",
+              "done": null,
+              "billPct": 0.15
+            },
+            {
+              "id": "drywall",
+              "name": "Insulation and drywall",
+              "planned": "2026-04-17",
+              "done": null,
+              "billPct": 0.1
+            },
+            {
+              "id": "finishes",
+              "name": "Finishes",
+              "planned": "2026-05-22",
+              "done": null,
+              "billPct": 0.15
+            },
+            {
+              "id": "final",
+              "name": "Final inspection and CO",
+              "planned": "2026-06-12",
+              "done": null,
+              "billPct": 0.1
+            }
+          ],
+          "selections": [
+            {
+              "item": "Kitchen cabinets",
+              "due": "2026-03-10",
+              "done": false
+            },
+            {
+              "item": "Tile and flooring",
+              "due": "2026-03-18",
+              "done": false
+            },
+            {
+              "item": "Exterior paint",
+              "due": "2026-04-10",
+              "done": false
+            }
+          ],
+          "orders": [
+            {
+              "item": "Cabinets",
+              "vendor": "Hearthline Cabinetry (FAKE)",
+              "vendorEmail": "orders@hearthline.example",
+              "leadDays": 42,
+              "needBy": "2026-04-24",
+              "ordered": false
+            },
+            {
+              "item": "Windows",
+              "vendor": "ClearView Windows (FAKE)",
+              "vendorEmail": "orders@clearview.example",
+              "leadDays": 42,
+              "needBy": "2026-03-02",
+              "ordered": true
+            }
+          ]
+        },
+        {
+          "id": "J-1051",
+          "name": "Oak Hollow Lot 6",
+          "address": "6 Oak Hollow Ln",
+          "lot": "Lot 6 · Oak Hollow",
+          "client": "Dana Whitfield (FAKE)",
+          "clientEmail": "dana.whitfield@example.com",
+          "pm": "jordan",
+          "stage": "scheduled",
+          "contract": 465000,
+          "hoursThisWeek": 6,
+          "lastClientUpdate": "2026-03-11",
+          "slackChannel": "#job-j1051",
+          "closing": "2026-08-28",
+          "lender": {
+            "name": "Summit Federal Credit Union (FAKE)",
+            "email": "draws@summitfcu.example"
+          },
+          "permit": {
+            "id": "PC-2026-0201",
+            "expires": "2026-12-01"
+          },
+          "milestones": [
+            {
+              "id": "foundation",
+              "name": "Foundation",
+              "planned": "2026-03-23",
+              "done": null,
+              "billPct": 0.15
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-04-17",
+              "done": null,
+              "billPct": 0.2
+            },
+            {
+              "id": "dryin",
+              "name": "Dried in",
+              "planned": "2026-05-08",
+              "done": null,
+              "billPct": 0.15
+            },
+            {
+              "id": "rough",
+              "name": "Rough-ins",
+              "planned": "2026-05-29",
+              "done": null,
+              "billPct": 0.15
+            },
+            {
+              "id": "drywall",
+              "name": "Insulation and drywall",
+              "planned": "2026-06-19",
+              "done": null,
+              "billPct": 0.1
+            },
+            {
+              "id": "finishes",
+              "name": "Finishes",
+              "planned": "2026-07-24",
+              "done": null,
+              "billPct": 0.15
+            },
+            {
+              "id": "final",
+              "name": "Final inspection and CO",
+              "planned": "2026-08-14",
+              "done": null,
+              "billPct": 0.1
+            }
+          ],
+          "selections": [
+            {
+              "item": "Exterior colors and roofing",
+              "due": "2026-03-16",
+              "done": false
+            }
+          ],
+          "orders": [
+            {
+              "item": "Roof trusses",
+              "vendor": "Truss Works (FAKE)",
+              "vendorEmail": "orders@trussworks.example",
+              "leadDays": 35,
+              "needBy": "2026-04-06",
+              "ordered": false
+            },
+            {
+              "item": "Windows",
+              "vendor": "ClearView Windows (FAKE)",
+              "vendorEmail": "orders@clearview.example",
+              "leadDays": 42,
+              "needBy": "2026-04-27",
+              "ordered": false
             }
           ]
         }
@@ -2888,6 +3096,167 @@
               "daysLate": 0
             }
           ]
+        },
+        {
+          "jobId": "J-1050",
+          "name": "Ridgeview Lot 14",
+          "pm": "renee",
+          "stage": "in-progress",
+          "percent": 50,
+          "status": "at-risk",
+          "reason": "Ridgeview Lot 14: 2 buyer selections overdue",
+          "daysLate": 0,
+          "nextMilestone": {
+            "name": "Rough-ins",
+            "planned": "2026-03-27"
+          },
+          "milestones": [
+            {
+              "id": "foundation",
+              "name": "Foundation",
+              "planned": "2026-01-16",
+              "done": "2026-01-16",
+              "billPct": 0.15,
+              "invoiced": true,
+              "state": "done",
+              "daysLate": 0
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-02-13",
+              "done": "2026-02-17",
+              "billPct": 0.2,
+              "invoiced": true,
+              "state": "done",
+              "daysLate": 4
+            },
+            {
+              "id": "dryin",
+              "name": "Dried in",
+              "planned": "2026-03-06",
+              "done": "2026-03-10",
+              "billPct": 0.15,
+              "invoiced": false,
+              "state": "done",
+              "daysLate": 4
+            },
+            {
+              "id": "rough",
+              "name": "Rough-ins",
+              "planned": "2026-03-27",
+              "done": null,
+              "billPct": 0.15,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "drywall",
+              "name": "Insulation and drywall",
+              "planned": "2026-04-17",
+              "done": null,
+              "billPct": 0.1,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "finishes",
+              "name": "Finishes",
+              "planned": "2026-05-22",
+              "done": null,
+              "billPct": 0.15,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "final",
+              "name": "Final inspection and CO",
+              "planned": "2026-06-12",
+              "done": null,
+              "billPct": 0.1,
+              "state": "upcoming",
+              "daysLate": 0
+            }
+          ]
+        },
+        {
+          "jobId": "J-1051",
+          "name": "Oak Hollow Lot 6",
+          "pm": "jordan",
+          "stage": "scheduled",
+          "percent": 0,
+          "status": "at-risk",
+          "reason": "Roof trusses for Oak Hollow Lot 6 not ordered: arrives 10 days late",
+          "daysLate": 0,
+          "nextMilestone": {
+            "name": "Foundation",
+            "planned": "2026-03-23"
+          },
+          "milestones": [
+            {
+              "id": "foundation",
+              "name": "Foundation",
+              "planned": "2026-03-23",
+              "done": null,
+              "billPct": 0.15,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "framing",
+              "name": "Framing",
+              "planned": "2026-04-17",
+              "done": null,
+              "billPct": 0.2,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "dryin",
+              "name": "Dried in",
+              "planned": "2026-05-08",
+              "done": null,
+              "billPct": 0.15,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "rough",
+              "name": "Rough-ins",
+              "planned": "2026-05-29",
+              "done": null,
+              "billPct": 0.15,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "drywall",
+              "name": "Insulation and drywall",
+              "planned": "2026-06-19",
+              "done": null,
+              "billPct": 0.1,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "finishes",
+              "name": "Finishes",
+              "planned": "2026-07-24",
+              "done": null,
+              "billPct": 0.15,
+              "state": "upcoming",
+              "daysLate": 0
+            },
+            {
+              "id": "final",
+              "name": "Final inspection and CO",
+              "planned": "2026-08-14",
+              "done": null,
+              "billPct": 0.1,
+              "state": "upcoming",
+              "daysLate": 0
+            }
+          ]
         }
       ],
       "risks": [
@@ -2957,6 +3326,16 @@
           "id": "R6"
         },
         {
+          "key": "draw:J-1050:dryin",
+          "kind": "draw",
+          "level": "watch",
+          "jobId": "J-1050",
+          "owner": "renee",
+          "title": "Ridgeview Lot 14: Dried in done, draw not requested",
+          "detail": "15% of $548,000 = $82,200 from Granite Valley Bank (FAKE).",
+          "id": "R7"
+        },
+        {
           "key": "client-update:J-1031",
           "kind": "client-update",
           "level": "watch",
@@ -2964,7 +3343,7 @@
           "owner": "maria",
           "title": "Morgan Hayes (FAKE) has not heard from us in 7 days",
           "detail": "Hayes basement is 60% complete. Next: Finish carpentry Wed, Mar 25.",
-          "id": "R7"
+          "id": "R8"
         },
         {
           "key": "double-booking:northfork|2026-03-13",
@@ -2975,7 +3354,7 @@
           "title": "North Fork Framing (FAKE) booked on two jobs Fri, Mar 13",
           "detail": "J-1019 (Tomas Reyes) and J-1036 (Renee Walsh). Cedar duplex has the earlier milestone, so it keeps the crew.",
           "due": "2026-03-13",
-          "id": "R8"
+          "id": "R9"
         },
         {
           "key": "quote-due:J-1042",
@@ -2986,7 +3365,7 @@
           "title": "Quote for Rivera kitchen due today",
           "detail": "$38,450 estimate for Sam Rivera (FAKE).",
           "due": "2026-03-12",
-          "id": "R9"
+          "id": "R10"
         },
         {
           "key": "quote-due:J-1047",
@@ -2997,7 +3376,73 @@
           "title": "Quote for Brooks roof due tomorrow",
           "detail": "$17,800 estimate for Taylor Brooks (FAKE).",
           "due": "2026-03-13",
-          "id": "R10"
+          "id": "R11"
+        },
+        {
+          "key": "selections:J-1050",
+          "kind": "selections",
+          "level": "blocked",
+          "jobId": "J-1050",
+          "owner": "renee",
+          "title": "Ridgeview Lot 14: 2 buyer selections overdue",
+          "detail": "Kitchen cabinets (was due Tue, Mar 10), Tile and flooring (due Wed, Mar 18). Orders and crews wait on these.",
+          "due": "2026-03-10",
+          "id": "R12"
+        },
+        {
+          "key": "selections:J-1051",
+          "kind": "selections",
+          "level": "watch",
+          "jobId": "J-1051",
+          "owner": "jordan",
+          "title": "Oak Hollow Lot 6: 1 buyer selection due this week",
+          "detail": "Exterior colors and roofing (due Mon, Mar 16). Orders and crews wait on these.",
+          "due": "2026-03-16",
+          "id": "R13"
+        },
+        {
+          "key": "order:J-1050:Cabinets",
+          "kind": "order",
+          "level": "watch",
+          "jobId": "J-1050",
+          "owner": "renee",
+          "title": "Order cabinets for Ridgeview Lot 14 by Fri, Mar 13",
+          "detail": "42-day lead time from Hearthline Cabinetry (FAKE). Needed on site Fri, Apr 24. Ordered today it arrives Thu, Apr 23. The buyer's selection for it is still open.",
+          "due": "2026-03-13",
+          "id": "R14"
+        },
+        {
+          "key": "order:J-1051:Roof trusses",
+          "kind": "order",
+          "level": "blocked",
+          "jobId": "J-1051",
+          "owner": "jordan",
+          "title": "Roof trusses for Oak Hollow Lot 6 not ordered: arrives 10 days late",
+          "detail": "35-day lead time from Truss Works (FAKE). Needed on site Mon, Apr 6. Ordered today it arrives Thu, Apr 16.",
+          "due": "2026-03-02",
+          "id": "R15"
+        },
+        {
+          "key": "order:J-1051:Windows",
+          "kind": "order",
+          "level": "watch",
+          "jobId": "J-1051",
+          "owner": "jordan",
+          "title": "Order windows for Oak Hollow Lot 6 by Mon, Mar 16",
+          "detail": "42-day lead time from ClearView Windows (FAKE). Needed on site Mon, Apr 27. Ordered today it arrives Thu, Apr 23.",
+          "due": "2026-03-16",
+          "id": "R16"
+        },
+        {
+          "key": "closing:J-1019",
+          "kind": "closing",
+          "level": "watch",
+          "jobId": "J-1019",
+          "owner": "tomas",
+          "title": "Cedar duplex closing Fri, May 29 at risk",
+          "detail": "Finishes projects to Thu, May 21 (6 days behind), leaving 8 of the 14 days a closing needs.",
+          "due": "2026-05-29",
+          "id": "R17"
         },
         {
           "key": "late-milestone:J-1019",
@@ -3007,7 +3452,7 @@
           "owner": "tomas",
           "title": "Cedar duplex is behind",
           "detail": "Dried in is 6 days late.",
-          "id": "R11"
+          "id": "R18"
         },
         {
           "key": "workload:tomas",
@@ -3016,8 +3461,8 @@
           "owner": "tomas",
           "jobId": "J-1047",
           "title": "Tomas Reyes is at 37 of 40 hours",
-          "detail": "Jordan Pike has 36 hours free. Brooks roof is early-stage and easy to hand over.",
-          "id": "R12"
+          "detail": "Jordan Pike has 30 hours free. Brooks roof is early-stage and easy to hand over.",
+          "id": "R19"
         }
       ],
       "drafts": [
@@ -3083,39 +3528,124 @@
           "status": "draft"
         },
         {
-          "kind": "email",
+          "kind": "invoice",
           "riskId": "R7",
+          "owner": "renee",
+          "to": "draws@granitevalley.example",
+          "jobId": "J-1050",
+          "amount": 82200,
+          "task": "drawRequest",
+          "subject": "Draw request: Ridgeview Lot 14, Dried in",
+          "body": "Hello,\n\nPlease process a draw for Ridgeview Lot 14, 14 Ridgeview Ct. Dried in was completed Tue, Mar 10. This draw is 15% of the $548,000 contract: $82,200.\n\nLet us know when the draw inspection is scheduled and we will meet the inspector on site.\n\nRenee Walsh\nSummit Ridge Builders",
+          "id": "D6",
+          "status": "draft"
+        },
+        {
+          "kind": "email",
+          "riskId": "R8",
           "owner": "maria",
           "to": "m.hayes@example.com",
           "jobId": "J-1031",
           "task": "clientUpdate",
           "subject": "Hayes basement update",
           "body": "Hi Morgan,\n\nQuick update on Hayes basement: demo, framing, drywall are done, and we are 60% through the project. Next up is finish carpentry, planned for Wed, Mar 25.\n\nI will send the next update when that is complete.\n\nMaria Alvarez",
-          "id": "D6",
+          "id": "D7",
           "status": "draft"
         },
         {
           "kind": "slack",
-          "riskId": "R8",
+          "riskId": "R9",
           "owner": "renee",
           "to": "@tomas @renee",
           "jobId": "J-1036",
           "task": "conflictResolution",
           "subject": "North Fork Framing (FAKE) double-booked",
           "body": "North Fork Framing (FAKE) is booked on J-1019 and J-1036 on Fri, Mar 13. Proposal: J-1019 keeps the crew (earlier milestone), J-1036 moves to the next open day. Reply here to confirm.",
-          "id": "D7",
+          "id": "D8",
+          "status": "draft"
+        },
+        {
+          "kind": "email",
+          "riskId": "R12",
+          "owner": "renee",
+          "to": "morgan.park@example.com",
+          "jobId": "J-1050",
+          "task": "selectionNudge",
+          "subject": "Ridgeview Lot 14: selections needed to stay on schedule",
+          "body": "Hi Morgan,\n\nTo keep your home on schedule we need these selections from you:\n- Kitchen cabinets: was due Tue, Mar 10\n- Tile and flooring: due Wed, Mar 18\n\nReply with your choices or pick a time at the design center, and I will place the orders the same day.\n\nRenee Walsh",
+          "id": "D9",
+          "status": "draft"
+        },
+        {
+          "kind": "email",
+          "riskId": "R13",
+          "owner": "jordan",
+          "to": "dana.whitfield@example.com",
+          "jobId": "J-1051",
+          "task": "selectionNudge",
+          "subject": "Oak Hollow Lot 6: selections needed to stay on schedule",
+          "body": "Hi Dana,\n\nTo keep your home on schedule we need these selections from you:\n- Exterior colors and roofing: due Mon, Mar 16\n\nReply with your choices or pick a time at the design center, and I will place the orders the same day.\n\nJordan Pike",
+          "id": "D10",
+          "status": "draft"
+        },
+        {
+          "kind": "email",
+          "riskId": "R14",
+          "owner": "renee",
+          "to": "orders@hearthline.example",
+          "jobId": "J-1050",
+          "task": "orderCheck",
+          "subject": "Order: Cabinets, Ridgeview Lot 14",
+          "body": "Hello,\n\nPlease confirm price and earliest delivery for cabinets for Ridgeview Lot 14, 14 Ridgeview Ct. We need delivery on site by Fri, Apr 24. If that date is not possible, tell us the soonest you can deliver.\n\nRenee Walsh\nSummit Ridge Builders",
+          "id": "D11",
+          "status": "draft"
+        },
+        {
+          "kind": "email",
+          "riskId": "R15",
+          "owner": "jordan",
+          "to": "orders@trussworks.example",
+          "jobId": "J-1051",
+          "task": "orderCheck",
+          "subject": "Order: Roof trusses, Oak Hollow Lot 6",
+          "body": "Hello,\n\nPlease confirm price and earliest delivery for roof trusses for Oak Hollow Lot 6, 6 Oak Hollow Ln. We need delivery on site by Mon, Apr 6. If that date is not possible, tell us the soonest you can deliver.\n\nJordan Pike\nSummit Ridge Builders",
+          "id": "D12",
+          "status": "draft"
+        },
+        {
+          "kind": "email",
+          "riskId": "R16",
+          "owner": "jordan",
+          "to": "orders@clearview.example",
+          "jobId": "J-1051",
+          "task": "orderCheck",
+          "subject": "Order: Windows, Oak Hollow Lot 6",
+          "body": "Hello,\n\nPlease confirm price and earliest delivery for windows for Oak Hollow Lot 6, 6 Oak Hollow Ln. We need delivery on site by Mon, Apr 27. If that date is not possible, tell us the soonest you can deliver.\n\nJordan Pike\nSummit Ridge Builders",
+          "id": "D13",
+          "status": "draft"
+        },
+        {
+          "kind": "slack",
+          "riskId": "R17",
+          "owner": "tomas",
+          "to": "@dave @tomas",
+          "jobId": "J-1019",
+          "task": "closingCheck",
+          "subject": "Closing at risk: J-1019",
+          "body": "Cedar duplex (J-1019) projects to finish Thu, May 21; closing is Fri, May 29. Options: add a crew to dried in, or agree a new closing date with the buyer and lender this week. Reply with a call and I will draft the note.",
+          "id": "D14",
           "status": "draft"
         },
         {
           "kind": "reassign",
-          "riskId": "R12",
+          "riskId": "R19",
           "owner": "tomas",
           "to": "@tomas @jordan",
           "jobId": "J-1047",
           "task": "reassign",
           "subject": "Hand J-1047 to Jordan Pike",
-          "body": "Proposal: Jordan Pike takes Brooks roof (J-1047, 6 h this week). Tomas Reyes drops to 31 h; Jordan Pike goes to 10 h.",
-          "id": "D8",
+          "body": "Proposal: Jordan Pike takes Brooks roof (J-1047, 6 h this week). Tomas Reyes drops to 31 h; Jordan Pike goes to 16 h.",
+          "id": "D15",
           "status": "draft"
         }
       ],
@@ -3137,11 +3667,12 @@
           "personId": "jordan",
           "name": "Jordan Pike",
           "jobs": [
-            "J-1027"
+            "J-1027",
+            "J-1051"
           ],
-          "hours": 4,
+          "hours": 10,
           "capacity": 40,
-          "openRisks": 1,
+          "openRisks": 4,
           "load": "light"
         },
         {
@@ -3149,11 +3680,12 @@
           "name": "Renee Walsh",
           "jobs": [
             "J-1045",
-            "J-1036"
+            "J-1036",
+            "J-1050"
           ],
-          "hours": 23,
+          "hours": 31,
           "capacity": 40,
-          "openRisks": 2,
+          "openRisks": 5,
           "load": "ok"
         },
         {
@@ -3165,7 +3697,7 @@
           ],
           "hours": 37,
           "capacity": 40,
-          "openRisks": 3,
+          "openRisks": 4,
           "load": "heavy"
         }
       ],
@@ -3179,7 +3711,7 @@
         {
           "agent": "coordinator",
           "check": "Permits and inspections",
-          "looked": 8,
+          "looked": 10,
           "found": 2
         },
         {
@@ -3190,14 +3722,14 @@
         },
         {
           "agent": "coordinator",
-          "check": "Completed milestones not yet invoiced",
-          "looked": 8,
-          "found": 1
+          "check": "Completed milestones not yet drawn or billed",
+          "looked": 10,
+          "found": 2
         },
         {
           "agent": "coordinator",
           "check": "Clients waiting on an update",
-          "looked": 8,
+          "looked": 10,
           "found": 1
         },
         {
@@ -3209,8 +3741,26 @@
         {
           "agent": "coordinator",
           "check": "Quotes due in the next day",
-          "looked": 8,
+          "looked": 10,
           "found": 2
+        },
+        {
+          "agent": "coordinator",
+          "check": "Buyer selections due or overdue",
+          "looked": 10,
+          "found": 2
+        },
+        {
+          "agent": "coordinator",
+          "check": "Long-lead orders against their need-by dates",
+          "looked": 10,
+          "found": 3
+        },
+        {
+          "agent": "coordinator",
+          "check": "Closing dates against the schedule",
+          "looked": 10,
+          "found": 1
         },
         {
           "agent": "coordinator",
@@ -3219,7 +3769,7 @@
           "found": 1
         }
       ],
-      "digest": "*Summit Ridge Builders · morning status, Thu, Mar 12*\n8 jobs: 3 on track, 4 at risk, 1 behind. 8 drafts waiting for approval.\n\n_Lead_\n• J-1047 Brooks roof (Tomas) 0% · on track · Next: Quote sent Fri, Mar 13.\n_Quote_\n• J-1042 Rivera kitchen (Maria) 0% · on track · Next: Site walk Thu, Mar 12.\n_Scheduled_\n• J-1045 Morales bath (Renee) 0% · at risk · Tilewright Tile (FAKE) insurance lapses before their work\n_In progress_\n• J-1031 Hayes basement (Maria) 60% · on track · Next: Finish carpentry Wed, Mar 25.\n• J-1038 Pinecrest addition (Maria) 40% · at risk · Bright Spark Electric (FAKE) insurance expired\n• J-1036 Patel garage (Renee) 30% · at risk · North Fork Framing (FAKE) booked on two jobs Fri, Mar 13\n• J-1019 Cedar duplex (Tomas) 35% · behind · Dried in is 6 days late.\n_Closeout_\n• J-1027 Lakeview deck (Jordan) 70% · at risk · Clearline Plumbing (FAKE) lien waiver missing\n\n*Blocked*\n• Bright Spark Electric (FAKE) insurance expired → Maria\n• Tilewright Tile (FAKE) insurance lapses before their work → Renee\n• Clearline Plumbing (FAKE) lien waiver missing → Jordan\n• North Fork Framing (FAKE) booked on two jobs Fri, Mar 13 → Renee\n• Cedar duplex is behind → Tomas"
+      "digest": "*Summit Ridge Builders · morning status, Thu, Mar 12*\n10 jobs: 3 on track, 6 at risk, 1 behind. 15 drafts waiting for approval.\n\n_Lead_\n• J-1047 Brooks roof (Tomas) 0% · on track · Next: Quote sent Fri, Mar 13.\n_Quote_\n• J-1042 Rivera kitchen (Maria) 0% · on track · Next: Site walk Thu, Mar 12.\n_Scheduled_\n• J-1045 Morales bath (Renee) 0% · at risk · Tilewright Tile (FAKE) insurance lapses before their work\n• J-1051 Oak Hollow Lot 6 (Jordan) 0% · at risk · Roof trusses for Oak Hollow Lot 6 not ordered: arrives 10 days late\n_In progress_\n• J-1031 Hayes basement (Maria) 60% · on track · Next: Finish carpentry Wed, Mar 25.\n• J-1038 Pinecrest addition (Maria) 40% · at risk · Bright Spark Electric (FAKE) insurance expired\n• J-1036 Patel garage (Renee) 30% · at risk · North Fork Framing (FAKE) booked on two jobs Fri, Mar 13\n• J-1019 Cedar duplex (Tomas) 35% · behind · Dried in is 6 days late.\n• J-1050 Ridgeview Lot 14 (Renee) 50% · at risk · Ridgeview Lot 14: 2 buyer selections overdue\n_Closeout_\n• J-1027 Lakeview deck (Jordan) 70% · at risk · Clearline Plumbing (FAKE) lien waiver missing\n\n*Blocked*\n• Bright Spark Electric (FAKE) insurance expired → Maria\n• Tilewright Tile (FAKE) insurance lapses before their work → Renee\n• Clearline Plumbing (FAKE) lien waiver missing → Jordan\n• North Fork Framing (FAKE) booked on two jobs Fri, Mar 13 → Renee\n• Ridgeview Lot 14: 2 buyer selections overdue → Renee\n• Roof trusses for Oak Hollow Lot 6 not ordered: arrives 10 days late → Jordan\n• Cedar duplex is behind → Tomas"
     },
     "changes": {
       "since": "2026-03-11",

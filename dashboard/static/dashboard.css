@@ -500,3 +500,8 @@ section > h2, .section-head h2, .mgroup h2 {
 .ev-kind.k-inspection { color: var(--warn); }
 .ev-kind.k-quote-due { color: var(--good); }
 .ev-kind.k-permit { color: var(--bad); }
+/* New-build look-ahead labels. */
+.ev-kind.k-selections { color: var(--prep-ink); }
+.ev-kind.k-order-by { color: var(--bad); }
+.ev-kind.k-closing { color: var(--good); }
+.jcard .closing { font-size: 12.5px; font-weight: 600; }

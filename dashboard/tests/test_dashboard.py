@@ -218,7 +218,7 @@ class AppTest(unittest.TestCase):
         data = self.client.get("/api/runs/thursday").get_json()
         self.assertIn("insights", data)
         team = self.client.get("/api/team").get_json()
-        self.assertEqual(team["counts"], {"on-track": 3, "at-risk": 4, "behind": 1})
+        self.assertEqual(team["counts"], {"on-track": 3, "at-risk": 6, "behind": 1})
         self.assertFalse(self.client.get("/api/slack/status").get_json()["connected"])
 
     def test_approve_requires_form_token(self):
@@ -459,7 +459,8 @@ class TeamViewTest(unittest.TestCase):
         q = self.view()["queue"]
         levels = [i["level"] for i in q]
         self.assertEqual(levels, sorted(levels, key=lambda level: level != "blocked"))
-        self.assertEqual(q[0]["id"], "day-maria")
+        self.assertEqual(q[0]["dueLabel"], "Overdue")  # oldest blocker first: the trusses should have been ordered Mar 2
+        self.assertIn("day-maria", [i["id"] for i in q if i["level"] == "blocked"])
 
     def test_lookahead_flags_conflicts_on_the_right_day(self):
         days = {d["label"]: d for d in self.view()["lookahead"]}
@@ -476,8 +477,41 @@ class TeamViewTest(unittest.TestCase):
 
     def test_team_ledger_counts_drafts(self):
         ledger = self.view()["ledger"]
-        self.assertEqual(ledger["reviewMinutes"], 9)  # 8 drafts + the brief
-        self.assertEqual(ledger["netMinutes"], ledger["manualMinutes"] - 9)
+        self.assertEqual(ledger["reviewMinutes"], 16)  # 15 drafts + the brief
+        self.assertEqual(ledger["netMinutes"], ledger["manualMinutes"] - 16)
+
+
+class NewBuildTest(unittest.TestCase):
+    def view(self):
+        from dashboard.portfolio import build_team_view
+
+        return build_team_view(snapshot(), assumptions())
+
+    def test_draw_request_goes_to_the_lender_with_its_own_button(self):
+        item = next(i for i in self.view()["queue"] if i["kindLabel"] == "Loan draw")
+        self.assertEqual(item["to"], "draws@granitevalley.example")
+        self.assertEqual(item["channel"], "Draw request")
+        self.assertEqual(item["action"], "Approve draw request")
+        self.assertEqual(item["amount"], 82200)
+        self.assertEqual(item["minutes"], 25)
+
+    def test_lookahead_shows_order_deadlines_and_selections(self):
+        events = [e for d in self.view()["lookahead"] for e in d["events"]]
+        kinds = {(e["kind"], e["title"]) for e in events}
+        self.assertIn(("Order by", "Cabinets"), kinds)  # Mar 13 = Apr 24 minus 42 days
+        self.assertIn(("Selections", "Exterior colors and roofing"), kinds)
+
+    def test_job_cards_show_lot_and_closing(self):
+        cards = {c["jobId"]: c for col in self.view()["board"] for c in col["jobs"]}
+        self.assertEqual(cards["J-1050"]["lot"], "Lot 14 · Ridgeview")
+        self.assertEqual(cards["J-1050"]["closingLabel"], "Fri, Jun 26")
+        self.assertEqual(cards["J-1050"]["lender"], "Granite Valley Bank (FAKE)")
+        self.assertIsNone(cards["J-1031"]["closingLabel"])  # remodels stay as they were
+
+    def test_ledger_names_the_new_build_work(self):
+        tasks = {line["task"] for line in self.view()["ledger"]["lines"]}
+        for task in ("Assemble a construction-loan draw request", "Chase a buyer for selections", "Check and place a long-lead order", "Check a closing date against the schedule"):
+            self.assertIn(task, tasks)
 
 
 class BriefTest(unittest.TestCase):

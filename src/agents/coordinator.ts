@@ -27,6 +27,12 @@ export const RULES = {
   /** Hours over capacity share that count as heavy. */
   heavyShare: 0.9,
   lightShare: 0.5,
+  /** Buyer selections due within this many days get a drafted reminder. */
+  selectionWarnDays: 7,
+  /** Warn this many days before the last day to place a long-lead order. */
+  orderWarnDays: 5,
+  /** Days a closing needs after the last milestone (final inspection, CO, walkthrough). */
+  closingBufferDays: 14,
 } as const;
 
 export function daysBetween(from: string, to: string): number {
@@ -35,6 +41,18 @@ export function daysBetween(from: string, to: string): number {
 
 export function money(amount: number): string {
   return `$${Math.round(amount).toLocaleString("en-US")}`;
+}
+
+export function addDays(iso: string, days: number): string {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+/** True when an open buyer selection names this order's item, e.g. "Kitchen cabinets" for "Cabinets". */
+function waitingOnBuyer(j: Job, item: string, today: string): boolean {
+  const word = item.toLowerCase();
+  return (j.selections ?? []).some((x) => !x.done && x.item.toLowerCase().includes(word) && daysBetween(today, x.due) <= RULES.selectionWarnDays);
 }
 
 function shortDate(iso: string): string {
@@ -196,25 +214,39 @@ export function sweepPortfolio(p: Portfolio): Sweep {
   }
   steps.push({ agent: "coordinator", check: "Lien waivers before final payments", looked: p.lienWaivers.length, found });
 
-  // 4. Milestones done but not invoiced.
+  // 4. Milestones done but not billed. With a construction lender, that is a draw request to the lender.
   found = 0;
   for (const j of p.jobs) {
     for (const m of j.milestones.filter((x) => x.done && x.billPct && !x.invoiced)) {
       found += 1;
       const amount = j.contract * m.billPct!;
-      const r = add({
-        key: `invoice:${j.id}:${m.id}`, kind: "invoice", level: "watch", jobId: j.id, owner: j.pm,
-        title: `${j.name}: ${m.name} done, not billed`,
-        detail: `${Math.round(m.billPct! * 100)}% of ${money(j.contract)} = ${money(amount)} ready to invoice.`,
-      });
-      draft({
-        kind: "invoice", riskId: r.id, owner: j.pm, to: j.clientEmail, jobId: j.id, amount, task: "invoiceDraft",
-        subject: `Invoice: ${j.name}, ${m.name}`,
-        body: `${m.name} was completed ${shortDate(m.done!)}. Progress billing ${Math.round(m.billPct! * 100)}% of the ${money(j.contract)} contract: ${money(amount)}.`,
-      });
+      const pct = Math.round(m.billPct! * 100);
+      if (j.lender) {
+        const r = add({
+          key: `draw:${j.id}:${m.id}`, kind: "draw", level: "watch", jobId: j.id, owner: j.pm,
+          title: `${j.name}: ${m.name} done, draw not requested`,
+          detail: `${pct}% of ${money(j.contract)} = ${money(amount)} from ${j.lender.name}.`,
+        });
+        draft({
+          kind: "invoice", riskId: r.id, owner: j.pm, to: j.lender.email, jobId: j.id, amount, task: "drawRequest",
+          subject: `Draw request: ${j.name}, ${m.name}`,
+          body: `Hello,\n\nPlease process a draw for ${j.name}, ${j.address}. ${m.name} was completed ${shortDate(m.done!)}. This draw is ${pct}% of the ${money(j.contract)} contract: ${money(amount)}.\n\nLet us know when the draw inspection is scheduled and we will meet the inspector on site.\n\n${person(j.pm).name}\n${p.company}`,
+        });
+      } else {
+        const r = add({
+          key: `invoice:${j.id}:${m.id}`, kind: "invoice", level: "watch", jobId: j.id, owner: j.pm,
+          title: `${j.name}: ${m.name} done, not billed`,
+          detail: `${pct}% of ${money(j.contract)} = ${money(amount)} ready to invoice.`,
+        });
+        draft({
+          kind: "invoice", riskId: r.id, owner: j.pm, to: j.clientEmail, jobId: j.id, amount, task: "invoiceDraft",
+          subject: `Invoice: ${j.name}, ${m.name}`,
+          body: `${m.name} was completed ${shortDate(m.done!)}. Progress billing ${pct}% of the ${money(j.contract)} contract: ${money(amount)}.`,
+        });
+      }
     }
   }
-  steps.push({ agent: "coordinator", check: "Completed milestones not yet invoiced", looked: p.jobs.length, found });
+  steps.push({ agent: "coordinator", check: "Completed milestones not yet drawn or billed", looked: p.jobs.length, found });
 
   // 5. Clients waiting on an update.
   found = 0;
@@ -280,6 +312,78 @@ export function sweepPortfolio(p: Portfolio): Sweep {
   }
   steps.push({ agent: "coordinator", check: "Quotes due in the next day", looked: p.jobs.length, found });
 
+  // 8. Buyer selections the schedule is waiting on.
+  found = 0;
+  for (const j of p.jobs) {
+    const pending = (j.selections ?? [])
+      .filter((x) => !x.done && daysBetween(p.today, x.due) <= RULES.selectionWarnDays)
+      .sort((a, b) => a.due.localeCompare(b.due));
+    if (pending.length === 0) continue;
+    found += 1;
+    const overdue = pending.filter((x) => daysBetween(p.today, x.due) < 0);
+    const buyer = j.client.replace(" (FAKE)", "").split(" ")[0];
+    const r = add({
+      key: `selections:${j.id}`, kind: "selections", level: overdue.length ? "blocked" : "watch", jobId: j.id, owner: j.pm,
+      title: `${j.name}: ${pending.length} buyer selection${pending.length === 1 ? "" : "s"} ${overdue.length ? "overdue" : "due this week"}`,
+      detail: pending.map((x) => `${x.item} (${daysBetween(p.today, x.due) < 0 ? "was due" : "due"} ${shortDate(x.due)})`).join(", ") + ". Orders and crews wait on these.",
+      due: pending[0]!.due,
+    });
+    draft({
+      kind: "email", riskId: r.id, owner: j.pm, to: j.clientEmail, jobId: j.id, task: "selectionNudge",
+      subject: `${j.name}: selections needed to stay on schedule`,
+      body: `Hi ${buyer},\n\nTo keep your home on schedule we need these selections from you:\n${pending.map((x) => `- ${x.item}: ${daysBetween(p.today, x.due) < 0 ? `was due ${shortDate(x.due)}` : `due ${shortDate(x.due)}`}`).join("\n")}\n\nReply with your choices or pick a time at the design center, and I will place the orders the same day.\n\n${person(j.pm).name}`,
+    });
+  }
+  steps.push({ agent: "coordinator", check: "Buyer selections due or overdue", looked: p.jobs.length, found });
+
+  // 9. Long-lead orders: the last day to order is the need-by date minus the lead time.
+  found = 0;
+  for (const j of p.jobs) {
+    for (const o of (j.orders ?? []).filter((x) => !x.ordered)) {
+      const orderBy = addDays(o.needBy, -o.leadDays);
+      const left = daysBetween(p.today, orderBy);
+      if (left > RULES.orderWarnDays) continue;
+      found += 1;
+      const arrives = addDays(p.today, o.leadDays);
+      const r = add({
+        key: `order:${j.id}:${o.item}`, kind: "order", level: left < 0 ? "blocked" : "watch", jobId: j.id, owner: j.pm,
+        title: left < 0 ? `${o.item} for ${j.name} not ordered: arrives ${-left} days late` : `Order ${o.item.toLowerCase()} for ${j.name} by ${shortDate(orderBy)}`,
+        detail: `${o.leadDays}-day lead time from ${o.vendor}. Needed on site ${shortDate(o.needBy)}. Ordered today it arrives ${shortDate(arrives)}.${waitingOnBuyer(j, o.item, p.today) ? " The buyer's selection for it is still open." : ""}`,
+        due: orderBy,
+      });
+      draft({
+        kind: "email", riskId: r.id, owner: j.pm, to: o.vendorEmail, jobId: j.id, task: "orderCheck",
+        subject: `Order: ${o.item}, ${j.name}`,
+        body: `Hello,\n\nPlease confirm price and earliest delivery for ${o.item.toLowerCase()} for ${j.name}, ${j.address}. We need delivery on site by ${shortDate(o.needBy)}. If that date is not possible, tell us the soonest you can deliver.\n\n${person(j.pm).name}\n${p.company}`,
+      });
+    }
+  }
+  steps.push({ agent: "coordinator", check: "Long-lead orders against their need-by dates", looked: p.jobs.length, found });
+
+  // 10. Closings: the last milestone plus any slip plus the closing buffer must land before the closing date.
+  found = 0;
+  const ownerPerson = p.people.find((x) => x.role === "Owner");
+  for (const j of p.jobs.filter((x) => x.closing && x.milestones.some((m) => !m.done))) {
+    const status = jobStatus(j, p.today, []);
+    const last = j.milestones.at(-1)!;
+    const projected = addDays(last.planned, status.daysLate);
+    const room = daysBetween(projected, j.closing!);
+    if (room >= RULES.closingBufferDays) continue;
+    found += 1;
+    const r = add({
+      key: `closing:${j.id}`, kind: "closing", level: room < 0 ? "blocked" : "watch", jobId: j.id, owner: j.pm,
+      title: `${j.name} closing ${shortDate(j.closing!)} at risk`,
+      detail: `${last.name} projects to ${shortDate(projected)}${status.daysLate ? ` (${status.daysLate} days behind)` : ""}, leaving ${Math.max(room, 0)} of the ${RULES.closingBufferDays} days a closing needs.`,
+      due: j.closing,
+    });
+    draft({
+      kind: "slack", riskId: r.id, owner: j.pm, to: [ownerPerson?.slack, person(j.pm).slack].filter(Boolean).join(" "), jobId: j.id, task: "closingCheck",
+      subject: `Closing at risk: ${j.id}`,
+      body: `${j.name} (${j.id}) projects to finish ${shortDate(projected)}; closing is ${shortDate(j.closing!)}. Options: add a crew to ${status.nextMilestone?.name.toLowerCase() ?? "the next phase"}, or agree a new closing date with the buyer and lender this week. Reply with a call and I will draft the note.`,
+    });
+  }
+  steps.push({ agent: "coordinator", check: "Closing dates against the schedule", looked: p.jobs.length, found });
+
   // Statuses use the risks found above.
   const statuses = p.jobs.map((j) => jobStatus(j, p.today, risks));
   for (const s of statuses.filter((x) => x.status === "behind")) {
@@ -290,7 +394,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
     });
   }
 
-  // 8. Workload and a rebalance proposal.
+  // 11. Workload and a rebalance proposal.
   const workload: Workload[] = p.people
     .filter((x) => x.role === "Project manager")
     .map((x) => {

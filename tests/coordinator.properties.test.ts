@@ -59,6 +59,11 @@ function randomPortfolio(seed: number): Portfolio {
       permit: r() < 0.4 ? { id: `PC-${2000 + i}`, expires: addDays(TODAY, int(-5, 60)) } : undefined,
       inspection: r() < 0.3 ? { name: "Inspection", date: addDays(TODAY, int(-2, 5)) } : undefined,
       quoteDue: r() < 0.3 ? addDays(TODAY, int(-1, 3)) : undefined,
+      // New-build fields on some jobs: a lender, a closing, buyer selections, long-lead orders.
+      lender: r() < 0.4 ? { name: "Bank (FAKE)", email: `draws${i}@bank.example` } : undefined,
+      closing: r() < 0.4 ? addDays(TODAY, int(10, 200)) : undefined,
+      selections: r() < 0.4 ? Array.from({ length: int(1, 3) }, (_, k) => ({ item: `Selection ${k}`, due: addDays(TODAY, int(-10, 20)), done: r() < 0.3 })) : undefined,
+      orders: r() < 0.4 ? Array.from({ length: int(1, 3) }, (_, k) => ({ item: `Order ${k}`, vendor: "Vendor (FAKE)", vendorEmail: `v${k}@vendor.example`, leadDays: int(7, 60), needBy: addDays(TODAY, int(-5, 90)), ordered: r() < 0.4 })) : undefined,
     };
   });
   const bookings: Booking[] = Array.from({ length: int(0, 10) }, () => ({
@@ -105,6 +110,7 @@ describe("coordinator invariants over 300 random portfolios", () => {
     eachSeed((p) => {
       const s = sweepPortfolio(p);
       for (const j of p.jobs) {
+        // Invoices and lender draws both bill the contract.
         const billed = s.drafts.filter((d) => d.kind === "invoice" && d.jobId === j.id).reduce((n, d) => n + d.amount!, 0);
         const already = j.milestones.filter((m) => m.invoiced).reduce((n, m) => n + j.contract * (m.billPct ?? 0), 0);
         assert.ok(billed + already <= j.contract + 0.01, `${j.id} billed ${billed + already} of ${j.contract}`);
@@ -183,5 +189,28 @@ describe("coordinator invariants over 300 random portfolios", () => {
       assert.equal(fwd.filter((c) => c.kind === "risk-new").length, back.filter((c) => c.kind === "risk-cleared").length, `seed ${seed}`);
       assert.equal(fwd.filter((c) => c.kind === "job-new").length, back.filter((c) => c.kind === "job-gone").length, `seed ${seed}`);
     }
+  });
+  it("sends draws to the lender, never to the buyer, and only for jobs with a lender", () => {
+    eachSeed((p) => {
+      const s = sweepPortfolio(p);
+      for (const d of s.drafts.filter((x) => x.task === "drawRequest")) {
+        const j = p.jobs.find((x) => x.id === d.jobId)!;
+        assert.equal(d.to, j.lender?.email, `${d.id} goes to ${d.to}`);
+      }
+      for (const d of s.drafts.filter((x) => x.task === "invoiceDraft")) {
+        assert.equal(p.jobs.find((x) => x.id === d.jobId)!.lender, undefined, `${d.id} invoices a lender-financed job`);
+      }
+    });
+  });
+
+  it("never flags an ordered material, a finished selection, or a finished job's closing", () => {
+    eachSeed((p) => {
+      for (const r of sweepPortfolio(p).risks) {
+        const j = p.jobs.find((x) => x.id === r.jobId);
+        if (r.kind === "order") assert.ok(j!.orders!.some((o) => !o.ordered && r.key === `order:${j!.id}:${o.item}`), r.key);
+        if (r.kind === "selections") assert.ok(j!.selections!.some((x) => !x.done), r.key);
+        if (r.kind === "closing") assert.ok(j!.milestones.some((m) => !m.done), r.key);
+      }
+    });
   });
 });
