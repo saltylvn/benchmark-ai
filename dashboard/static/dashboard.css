@@ -489,3 +489,8 @@ section > h2, .section-head h2, .mgroup h2 {
 .since .since-group.worse h3 { color: var(--bad); } .since .since-group.better h3 { color: var(--good); } .since .since-group.news h3 { color: var(--accent); }
 .since-group li b { font-weight: 700; }
 .layer h3 { font-weight: 700; }
+/* Small all-caps labels ("MORNING SWEEP · THU, MAR 12", "FOUND THIS MORNING", "CREW", "MILESTONE"):
+   bold, a step larger, and in colour instead of grey, so they work as signposts. */
+.eyebrow, .found-label { font-size: 13px; font-weight: 700; letter-spacing: .09em; color: var(--title-rule); }
+.ev-kind { font-size: 12px; color: var(--ink); }
+.signin-label { font-weight: 700; color: var(--ink); }
