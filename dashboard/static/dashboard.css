@@ -770,3 +770,79 @@ section .eng { box-shadow: none; }
 .kpi.accent b, .kpi.accent span { color: var(--on-accent); }
 /* Landing sections sit on the page; only their cards are panels. */
 .landing section.land-section, .landing section.land-proof { border: 0; box-shadow: none; background: none; }
+
+/* ---- On site: iPhone and iPad ------------------------------------------------------------
+   Phones get an iOS-style bottom tab bar (thumb reach, always visible), a quiet header,
+   and tighter cards. iPads keep the top tabs and use two columns. */
+.tab-ico { display: none; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tab-short { display: none; }
+
+@media (max-width: 640px) {
+  /* Header: brand and date only; connection status moves into the summary card's context. */
+  .top { padding-block: 10px; }
+  .integrations .chip.draft, .integrations .chip.user { display: none; }
+  .integrations { gap: 6px; }
+  .integrations .chip { font-size: 12px; padding: 4px 10px; }
+
+  /* Bottom tab bar */
+  .tabs {
+    position: fixed; z-index: 40; left: 0; right: 0; bottom: 0; top: auto;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; overflow: visible;
+    margin: 0; padding: 6px max(8px, env(safe-area-inset-left, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-right, 0px));
+    background: var(--paper); border-top: 1px solid var(--line); box-shadow: 0 -4px 18px rgba(17, 24, 39, 0.06);
+  }
+  .tabs a {
+    position: relative; flex-direction: column; justify-content: center; gap: 3px; min-height: 52px; padding: 4px 2px;
+    border-radius: 12px; font-size: 11px; font-weight: 600; color: var(--muted); background: none;
+  }
+  .tabs a.on { background: none; color: var(--accent); }
+  .tabs a.on .tab-ico { stroke-width: 2.2; }
+  .tab-ico { display: block; }
+  .tab-long { display: none; } .tab-short { display: inline; }
+  .tabs .count { position: absolute; top: 2px; left: calc(50% + 6px); font-size: 10.5px; padding: 0 6px; line-height: 17px; background: var(--bad); color: #fff; }
+  .tabs a.on .count { background: var(--bad); color: #fff; }
+  main { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  .tour { bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+
+  /* Cards: a little tighter and calmer */
+  section, .since { padding: 16px; border-radius: 16px; }
+  .summary h1 { font-size: 26px; }
+  .summary .lede { font-size: 14.5px; }
+  .kpis { grid-template-columns: 1fr 1fr; }
+  .kpis .status-kpi, .kpis .kpi.accent { grid-column: 1 / -1; }
+  .qcard { padding: 14px; }
+  .qcard h3 { font-size: 16px; }
+  .qactions { flex-wrap: wrap; }
+  .qactions .approve { flex: 1 1 auto; min-height: 46px; }
+  .found, .filters { margin-inline: -2px; }
+}
+
+/* iPad portrait and landscape: room for two columns of cards and the full tab labels. */
+@media (min-width: 641px) and (max-width: 1180px) {
+  .tabs { justify-content: flex-start; }
+  .queue-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .summary { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .eng-grid, .pain-grid, .life-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .since-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .top { flex-wrap: nowrap; gap: 8px; }
+  .integrations { flex-wrap: nowrap; margin-left: auto; }
+  .integrations .chip { white-space: nowrap; }
+}
+@media (max-width: 360px) { .integrations a.chip { display: none; } }
+@media (max-width: 1180px) {
+  .kpis { grid-template-columns: 1fr 1fr; }
+  .kpis .status-kpi, .kpis .kpi.accent { grid-column: 1 / -1; }
+  .donut-legend span { white-space: nowrap; }
+}
+@media (max-width: 640px) {
+  .integrations .chip.ok, .integrations .chip.off { display: none; }
+  .integrations a.chip { border: 0; background: none; padding: 6px 2px; color: var(--accent); font-weight: 600; font-size: 14px; }
+  .brand strong { white-space: nowrap; }
+}
+@media (max-width: 360px) { .integrations a.chip { display: inline-flex; } }
+@media (max-width: 640px) {
+  .integrations { width: auto; flex: none; overflow: visible; }
+  .brand { flex: 1 1 auto; }
+}

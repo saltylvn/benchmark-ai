@@ -41,11 +41,11 @@
 </header>
 
 <nav class="tabs" aria-label="Views">
-  <a href="#today" data-tab="today">Today <b class="count" data-count="open">{{ t.queue|length }}</b></a>
-  <a href="#jobs" data-tab="jobs">Jobs</a>
-  <a href="#team" data-tab="team">Team</a>
-  <a href="#messages" data-tab="messages">Messages</a>
-  <a href="#hood" data-tab="hood">Under the hood</a>
+  <a href="#today" data-tab="today"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h10"/></svg><span class="tab-label">Today</span> <b class="count" data-count="open">{{ t.queue|length }}</b></a>
+  <a href="#jobs" data-tab="jobs"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="7" height="16" rx="2"/><rect x="13.5" y="4" width="7" height="10" rx="2"/></svg><span class="tab-label">Jobs</span></a>
+  <a href="#team" data-tab="team"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15.5 6a3 3 0 0 1 0 5.5M17.5 19a5 5 0 0 0-2.5-4.3"/></svg><span class="tab-label">Team</span></a>
+  <a href="#messages" data-tab="messages"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-5 4z"/></svg><span class="tab-label">Messages</span></a>
+  <a href="#hood" data-tab="hood"><svg class="tab-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 2.5v2.5M15 2.5v2.5M9 19v2.5M15 19v2.5M2.5 9h2.5M2.5 15h2.5M19 9h2.5M19 15h2.5"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/></svg><span class="tab-label"><span class="tab-long">Under the hood</span><span class="tab-short">Agents</span></span></a>
 </nav>
 
 <main>

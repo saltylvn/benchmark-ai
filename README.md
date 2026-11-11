@@ -1,6 +1,6 @@
 # Benchmark
 
-**An agent team for new-home builders. Every morning it checks every home, trade and project manager, then drafts the follow-ups. A person approves anything before it leaves the building.**
+**An agent team for construction project managers. Every morning it checks every job, trade and PM, then drafts the follow-ups. A person approves anything before it leaves the building.**
 
 [![CI](https://github.com/saltylvn/benchmark-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/saltylvn/benchmark-ai/actions/workflows/ci.yml)
 &nbsp;**Live demo:** [benchmark-qypb.onrender.com](https://benchmark-qypb.onrender.com) (tap **View the demo**; the free host may take ~1 minute to wake)
@@ -10,6 +10,10 @@
   <img src="docs/images/screens/today-phone.jpg" width="24%" alt="Today: what is blocked and what is already drafted">
   <img src="docs/images/screens/draw-request-phone.jpg" width="24%" alt="A drafted construction-loan draw request waiting for approval">
   <img src="docs/images/screens/today-phone-dark.jpg" width="24%" alt="Today in dark mode">
+</p>
+<p>
+  <img src="docs/images/screens/ipad-today.jpg" width="37%" alt="Today on iPad: summary, metrics and what changed since yesterday">
+  <img src="docs/images/screens/ipad-queue.jpg" width="37%" alt="The approval queue on iPad in two columns">
 </p>
 <img src="docs/images/screens/workflow-desktop.jpg" width="74%" alt="The morning workflow: schedule, Coordinator agent and its checks, drafts behind a fact guard, human approval, then Slack, email drafts and signed webhooks">
 <img src="docs/images/screens/board-desktop.jpg" width="74%" alt="Where every job stands: a board by stage with status, progress and what changed since yesterday">
@@ -34,7 +38,7 @@ A new-home PM runs 6 to 10 houses at once, each with a lender, a buyer, 15 to 25
 | Crews double-booked, quotes due, late milestones | A proposed resolution |
 | PM workload against capacity | A handoff proposal |
 
-The PM gets one queue, in a clean interface built for a phone between site visits: **Approve** or **Later** on each card, a "since yesterday" diff, a two-week look-ahead, a status board and timeline, team load, an 8:00 Slack brief, and a guided tour. It works on iPhone, iPad and desktop and installs to the home screen.
+The PM gets one queue, in a clean interface built for a phone between site visits: **Approve** or **Later** on each card, a "since yesterday" diff, a two-week look-ahead, a status board and timeline, team load, an 8:00 Slack brief, and a guided tour. It is built for the field: an iOS-style bottom tab bar on iPhone, two-column layouts on iPad, and a full dashboard on desktop. It installs to the home screen.
 
 ---
 

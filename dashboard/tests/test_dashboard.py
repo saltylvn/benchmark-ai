@@ -186,7 +186,7 @@ class AppTest(unittest.TestCase):
 
     def test_landing_uses_the_demo_numbers_not_claims(self):
         page = self.app.test_client().get("/").get_data(as_text=True)
-        self.assertIn("For new-home builders", page)
+        self.assertIn("For construction project managers", page)
         self.assertIn("$82,200", page)  # the draw the Coordinator drafted
         self.assertIn("the sample builder in the demo", page)
         self.assertIn("Lien waivers before final payments", page)  # a real check name from the sweep
