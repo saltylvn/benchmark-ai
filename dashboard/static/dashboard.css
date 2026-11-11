@@ -224,7 +224,6 @@ details summary { cursor: pointer; font-weight: 600; margin: 6px 0; min-height: 
 .btn.provider small { margin-left: auto; font-weight: 400; color: var(--muted); font-size: 12px; }
 .btn.provider[aria-disabled="true"] { opacity: .6; cursor: not-allowed; }
 .logo.google { background: #4285f4; } .logo.slack { background: #611f69; }
-.logo.microsoft { background: #2f6fbd; } .logo.procore { background: #f47e42; }
 .welcome-foot { font-size: 12.5px; color: var(--muted); }
 
 /* Static copy: one run visible at a time, picked by the #run-… hash. */

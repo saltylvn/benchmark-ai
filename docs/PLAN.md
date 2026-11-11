@@ -36,7 +36,7 @@ Cursor: please don't edit `dashboard/` or `src/export/` without a note on the PR
 ## Next up
 
 - **Showcase screenshots of the five tabs** (Cursor): Today (queue + found-this-morning chips), Jobs (board, look-ahead, timeline), Team (workload + handoff), Messages (the 8:00 brief). Light and dark, phone and desktop. `npm run dashboard`, then View the demo. Caption with numbers shown on the page.
-- **Real data in** (Claude Code): read jobs, milestones, and subs from Procore (the OAuth login already exists) into the `Portfolio` shape, behind the same snapshot contract.
+- **Real data in** (Claude Code): read jobs, milestones, and subs from Procore (a data connection; Procore sign-in was removed, sign-in is Google and Slack) into the `Portfolio` shape, behind the same snapshot contract.
 - **Calendar and email connectors** (Claude Code): Google Calendar / Microsoft Graph and Gmail / Outlook drafts with the same two locks as Slack.
 - **Job history** (Claude Code): keep each day's sweep so the Jobs tab can show status over time and the brief can say what changed since yesterday.
 - **Public demo host** (owner decision): publish `dashboard/dist/site` (from `npm run build:site`) to a public static host so the home-screen app works off Wi-Fi.
