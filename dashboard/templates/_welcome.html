@@ -1,3 +1,126 @@
+{#- First screen: the sign-in card, and (when landing data is passed) a short landing page around it. -#}
+{% if landing %}
+<div class="landing">
+  <header class="land-bar">
+    <span class="land-brand"><span class="mark">B</span> Benchmark</span>
+    <a class="btn land-bar-cta" href="{{ '#today' if static_mode else url_for('demo') }}">View the demo</a>
+  </header>
+
+  <div class="land-hero">
+    <div class="land-pitch">
+      <span class="land-eyebrow">For new-home builders and their PMs</span>
+      <h2 class="land-title">Every morning, the follow-ups are already written.</h2>
+      <p class="land-sub">Benchmark's AI agents check every home, trade and PM before anyone gets in: insurance, permits, orders, buyer selections, loan draws and closing dates. Then they draft the fix. Your PMs approve in one tap. Nothing goes out without a person.</p>
+      <ul class="land-ticks">
+        <li>Catches what slips between the office, the field and the lender</li>
+        <li>Drafts the email, Slack note or draw request, never sends on its own</li>
+        <li>Works on a phone, an iPad or a laptop</li>
+      </ul>
+    </div>
+    <div class="welcome">
+  <div class="welcome-card">
+    <span class="mark">B</span>
+    <div>
+      <h1>Benchmark</h1>
+      <p>An agent team that gives construction project managers their day back. Every calendar move, email and Slack note waits for your approval.</p>
+    </div>
+    {% if not static_mode %}{% with flashes = get_flashed_messages(with_categories=true) %}
+      {% for cat, msg in flashes %}<div class="flash {{ cat }}" role="status">{{ msg }}</div>{% endfor %}
+    {% endwith %}{% endif %}
+    <a class="btn demo" href="{{ '#today' if static_mode else url_for('demo') }}">View the demo</a>
+    <p class="small">A fictional Thursday at Summit Ridge Builders. No account needed, and nothing is sent.</p>
+    <div class="signin">
+      <span class="signin-label">or sign in with</span>
+      {% for p in providers %}
+        {% if static_mode %}
+          <span class="btn provider" role="link" aria-disabled="true"><span class="logo {{ p.id }}" aria-hidden="true">{{ p.label[0] }}</span>{{ p.label }}<small>in the live dashboard</small></span>
+        {% else %}
+          <a class="btn provider" href="{{ url_for('login', provider_id=p.id) }}"><span class="logo {{ p.id }}" aria-hidden="true">{{ p.label[0] }}</span>{{ p.label }}<small>{{ p.why if p.ready else 'not set up yet' }}</small></a>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <p class="welcome-foot">Signing in uses your company account through the provider. Benchmark never sees your password. Signed-in approvals are logged under your name.</p>
+  </div>
+    </div>
+  </div>
+
+  <section class="land-proof" aria-label="From this morning's demo">
+    <p class="land-kicker">This morning at {{ landing.company }} <span>(the sample builder in the demo)</span></p>
+    <div class="proof-grid">
+      {% for p in landing.proof %}<div class="proof"><b>{{ p.value }}</b><span>{{ p.label }}</span></div>{% endfor %}
+    </div>
+  </section>
+
+  <section class="land-section">
+    <p class="land-kicker">Why PMs fall behind</p>
+    <h2>The day gets eaten by things nobody else is checking</h2>
+    <div class="pain-grid">
+      <article class="pain">
+        <h3>Schedules slip quietly</h3>
+        <p class="pain-problem">Trusses that were never ordered. A sub whose insurance lapsed. A crew booked on two jobs Friday.</p>
+        <p class="pain-fix"><b>Benchmark</b> checks every order-by date, certificate and booking each morning and flags it while there is still time.</p>
+      </article>
+      <article class="pain">
+        <h3>Money waits on paperwork</h3>
+        <p class="pain-problem">A home dried in last week, but nobody asked the lender for the draw. A final payment waits on one lien waiver.</p>
+        <p class="pain-fix"><b>Benchmark</b> drafts the draw request and the waiver chase the day they are due, with the amount computed by code.</p>
+      </article>
+      <article class="pain">
+        <h3>Buyers and closings drift</h3>
+        <p class="pain-problem">Cabinet choices past due. A buyer who has not heard from you in a week. A closing the schedule can no longer make.</p>
+        <p class="pain-fix"><b>Benchmark</b> reminds buyers, writes the update, and warns the owner when a closing is at risk.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="land-section land-check">
+    <div>
+      <p class="land-kicker">What the agents checked at 6:00 a.m.</p>
+      <h2>Every check, every morning, in the open</h2>
+      <p class="land-copy">The Coordinator agent runs the same checks a careful PM would, across the whole team, and shows its work: what it looked at and what it found.</p>
+    </div>
+    <ol class="check-feed">
+      {% for c in landing.checks %}
+      <li class="{{ 'found' if c.found else 'clear' }}" style="--i: {{ loop.index0 }}">
+        <span class="check-mark" aria-hidden="true">{{ '!' if c.found else '✓' }}</span>
+        <span class="check-name">{{ c.check }}</span>
+        <span class="check-count">{{ c.found }} found · {{ c.looked }} checked</span>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="land-section">
+    <p class="land-kicker">From lot to closing</p>
+    <h2>One morning check across the whole build</h2>
+    <div class="life-grid">
+      <article class="life"><span class="life-n">1</span><h3>Pre-construction</h3><p>Permits, quotes due, buyer selections and the long-lead orders that must go in first.</p></article>
+      <article class="life"><span class="life-n">2</span><h3>Building</h3><p>Crews and subs booked, insurance current, inspections staffed, milestones on time.</p></article>
+      <article class="life"><span class="life-n">3</span><h3>Getting paid</h3><p>Loan draws to the lender, progress invoices, lien waivers before final payment.</p></article>
+      <article class="life"><span class="life-n">4</span><h3>Closing</h3><p>Projected finish against the closing date, buyer updates, and a heads-up to the owner.</p></article>
+    </div>
+  </section>
+
+  <section class="land-section">
+    <p class="land-kicker">Questions PMs ask</p>
+    <h2>How it works</h2>
+    <div class="faq">
+      <details><summary>Does it send anything on its own?</summary><p>No. Benchmark only drafts. Every email, Slack note, draw request and invoice waits for a named person to approve it, and demo visitors can never send.</p></details>
+      <details><summary>What does the AI do, and what does code do?</summary><p>Code computes every date, dollar amount and schedule check, and it is tested against hundreds of randomly generated teams. AI writes the wording and answers questions in Ask Benchmark, and every figure it mentions is checked against the data before you see it.</p></details>
+      <details><summary>Where does the data come from?</summary><p>The demo uses a fictional builder. For a pilot, jobs, milestones, orders and selections come in from a spreadsheet first, then from tools like Procore.</p></details>
+      <details><summary>How much time does it save?</summary><p>The demo estimates about {{ landing.hours }} of PM admin drafted on one morning, from minutes-per-task assumptions shown under the hood. These are estimates, not measurements. A pilot measures the real number.</p></details>
+      <details><summary>Does it work on a phone?</summary><p>Yes. It is built for a PM between site visits: it works on an iPhone, an iPad or a laptop, and can be saved to the home screen like an app.</p></details>
+    </div>
+  </section>
+
+  <section class="land-final">
+    <h2>See a morning in one minute</h2>
+    <p>Open the demo and the guided tour walks you through what the agents caught and how a PM approves it.</p>
+    <a class="btn demo" href="{{ '#today' if static_mode else url_for('demo') }}">View the demo</a>
+    <p class="land-fine">Summit Ridge Builders and everyone in the demo are fictional. Time savings are estimates.</p>
+  </section>
+</div>
+{% else %}
 <div class="welcome">
   <div class="welcome-card">
     <span class="mark">B</span>
@@ -23,3 +146,4 @@
     <p class="welcome-foot">Signing in uses your company account through the provider. Benchmark never sees your password. Signed-in approvals are logged under your name.</p>
   </div>
 </div>
+{% endif %}

@@ -543,3 +543,68 @@ section > h2, .section-head h2, .mgroup h2 {
 .tour-actions .tour-skip { border: 0; background: none; color: var(--muted); padding: 0 4px; }
 .tour-focus { position: relative; z-index: 70; border-radius: 14px; box-shadow: 0 0 0 4px var(--title-rule), 0 0 0 100vmax rgba(0, 0, 0, .42); scroll-margin-top: 80px; }
 body.touring { padding-bottom: 240px; }
+
+/* Landing: the first screen for visitors. Proof from the demo's own numbers, pains, the morning check, FAQ. */
+.landing { padding-left: var(--gutter-l); padding-right: var(--gutter-r); padding-bottom: 40px; max-width: 1120px; margin: 0 auto; }
+.land-bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 10px; background: var(--header); backdrop-filter: blur(8px); }
+.land-brand { display: inline-flex; align-items: center; gap: 8px; font: 700 18px var(--serif); }
+.land-brand .mark { width: 32px; height: 32px; font-size: 16px; border-radius: 8px; }
+.land-bar-cta { min-height: 40px; padding: 0 16px; font-size: 14px; }
+.land-hero { display: grid; gap: 20px; align-items: center; padding-block: 16px 8px; }
+.land-hero .welcome { min-height: 0; padding: 0; display: block; }
+.land-hero .welcome-card { margin: 0 auto; }
+.land-eyebrow { display: inline-block; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--title-rule); color: var(--title-rule); font: 700 12.5px var(--sans); letter-spacing: .08em; text-transform: uppercase; }
+.land-title { margin: 12px 0 10px; font: 700 clamp(30px, 5.4vw, 48px)/1.08 var(--serif); letter-spacing: -.01em; text-wrap: balance; }
+.land-sub { margin: 0 0 14px; font-size: 17px; line-height: 1.55; color: var(--muted); max-width: 60ch; }
+.land-ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.land-ticks li { position: relative; padding-left: 28px; font-weight: 600; }
+.land-ticks li::before { content: "✓"; position: absolute; left: 0; top: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--good-bg); color: var(--good); font-size: 12px; display: grid; place-items: center; }
+.land-kicker { margin: 0 0 6px; font: 700 13px var(--sans); letter-spacing: .09em; text-transform: uppercase; color: var(--title-rule); }
+.land-kicker span { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--muted); }
+.land-proof { margin-top: 26px; padding: 20px; border-radius: 16px; background: var(--ink); color: var(--on-ink); }
+.land-proof .land-kicker { color: var(--prep); } .land-proof .land-kicker span { color: inherit; opacity: .75; }
+.proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-top: 8px; }
+.proof b { display: block; font: 700 clamp(28px, 4.4vw, 38px)/1.1 var(--serif); font-variant-numeric: tabular-nums; }
+.proof span { display: block; margin-top: 4px; font-size: 13.5px; line-height: 1.4; opacity: .85; }
+.land-section { margin-top: 26px; }
+.land-section > h2 { margin-bottom: 14px; }
+.land-copy { color: var(--muted); max-width: 60ch; }
+.pain-grid, .life-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.pain, .life { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 16px; min-width: 0; }
+.pain h3, .life h3 { margin: 0 0 6px; font: 700 18px/1.25 var(--serif); }
+.pain-problem { margin: 0 0 10px; color: var(--muted); }
+.pain-fix { margin: 0; padding-top: 10px; border-top: 1px dashed var(--line-strong); }
+.pain-fix b { color: var(--title-rule); }
+.life-n { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--title-rule); color: var(--on-block); font: 700 14px var(--sans); margin-bottom: 8px; }
+.life p { margin: 0; color: var(--muted); }
+.land-check { display: grid; gap: 14px; }
+.check-feed { list-style: none; margin: 0; padding: 8px; display: grid; gap: 6px; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; }
+.check-feed li { display: grid; grid-template-columns: 26px 1fr; gap: 2px 10px; align-items: center; padding: 8px; border-radius: 10px; animation: check-in .4s ease both; animation-delay: calc(var(--i) * 90ms); }
+.check-feed li.found { background: var(--warn-bg); }
+.check-mark { grid-row: span 2; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 13px var(--sans); background: var(--good-bg); color: var(--good); }
+.check-feed li.found .check-mark { background: var(--warn); color: var(--on-ink); }
+.check-name { font-weight: 600; min-width: 0; }
+.check-count { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+@keyframes check-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .check-feed li { animation: none; } }
+.faq { display: grid; gap: 8px; }
+.faq details { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 0 16px; }
+.faq summary { min-height: var(--tap); display: flex; align-items: center; justify-content: space-between; gap: 12px; font-weight: 700; cursor: pointer; list-style: none; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font: 600 22px var(--sans); color: var(--title-rule); flex: none; }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { margin: 0 0 14px; color: var(--muted); }
+.land-final { margin-top: 30px; padding: 28px 20px; border-radius: 16px; text-align: center; background: var(--paper); border: 1px solid var(--line); border-top: 4px solid var(--title-rule); }
+.land-final h2 { margin: 0 0 8px; font-size: clamp(24px, 3.4vw, 32px); }
+.land-final p { color: var(--muted); max-width: 52ch; margin: 0 auto 16px; }
+.land-final .btn.demo { min-height: 52px; padding: 0 28px; font-size: 16px; }
+.land-final .land-fine { margin: 14px auto 0; font-size: 12.5px; }
+@media (min-width: 900px) {
+  .land-hero { grid-template-columns: 1.15fr 1fr; gap: 40px; padding-block: 36px 12px; }
+  .land-check { grid-template-columns: 1fr 1.2fr; align-items: start; }
+}
+/* Landing sections sit on the page, not in a panel; their cards are the panels. */
+.landing section.land-section { background: none; border: 0; padding: 0; margin-bottom: 0; }
+.landing section.land-proof { border: 0; margin-bottom: 0; }
+.landing section.land-final { margin-bottom: 0; }
+.land-check h2 { font-weight: 700; font-size: clamp(22px, 2.6vw, 26px); line-height: 1.2; border-left: 4px solid var(--title-rule); padding-left: 10px; }

@@ -21,7 +21,7 @@ from . import auth
 from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, SnapshotError, build_view, load_json, load_snapshot
 from .store import JsonStore
 from .brief import build_brief, with_brief
-from .portfolio import build_team_view, client_view
+from .portfolio import build_team_view, client_view, landing
 from .slack import SlackConfig, SlackConnector
 
 RUNS = {"thursday": "08:47 request", "morning": "Morning plan"}
@@ -141,7 +141,8 @@ def create_app(
     def index():
         user = current_user()
         if not user:
-            return render_template("index.html", page="welcome", providers=provider_cards(env), static_mode=False)
+            snap = snapshot()
+            return render_template("index.html", page="welcome", providers=provider_cards(env), static_mode=False, landing=landing(snap, load_json(Path(assumptions_path))))
         snap = snapshot()
         assumptions = load_json(Path(assumptions_path))
         status = connector.status()
