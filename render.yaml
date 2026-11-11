@@ -1,0 +1,40 @@
+# Render Blueprint: the Benchmark PM dashboard as a public website.
+# In Render: New → Blueprint → pick this repo → Apply. See docs/DEPLOY.md.
+services:
+  - type: web
+    name: benchmark
+    runtime: python
+    plan: free            # sleeps after 15 idle minutes; switch to "starter" to keep it awake
+    branch: main
+    autoDeploy: true      # every merge to main redeploys
+    buildCommand: pip install -r dashboard/requirements.txt
+    startCommand: gunicorn dashboard.wsgi:app --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 60 --access-logfile -
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      # Session key, generated once by Render so sign-ins survive restarts.
+      - key: DASHBOARD_SECRET
+        generateValue: true
+      # Nothing posts to Slack unless this is 1 AND a signed-in PM approves.
+      - key: SLACK_SEND_ENABLED
+        value: "0"
+      # Optional: fill these in Render's Environment tab when you are ready. Empty is fine.
+      - key: ALLOWED_EMAIL_DOMAINS
+        sync: false
+      - key: SLACK_BOT_TOKEN
+        sync: false
+      - key: SLACK_CHANNEL
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: SLACK_CLIENT_ID
+        sync: false
+      - key: SLACK_CLIENT_SECRET
+        sync: false
+      - key: MICROSOFT_CLIENT_ID
+        sync: false
+      - key: MICROSOFT_CLIENT_SECRET
+        sync: false

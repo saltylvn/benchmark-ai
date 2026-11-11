@@ -196,7 +196,11 @@ What is on it, top to bottom:
 | **Approval queue · Slack** | The executor's Slack draft and the morning brief, each with **Approve & send**. Every press is written to an audit log with the approver's name and the exact payload. |
 | **Under the hood** | The full trace and JSON endpoints: `/api/runs/thursday`, `/api/snapshot`, `/api/slack/status`, `/api/slack/audit`. |
 
-### On iPhone and iPad
+### Online with Render
+
+To put the dashboard on a public website that works on a MacBook, iPad, or iPhone, follow [docs/DEPLOY.md](docs/DEPLOY.md). It's free on Render's free plan, which sleeps when nobody is using it.
+
+## On iPhone and iPad
 
 The dashboard is built for the job site as much as the office.
 
