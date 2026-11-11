@@ -894,3 +894,6 @@ section, .since, .qcard, .jcard, .kpi, .pain, .life, .eng, .faq details, .welcom
 /* Drafts and "not sent yet" read as dashed amber, like planned work in the drawings. */
 .integrations .chip.draft { border-style: var(--draft-border); }
 .draft pre { border: var(--draft-pre-border); }
+
+/* Brand mark: the roof + check logo (flat navy), shared by the header, landing and sign-in card. */
+.mark { background: #2c3a84 url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22%3E %3Crect width=%22512%22 height=%22512%22 rx=%22116%22 fill=%22%232c3a84%22/%3E %3Cpath d=%22M116 262 L256 140 L396 262%22 fill=%22none%22 stroke=%22%23ffffff%22 stroke-width=%2236%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E %3Cpath d=%22M176 320 L232 374 L338 268%22 fill=%22none%22 stroke=%22%239fb6ff%22 stroke-width=%2238%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E %3C/svg%3E") center / cover no-repeat; color: transparent; overflow: hidden; }

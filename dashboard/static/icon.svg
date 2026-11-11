@@ -1,20 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#2a241d"/>
-      <stop offset="1" stop-color="#1a1612"/>
-    </linearGradient>
-    <radialGradient id="sun" cx="0.5" cy="1.02" r="0.62">
-      <stop offset="0" stop-color="#e8862c" stop-opacity="0.55"/>
-      <stop offset="0.55" stop-color="#b15e10" stop-opacity="0.18"/>
-      <stop offset="1" stop-color="#b15e10" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
-  <rect width="512" height="512" rx="112" fill="url(#sun)"/>
-  <!-- A new home, drawn in one stroke weight so it reads at 60 px -->
-  <path d="M100 254 L256 118 L412 254" fill="none" stroke="#fffdf9" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M146 232 V392 Q146 404 158 404 H354 Q366 404 366 392 V232" fill="none" stroke="#fffdf9" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- The morning check -->
-  <path d="M200 316 L244 358 L318 276" fill="none" stroke="#f0913a" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Benchmark: a roofline over the morning check. Flat, one stroke weight, reads at 16 px. -->
+  <rect width="512" height="512" rx="116" fill="#2c3a84"/>
+  <path d="M116 262 L256 140 L396 262" fill="none" stroke="#ffffff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M176 320 L232 374 L338 268" fill="none" stroke="#9fb6ff" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
