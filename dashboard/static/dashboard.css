@@ -1,16 +1,19 @@
 /* Layout: one column of panels, sticky header + section jump bar; panels pair up on wide screens.
-   Palette and faces match the Benchmark demo in docs/ (paper, ink, county-blue focus, job-site orange). */
+   Look: clean and flat, after the workflow-canvas style of tools like n8n. Neutral surfaces on a faint
+   dot grid, near-black ink, one blue accent, a grotesk for headings and monospace for labels.
+   Orange is the brand mark only. */
 :root {
-  --bg: #f3f0e8; --paper: #fffdf9; --ink: #221f1a; --muted: #6f695f;
-  --line: #e4dcd0; --line-strong: #d2c8b8;
+  --bg: #f4f4f4; --paper: #ffffff; --ink: #151515; --muted: #6b6b6b;
+  --line: #e3e3e3; --line-strong: #cfcfcf; --dot: #d6d6d6;
   --focus: #2c3d86; --client: #b15e10; --prep: #ead7ae; --prep-ink: #5c4a28;
   --internal: #4e6570; --personal: #1b754e; --break: #ddd6ca; --break-ink: #3f3b34;
   --admin: #7c766c; --standup: #596069; --on-block: #fffdf9;
   --bad: #9b2832; --bad-bg: #fbeeee; --good: #1b754e; --good-bg: #e8f4ee;
-  --warn: #8a5a00; --warn-bg: #fbf1dc; --accent: #2c3d86; --accent-bg: #eceffa;
-  --on-ink: #fffdf9; --header: rgba(243, 240, 232, 0.94);
-  --sans: "Segoe UI", system-ui, -apple-system, sans-serif;
-  --serif: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+  --warn: #8a5a00; --warn-bg: #fbf1dc; --accent: #2c3d86; --accent-bg: #e6ecff;
+  --on-ink: #ffffff; --header: rgba(244, 244, 244, 0.92);
+  --sans: -apple-system, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  /* Headings: a tight grotesk. (The token keeps its old name so every heading picks it up.) */
+  --serif: -apple-system, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
   --gutter-l: max(16px, env(safe-area-inset-left, 0px));
   --gutter-r: max(16px, env(safe-area-inset-right, 0px));
@@ -18,26 +21,26 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #141311; --paper: #211e1a; --ink: #f4efe6; --muted: #b7ae9f;
-    --line: #3a342c; --line-strong: #534a40;
+    --bg: #111111; --paper: #1b1b1b; --ink: #f2f2f2; --muted: #a3a3a3;
+    --line: #2b2b2b; --line-strong: #3d3d3d; --dot: #2a2a2a;
     --focus: #4458a8; --client: #c56a16; --prep: #e4d0a4; --prep-ink: #3a2e16;
     --internal: #6d8c9a; --personal: #218a5e; --break: #d5cec2; --break-ink: #2a261f;
     --admin: #8d877d; --standup: #6d7580; --on-block: #fffdf9;
     --bad: #f3b4b9; --bad-bg: #3a2426; --good: #9ed9bc; --good-bg: #1c3329;
-    --warn: #f0c08a; --warn-bg: #3a2e1c; --accent: #b7c4f5; --accent-bg: #252c45;
-    --on-ink: #141311; --header: rgba(20, 19, 17, 0.94);
+    --warn: #f0c08a; --warn-bg: #3a2e1c; --accent: #b7c4f5; --accent-bg: #1f2640;
+    --on-ink: #111111; --header: rgba(17, 17, 17, 0.92);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #141311; --paper: #211e1a; --ink: #f4efe6; --muted: #b7ae9f;
-  --line: #3a342c; --line-strong: #534a40;
+  --bg: #111111; --paper: #1b1b1b; --ink: #f2f2f2; --muted: #a3a3a3;
+  --line: #2b2b2b; --line-strong: #3d3d3d; --dot: #2a2a2a;
   --focus: #4458a8; --client: #c56a16; --prep: #e4d0a4; --prep-ink: #3a2e16;
   --internal: #6d8c9a; --personal: #218a5e; --break: #d5cec2; --break-ink: #2a261f;
   --admin: #8d877d; --standup: #6d7580; --on-block: #fffdf9;
   --bad: #f3b4b9; --bad-bg: #3a2426; --good: #9ed9bc; --good-bg: #1c3329;
-  --warn: #f0c08a; --warn-bg: #3a2e1c; --accent: #b7c4f5; --accent-bg: #252c45;
-  --on-ink: #141311; --header: rgba(20, 19, 17, 0.94);
+  --warn: #f0c08a; --warn-bg: #3a2e1c; --accent: #b7c4f5; --accent-bg: #1f2640;
+  --on-ink: #111111; --header: rgba(17, 17, 17, 0.92);
   color-scheme: dark;
 }
 
@@ -610,3 +613,55 @@ body.touring { padding-bottom: 240px; }
 .ev-kind { justify-self: start; align-self: start; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, currentColor 11%, transparent); line-height: 1.5; }
 .ev-kind.k-crew { color: var(--ink); }
 .ev-kind.k-quote-due { color: var(--internal); }
+
+
+/* Clean, flat, organized: the workflow-canvas look --------------------------------------- */
+body { background-color: var(--bg); background-image: radial-gradient(circle, var(--dot) 1.15px, transparent 1.3px); background-size: 22px 22px; }
+h1, h2, h3 { font-weight: 700; letter-spacing: -0.015em; }
+h1 { letter-spacing: -0.025em; }
+section, .since, .qcard, .jcard, .kpi, .pain, .life, .faq details, .welcome-card, .land-final, .check-feed { border-radius: 16px; box-shadow: none; }
+section, .since { border-color: var(--line); }
+:root { --title-rule: var(--accent); }
+
+/* Small labels read as code-like signposts: monospace, uppercase, airy. */
+.eyebrow, .found-label, .land-kicker, .land-eyebrow, .tour .tour-step, .ev-kind, .pill, .since-group h3, .col h3, .signin-label, .ask-badge {
+  font-family: var(--mono); text-transform: uppercase; letter-spacing: .06em; font-weight: 600;
+}
+.eyebrow, .found-label { font-size: 12px; }
+.land-kicker { font-size: 12.5px; }
+
+/* Pill buttons with monospace caps for the calls to action; card actions stay plain and bold. */
+.btn.demo, .land-bar-cta, .tour-start {
+  border-radius: 999px; font-family: var(--mono); text-transform: uppercase; letter-spacing: .06em; font-weight: 600;
+}
+.land-bar-cta, .tour-start { background: var(--accent-bg); color: var(--accent); border: 1px solid transparent; }
+.tour-start { font-size: 13px; }
+.tabs a { font-family: var(--mono); font-size: 13px; letter-spacing: .03em; }
+.tabs a.on { background: var(--ink); color: var(--on-ink); }
+
+/* Brand mark: the house icon instead of a letter. */
+.mark { background: #1d1a16 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E %3Cdefs%3E %3ClinearGradient id='bg' x1='0' y1='0' x2='0' y2='1'%3E %3Cstop offset='0' stop-color='%232a241d'/%3E %3Cstop offset='1' stop-color='%231a1612'/%3E %3C/linearGradient%3E %3CradialGradient id='sun' cx='0.5' cy='1.02' r='0.62'%3E %3Cstop offset='0' stop-color='%23e8862c' stop-opacity='0.55'/%3E %3Cstop offset='0.55' stop-color='%23b15e10' stop-opacity='0.18'/%3E %3Cstop offset='1' stop-color='%23b15e10' stop-opacity='0'/%3E %3C/radialGradient%3E %3C/defs%3E %3Crect width='512' height='512' rx='112' fill='url%28%23bg%29'/%3E %3Crect width='512' height='512' rx='112' fill='url%28%23sun%29'/%3E %3Cpath d='M100 254 L256 118 L412 254' fill='none' stroke='%23fffdf9' stroke-width='42' stroke-linecap='round' stroke-linejoin='round'/%3E %3Cpath d='M146 232 V392 Q146 404 158 404 H354 Q366 404 366 392 V232' fill='none' stroke='%23fffdf9' stroke-width='42' stroke-linecap='round' stroke-linejoin='round'/%3E %3Cpath d='M200 316 L244 358 L318 276' fill='none' stroke='%23f0913a' stroke-width='44' stroke-linecap='round' stroke-linejoin='round'/%3E %3C/svg%3E") center / cover no-repeat; color: transparent; overflow: hidden; }
+
+/* Proof strip: flat dark panel, like a canvas. */
+.land-proof { background: var(--ink); }
+
+/* Workflow canvas (templates/_workflow.html) */
+.wf-wrap { margin: 0; }
+.wf { display: block; width: 100%; min-width: 760px; height: auto; }
+.wf-canvas { fill: var(--paper); stroke: var(--line); stroke-width: 1.5; }
+.wf-dot { fill: var(--line); }
+.wf-label { font: 600 13px var(--mono); letter-spacing: .06em; fill: var(--muted); }
+.wf-tile { fill: var(--paper); stroke: var(--line-strong); stroke-width: 1.6; }
+.wf-hl { fill: var(--accent-bg); stroke: var(--accent); stroke-width: 2.4; }
+.wf-ico { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.wf-thick { stroke-width: 46; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.wf-brand { stroke: #e07b24; }
+.wf-acc { stroke: var(--accent); }
+.wf-ok { fill: none; stroke: var(--good); stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+.wf-glyph { font: 800 30px var(--sans); fill: var(--ink); }
+.wf-name { font: 700 14.5px var(--sans); fill: var(--ink); }
+.wf-op { font: 500 11.5px var(--mono); fill: var(--muted); }
+.wf-code { font: 700 12px var(--mono); fill: var(--ink); }
+.wf-line { fill: none; stroke: var(--muted); stroke-width: 1.8; }
+.wf-dash { stroke-dasharray: 5 5; }
+.wf-arrow { fill: var(--muted); }
