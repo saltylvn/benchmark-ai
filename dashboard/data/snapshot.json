@@ -2892,6 +2892,7 @@
       ],
       "risks": [
         {
+          "key": "insurance:brightspark",
           "kind": "insurance",
           "level": "blocked",
           "jobId": "J-1038",
@@ -2902,6 +2903,7 @@
           "id": "R1"
         },
         {
+          "key": "insurance:tilewright",
           "kind": "insurance",
           "level": "blocked",
           "jobId": "J-1045",
@@ -2912,6 +2914,7 @@
           "id": "R2"
         },
         {
+          "key": "inspection:J-1038",
           "kind": "inspection",
           "level": "watch",
           "jobId": "J-1038",
@@ -2922,6 +2925,7 @@
           "id": "R3"
         },
         {
+          "key": "permit:J-1019",
           "kind": "permit",
           "level": "watch",
           "jobId": "J-1019",
@@ -2932,6 +2936,7 @@
           "id": "R4"
         },
         {
+          "key": "lien-waiver:clearline:J-1027",
           "kind": "lien-waiver",
           "level": "blocked",
           "jobId": "J-1027",
@@ -2942,6 +2947,7 @@
           "id": "R5"
         },
         {
+          "key": "invoice:J-1031:drywall",
           "kind": "invoice",
           "level": "watch",
           "jobId": "J-1031",
@@ -2951,6 +2957,7 @@
           "id": "R6"
         },
         {
+          "key": "client-update:J-1031",
           "kind": "client-update",
           "level": "watch",
           "jobId": "J-1031",
@@ -2960,6 +2967,7 @@
           "id": "R7"
         },
         {
+          "key": "double-booking:northfork|2026-03-13",
           "kind": "double-booking",
           "level": "blocked",
           "jobId": "J-1036",
@@ -2970,6 +2978,7 @@
           "id": "R8"
         },
         {
+          "key": "quote-due:J-1042",
           "kind": "quote-due",
           "level": "watch",
           "jobId": "J-1042",
@@ -2980,6 +2989,7 @@
           "id": "R9"
         },
         {
+          "key": "quote-due:J-1047",
           "kind": "quote-due",
           "level": "watch",
           "jobId": "J-1047",
@@ -2990,6 +3000,7 @@
           "id": "R10"
         },
         {
+          "key": "late-milestone:J-1019",
           "kind": "late-milestone",
           "level": "blocked",
           "jobId": "J-1019",
@@ -2999,6 +3010,7 @@
           "id": "R11"
         },
         {
+          "key": "workload:tomas",
           "kind": "workload",
           "level": "watch",
           "owner": "tomas",
@@ -3208,6 +3220,107 @@
         }
       ],
       "digest": "*Summit Ridge Builders · morning status, Thu, Mar 12*\n8 jobs: 3 on track, 4 at risk, 1 behind. 8 drafts waiting for approval.\n\n_Lead_\n• J-1047 Brooks roof (Tomas) 0% · on track · Next: Quote sent Fri, Mar 13.\n_Quote_\n• J-1042 Rivera kitchen (Maria) 0% · on track · Next: Site walk Thu, Mar 12.\n_Scheduled_\n• J-1045 Morales bath (Renee) 0% · at risk · Tilewright Tile (FAKE) insurance lapses before their work\n_In progress_\n• J-1031 Hayes basement (Maria) 60% · on track · Next: Finish carpentry Wed, Mar 25.\n• J-1038 Pinecrest addition (Maria) 40% · at risk · Bright Spark Electric (FAKE) insurance expired\n• J-1036 Patel garage (Renee) 30% · at risk · North Fork Framing (FAKE) booked on two jobs Fri, Mar 13\n• J-1019 Cedar duplex (Tomas) 35% · behind · Dried in is 6 days late.\n_Closeout_\n• J-1027 Lakeview deck (Jordan) 70% · at risk · Clearline Plumbing (FAKE) lien waiver missing\n\n*Blocked*\n• Bright Spark Electric (FAKE) insurance expired → Maria\n• Tilewright Tile (FAKE) insurance lapses before their work → Renee\n• Clearline Plumbing (FAKE) lien waiver missing → Jordan\n• North Fork Framing (FAKE) booked on two jobs Fri, Mar 13 → Renee\n• Cedar duplex is behind → Tomas"
+    },
+    "changes": {
+      "since": "2026-03-11",
+      "today": "2026-03-12",
+      "counts": {
+        "worse": 2,
+        "better": 4,
+        "news": 4
+      },
+      "items": [
+        {
+          "id": "C1",
+          "kind": "status",
+          "tone": "worse",
+          "jobId": "J-1036",
+          "owner": "renee",
+          "title": "J-1036 Patel garage now at risk",
+          "detail": "Was on track. North Fork Framing (FAKE) booked on two jobs Fri, Mar 13"
+        },
+        {
+          "id": "C2",
+          "kind": "risk-new",
+          "tone": "worse",
+          "jobId": "J-1036",
+          "owner": "renee",
+          "title": "North Fork Framing (FAKE) booked on two jobs Fri, Mar 13",
+          "detail": "J-1019 (Tomas Reyes) and J-1036 (Renee Walsh). Cedar duplex has the earlier milestone, so it keeps the crew."
+        },
+        {
+          "id": "C3",
+          "kind": "risk-cleared",
+          "tone": "better",
+          "jobId": "J-1027",
+          "owner": "jordan",
+          "title": "Cleared: North Fork Framing (FAKE) lien waiver missing",
+          "detail": "The morning sweep no longer finds it."
+        },
+        {
+          "id": "C4",
+          "kind": "milestone-done",
+          "tone": "better",
+          "jobId": "J-1031",
+          "owner": "maria",
+          "title": "Drywall done on J-1031 Hayes basement",
+          "detail": "Now 60% complete, up from 40%."
+        },
+        {
+          "id": "C5",
+          "kind": "stage",
+          "tone": "better",
+          "jobId": "J-1045",
+          "owner": "renee",
+          "title": "J-1045 Morales bath moved to scheduled",
+          "detail": "Was quote."
+        },
+        {
+          "id": "C6",
+          "kind": "risk-cleared",
+          "tone": "better",
+          "jobId": "J-1045",
+          "owner": "renee",
+          "title": "Cleared: Jesse Morales (FAKE) has not heard from us in 7 days",
+          "detail": "The morning sweep no longer finds it."
+        },
+        {
+          "id": "C7",
+          "kind": "risk-new",
+          "tone": "news",
+          "jobId": "J-1031",
+          "owner": "maria",
+          "title": "Hayes basement: Drywall done, not billed",
+          "detail": "20% of $62,000 = $12,400 ready to invoice."
+        },
+        {
+          "id": "C8",
+          "kind": "job-new",
+          "tone": "news",
+          "jobId": "J-1042",
+          "owner": "maria",
+          "title": "New job: J-1042 Rivera kitchen",
+          "detail": "Maria owns it. Stage: quote."
+        },
+        {
+          "id": "C9",
+          "kind": "risk-new",
+          "tone": "news",
+          "jobId": "J-1042",
+          "owner": "maria",
+          "title": "Quote for Rivera kitchen due today",
+          "detail": "$38,450 estimate for Sam Rivera (FAKE)."
+        },
+        {
+          "id": "C10",
+          "kind": "risk-new",
+          "tone": "news",
+          "jobId": "J-1047",
+          "owner": "tomas",
+          "title": "Quote for Brooks roof due tomorrow",
+          "detail": "$17,800 estimate for Taylor Brooks (FAKE)."
+        }
+      ]
     }
   }
 }

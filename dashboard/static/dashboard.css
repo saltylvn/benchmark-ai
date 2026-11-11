@@ -452,3 +452,20 @@ details summary { cursor: pointer; font-weight: 600; margin: 6px 0; min-height: 
 .client-steps .muted { font-size: 13px; }
 .client-pm { background: var(--bg); border-radius: 12px; padding: 12px 14px; }
 .client-pm p { margin: 0; }
+
+/* Since yesterday: the Coordinator's diff of two sweeps. Slipped, moved forward, new. */
+.tone.worse { color: var(--bad); } .tone.better { color: var(--good); } .tone.news { color: var(--accent); }
+.since { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin: 0 0 14px; }
+.since > summary { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; min-height: var(--tap); cursor: pointer; list-style: none; }
+.since > summary::-webkit-details-marker { display: none; }
+.since > summary::after { content: "Hide"; margin-left: auto; font-size: 12.5px; color: var(--muted); }
+.since:not([open]) > summary::after { content: "Show"; }
+.since-title { font: 600 16px var(--serif); }
+.since-counts { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.since-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 6px; }
+.since .since-group { min-width: 0; margin: 0; background: none; box-shadow: none; border: 0; border-top: 2px solid var(--line); border-radius: 0; padding: 8px 0 0; }
+.since .since-group.worse { border-top-color: var(--bad); } .since .since-group.better { border-top-color: var(--good); } .since .since-group.news { border-top-color: var(--accent); }
+.since-group h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.since-group ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.since-group li { font-size: 14px; line-height: 1.35; overflow-wrap: anywhere; }
+.jchanges { list-style: none; margin: 2px 0 0; padding: 0; display: flex; flex-direction: column; gap: 2px; font-size: 12.5px; font-weight: 600; }

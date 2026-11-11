@@ -2,9 +2,10 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { diffSweeps } from "../agents/changes.js";
 import { sweepPortfolio } from "../agents/coordinator.js";
 import { ROLES } from "../agents/roles.js";
-import { PORTFOLIO } from "../fixtures/portfolio.js";
+import { PORTFOLIO, PORTFOLIO_YESTERDAY } from "../fixtures/portfolio.js";
 import { runWorkflow } from "../orchestrator/supervisor.js";
 import { resolveModel } from "../providers/model.js";
 import { range } from "../time.js";
@@ -53,6 +54,12 @@ function plan(p: Plan) {
   };
 }
 
+/** Today's sweep plus what changed since yesterday's. Live, yesterday's sweep comes from the last export. */
+export function portfolioSnapshot() {
+  const sweep = sweepPortfolio(PORTFOLIO);
+  return { data: PORTFOLIO, sweep, changes: diffSweeps(sweepPortfolio(PORTFOLIO_YESTERDAY), sweep) };
+}
+
 export async function buildSnapshot() {
   const model = resolveModel(false);
   const [thursday, morning] = await Promise.all([
@@ -64,7 +71,7 @@ export async function buildSnapshot() {
     generatedBy: "src/export/snapshot.ts",
     roles: ROLES,
     runs: { thursday: snapshotRun(thursday), morning: snapshotRun(morning) },
-    portfolio: { data: PORTFOLIO, sweep: sweepPortfolio(PORTFOLIO) },
+    portfolio: portfolioSnapshot(),
   };
 }
 

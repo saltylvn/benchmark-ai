@@ -114,7 +114,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
     if (left < 0 || daysBetween(sub.coiExpires, first.date) > 0) {
       found += 1;
       const r = add({
-        kind: "insurance", level: "blocked", jobId: first.jobId, owner,
+        key: `insurance:${sub.id}`, kind: "insurance", level: "blocked", jobId: first.jobId, owner,
         title: `${sub.name} insurance ${left < 0 ? "expired" : "lapses before their work"}`,
         detail: `Certificate ${left < 0 ? `expired ${shortDate(sub.coiExpires)}` : `ends ${shortDate(sub.coiExpires)}`}. Booked ${first.task.toLowerCase()} on ${first.jobId} ${shortDate(first.date)}. Not cleared to work.`,
         due: first.date,
@@ -127,7 +127,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
     } else if (left <= RULES.coiWarnDays) {
       found += 1;
       const r = add({
-        kind: "insurance", level: "watch", jobId: first.jobId, owner,
+        key: `insurance:${sub.id}`, kind: "insurance", level: "watch", jobId: first.jobId, owner,
         title: `${sub.name} insurance ends in ${left} days`,
         detail: `Certificate ends ${shortDate(sub.coiExpires)}. Next booking ${first.jobId} ${shortDate(first.date)}.`,
         due: sub.coiExpires,
@@ -150,7 +150,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
       if (left <= RULES.permitWarnDays && unfinished) {
         found += 1;
         const r = add({
-          kind: "permit", level: left <= 7 ? "blocked" : "watch", jobId: j.id, owner: j.pm,
+          key: `permit:${j.id}`, kind: "permit", level: left <= 7 ? "blocked" : "watch", jobId: j.id, owner: j.pm,
           title: `Permit ${j.permit.id} expires in ${left} days`,
           detail: `Work on ${j.name} is planned past ${shortDate(j.permit.expires)}. File the extension now.`,
           due: j.permit.expires,
@@ -165,7 +165,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
     if (j.inspection && daysBetween(p.today, j.inspection.date) >= 0 && daysBetween(p.today, j.inspection.date) <= 2) {
       found += 1;
       add({
-        kind: "inspection", level: "watch", jobId: j.id, owner: j.pm,
+        key: `inspection:${j.id}`, kind: "inspection", level: "watch", jobId: j.id, owner: j.pm,
         title: `${j.inspection.name} ${daysBetween(p.today, j.inspection.date) === 0 ? "today" : shortDate(j.inspection.date)}`,
         detail: j.inspection.who ? `${j.inspection.who} meets the inspector.` : "Nobody is assigned to meet the inspector yet.",
         due: j.inspection.date,
@@ -183,7 +183,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
     const final = j.milestones.find((m) => !m.done && m.billPct);
     const held = final ? j.contract * (final.billPct ?? 0) : 0;
     const r = add({
-      kind: "lien-waiver", level: "blocked", jobId: j.id, owner: j.pm,
+      key: `lien-waiver:${w.subId}:${j.id}`, kind: "lien-waiver", level: "blocked", jobId: j.id, owner: j.pm,
       title: `${sub.name} lien waiver missing`,
       detail: `${w.neededFor} on ${j.name} (${money(held)}) cannot be collected until it arrives.`,
       due: final?.planned,
@@ -203,7 +203,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
       found += 1;
       const amount = j.contract * m.billPct!;
       const r = add({
-        kind: "invoice", level: "watch", jobId: j.id, owner: j.pm,
+        key: `invoice:${j.id}:${m.id}`, kind: "invoice", level: "watch", jobId: j.id, owner: j.pm,
         title: `${j.name}: ${m.name} done, not billed`,
         detail: `${Math.round(m.billPct! * 100)}% of ${money(j.contract)} = ${money(amount)} ready to invoice.`,
       });
@@ -224,7 +224,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
     found += 1;
     const status = jobStatus(j, p.today, []);
     const r = add({
-      kind: "client-update", level: "watch", jobId: j.id, owner: j.pm,
+      key: `client-update:${j.id}`, kind: "client-update", level: "watch", jobId: j.id, owner: j.pm,
       title: `${j.client} has not heard from us in ${quiet} days`,
       detail: `${j.name} is ${status.percent}% complete. ${status.reason}`,
     });
@@ -254,7 +254,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
     const later = nextOpen(b) < nextOpen(a) ? a : nextOpen(a) < nextOpen(b) ? b : b;
     const keep = later === a ? b : a;
     const r = add({
-      kind: "double-booking", level: "blocked", jobId: later.id, owner: later.pm,
+      key: `double-booking:${key}`, kind: "double-booking", level: "blocked", jobId: later.id, owner: later.pm,
       title: `${sub.name} booked on two jobs ${shortDate(list[0]!.date)}`,
       detail: `${keep.id} (${person(keep.pm).name}) and ${later.id} (${person(later.pm).name}). ${keep.name} has the earlier milestone, so it keeps the crew.`,
       due: list[0]!.date,
@@ -272,7 +272,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
   for (const j of p.jobs.filter((x) => x.quoteDue && daysBetween(p.today, x.quoteDue) <= 1 && daysBetween(p.today, x.quoteDue) >= 0)) {
     found += 1;
     add({
-      kind: "quote-due", level: "watch", jobId: j.id, owner: j.pm,
+      key: `quote-due:${j.id}`, kind: "quote-due", level: "watch", jobId: j.id, owner: j.pm,
       title: `Quote for ${j.name} due ${daysBetween(p.today, j.quoteDue!) === 0 ? "today" : "tomorrow"}`,
       detail: `${money(j.contract)} estimate for ${j.client}.`,
       due: j.quoteDue,
@@ -284,7 +284,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
   const statuses = p.jobs.map((j) => jobStatus(j, p.today, risks));
   for (const s of statuses.filter((x) => x.status === "behind")) {
     add({
-      kind: "late-milestone", level: "blocked", jobId: s.jobId, owner: s.pm,
+      key: `late-milestone:${s.jobId}`, kind: "late-milestone", level: "blocked", jobId: s.jobId, owner: s.pm,
       title: `${s.name} is behind`,
       detail: s.reason,
     });
@@ -313,7 +313,7 @@ export function sweepPortfolio(p: Portfolio): Sweep {
     if (movable) {
       found += 1;
       const r = add({
-        kind: "workload", level: "watch", owner: heaviest.personId, jobId: movable.id,
+        key: `workload:${heaviest.personId}`, kind: "workload", level: "watch", owner: heaviest.personId, jobId: movable.id,
         title: `${heaviest.name} is at ${heaviest.hours} of ${heaviest.capacity} hours`,
         detail: `${lightest.name} has ${lightest.capacity - lightest.hours} hours free. ${movable.name} is early-stage and easy to hand over.`,
       });

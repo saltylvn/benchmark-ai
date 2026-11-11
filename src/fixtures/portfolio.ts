@@ -120,3 +120,25 @@ export const PORTFOLIO: Portfolio = {
     { subId: "northfork", jobId: "J-1027", received: true, neededFor: "Final payment" },
   ],
 };
+
+/**
+ * The same team one morning earlier, Wednesday Mar 11. Each difference is a
+ * small, ordinary overnight event so "since yesterday" has something real to show:
+ *  - Sam Rivera's kitchen request (J-1042) had not come in yet.
+ *  - Hayes basement drywall (J-1031) was finished Wednesday afternoon.
+ *  - Jesse Morales signed the bath quote (J-1045) and got a client update.
+ *  - North Fork sent the Lakeview deck lien waiver (J-1027).
+ *  - North Fork was booked on the Cedar duplex for Friday, the same day as Patel garage.
+ */
+export const PORTFOLIO_YESTERDAY: Portfolio = (() => {
+  const p: Portfolio = structuredClone(PORTFOLIO);
+  p.today = "2026-03-11";
+  p.jobs = p.jobs.filter((j) => j.id !== "J-1042");
+  const job = (id: string) => p.jobs.find((j) => j.id === id)!;
+  job("J-1031").milestones.find((m) => m.id === "drywall")!.done = null;
+  job("J-1045").stage = "quote";
+  job("J-1045").lastClientUpdate = "2026-03-04";
+  p.lienWaivers.find((w) => w.subId === "northfork" && w.jobId === "J-1027")!.received = false;
+  p.bookings = p.bookings.filter((b) => !(b.subId === "northfork" && b.jobId === "J-1019"));
+  return p;
+})();

@@ -150,11 +150,63 @@ def today_queue(p: dict[str, Any], minutes: dict[str, float], run: dict[str, Any
 
 
 # ---------------------------------------------------------------------------
+# Since yesterday: the Coordinator's diff of this morning's sweep against the last one
+
+TONES = (
+    ("worse", "Slipped", "▼"),
+    ("better", "Moved forward", "▲"),
+    ("news", "New on the board", "●"),
+)
+
+
+def _on_card(title: str, job: str | None) -> str:
+    """The same change, worded for the job's own card, where the job name is already shown."""
+    if not job:
+        return title
+    for cut in (f" on {job}", f"{job} "):
+        title = title.replace(cut, "", 1)
+    title = title.replace("New job: " + job, "New job").replace("New job: ", "New job ")
+    return title[:1].upper() + title[1:]
+
+
+def since_yesterday(p: dict[str, Any]) -> dict[str, Any]:
+    """Group the snapshot's changes for the Today card, the job cards, and the brief.
+
+    An older snapshot without ``changes`` gives an empty, clearly labelled result.
+    """
+    c = p.get("changes") or {"since": None, "items": [], "counts": {}}
+    who = people(p)
+    names = {j["jobId"]: f"{j['jobId']} {j['name']}" for j in p["sweep"]["statuses"]}
+    marks = {t: m for t, _, m in TONES}
+    items = [
+        {
+            **i,
+            "ownerName": who.get(i.get("owner") or "", {}).get("name", ""),
+            "mark": marks[i["tone"]],
+            "short": _on_card(i["title"], names.get(i.get("jobId") or "")),
+        }
+        for i in c["items"]
+    ]
+    by_job: dict[str, list[dict[str, Any]]] = {}
+    for i in items:
+        if i.get("jobId"):
+            by_job.setdefault(i["jobId"], []).append(i)
+    return {
+        "sinceLabel": short(c["since"]) if c.get("since") else None,
+        "total": len(items),
+        "counts": {t: sum(1 for i in items if i["tone"] == t) for t, _, _ in TONES},
+        "groups": [{"tone": t, "label": label, "mark": m, "items": [i for i in items if i["tone"] == t]} for t, label, m in TONES],
+        "byJob": by_job,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Jobs: status board and timeline
 
 
 def job_cards(p: dict[str, Any]) -> list[dict[str, Any]]:
     who = people(p)
+    changed = since_yesterday(p)["byJob"]
     data = {j["id"]: j for j in p["data"]["jobs"]}
     risks_by_job: dict[str, list[dict[str, Any]]] = {}
     for r in p["sweep"]["risks"]:
@@ -174,6 +226,7 @@ def job_cards(p: dict[str, Any]) -> list[dict[str, Any]]:
                 "channel": j["slackChannel"],
                 "nextLabel": f"{s['nextMilestone']['name']} · {short(s['nextMilestone']['planned'])}" if s.get("nextMilestone") else "All milestones done",
                 "risks": [{"label": KIND_LABEL.get(r["kind"], r["kind"]), "level": r["level"], "title": r["title"]} for r in risks_by_job.get(s["jobId"], [])],
+                "changes": changed.get(s["jobId"], []),
             }
         )
     return cards
@@ -423,6 +476,7 @@ def build_team_view(snapshot: dict[str, Any], assumptions: dict[str, Any]) -> di
         "draftCount": sum(1 for i in queue if i["kind"] not in ("heads-up",)),
         "owners": [{"id": x["id"], "name": x["name"], "first": first(x["name"])} for x in p["data"]["people"] if x["role"] == "Project manager"],
         "board": board(p),
+        "since": since_yesterday(p),
         "lookahead": lookahead(p),
         "timeline": timeline(p),
         "counts": status_counts(p),

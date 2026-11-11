@@ -173,6 +173,16 @@ class AppTest(unittest.TestCase):
         self.client = self.app.test_client()
         self.client.get("/demo")
 
+    def test_today_shows_since_yesterday(self):
+        page = self.client.get("/").get_data(as_text=True)
+        self.assertIn("Since yesterday", page)
+        self.assertIn("Drywall done on J-1031 Hayes basement", page)
+        self.assertIn('class="jchanges"', page)
+
+    def test_stylesheet_url_changes_when_the_file_does(self):
+        page = self.client.get("/").get_data(as_text=True)
+        self.assertRegex(page, r'/static/dashboard\.css\?v=\d{9,}')
+
     def test_welcome_comes_first(self):
         fresh = self.app.test_client()
         page = fresh.get("/").data
@@ -380,6 +390,26 @@ class TeamViewTest(unittest.TestCase):
 
         return build_team_view(snapshot(), assumptions())
 
+    def test_since_yesterday_groups_and_tags_job_cards(self):
+        t = self.view()
+        since = t["since"]
+        self.assertEqual(since["sinceLabel"], "Wed, Mar 11")
+        self.assertEqual(since["counts"], {"worse": 2, "better": 4, "news": 4})
+        self.assertEqual([g["tone"] for g in since["groups"]], ["worse", "better", "news"])
+        cards = {c["jobId"]: c for col in t["board"] for c in col["jobs"]}
+        self.assertEqual([c["short"] for c in cards["J-1031"]["changes"]][0], "Drywall done")
+        self.assertIn("Now at risk", [c["short"] for c in cards["J-1036"]["changes"]])
+        self.assertEqual(cards["J-1038"]["changes"], [])
+
+    def test_older_snapshot_without_changes_still_renders(self):
+        from dashboard.portfolio import build_team_view
+
+        snap = snapshot()
+        del snap["portfolio"]["changes"]
+        since = build_team_view(snap, assumptions())["since"]
+        self.assertEqual(since["total"], 0)
+        self.assertIsNone(since["sinceLabel"])
+
     def test_today_queue_puts_blockers_first(self):
         q = self.view()["queue"]
         levels = [i["level"] for i in q]
@@ -414,8 +444,21 @@ class BriefTest(unittest.TestCase):
         self.assertIn("*Needs you first*", text)
         for job in ("J-1019", "J-1027", "J-1031", "J-1036", "J-1038", "J-1042", "J-1045", "J-1047"):
             self.assertIn(job, text)
-        self.assertLess(text.index("J-1019"), text.index("J-1031"))  # behind before on track
+        jobs = text[text.index("*Jobs*"):]
+        self.assertLess(jobs.index("J-1019"), jobs.index("J-1031"))  # behind before on track
         self.assertIn("Tomas Reyes is at 37 of 40 h", text)
+
+    def test_brief_says_what_changed_since_yesterday(self):
+        from dashboard.brief import build_brief
+
+        text = build_brief(snapshot(), assumptions())
+        since = text[text.index("*Since yesterday*"):text.index("*Needs you first*")]
+        self.assertIn("2 slipped, 4 moved forward", since)
+        self.assertIn("▼ J-1036 Patel garage now at risk", since)
+        self.assertIn("▲ Drywall done on J-1031 Hayes basement", since)
+        self.assertLess(since.index("▼"), since.index("▲"))
+        self.assertNotIn("New job", since)  # news stays in the app, the brief is for what moved
+        self.assertNotIn("Since yesterday", build_brief(snapshot(), assumptions(), "tomas"))  # nothing of Tomas's moved
 
     def test_personal_brief_only_shows_their_work(self):
         from dashboard.brief import build_brief
