@@ -36,7 +36,7 @@
   <div class="integrations" aria-label="Connections">
     <span class="chip {{ 'ok' if slack.connected else 'off' }}" title="{{ slack.detail }}"><span class="dot"></span>Slack · {{ 'live' if slack.connected and slack.sendEnabled else ('connected' if slack.connected else 'preview') }}</span>
     <span class="chip draft" title="Calendar, email, and invoices are staged as drafts"><span class="dot"></span>Calendar, email, invoices · drafts</span>
-    {% if not static_mode and user %}<span class="chip user" title="{{ user.email or 'Demo session' }}">{{ user.name }}</span><a class="chip" href="{{ url_for('logout') }}">Sign out</a>{% endif %}
+    {% if not static_mode and user %}<span class="chip user" title="{{ user.email or 'Demo session' }}">{{ user.name }}</span><form class="signout" method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf" value="{{ form_token }}"><button type="submit" class="chip">Sign out</button></form>{% endif %}
   </div>
 </header>
 

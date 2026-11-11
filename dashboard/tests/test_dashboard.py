@@ -210,8 +210,15 @@ class AppTest(unittest.TestCase):
         self.assertIn(b"GOOGLE_CLIENT_ID", response.data)
 
     def test_sign_out_returns_to_welcome(self):
-        self.client.get("/logout")
+        self.client.get("/")
+        self.client.post("/logout", data={"csrf": csrf(self.client)})
         self.assertIn(b"View the demo", self.client.get("/").data)
+
+    def test_sign_out_needs_the_page_token(self):
+        self.client.get("/")
+        self.assertEqual(self.client.get("/logout").status_code, 405)  # a link or <img> cannot sign anyone out
+        self.client.post("/logout", data={"csrf": "forged"})
+        self.assertNotIn(b"View the demo", self.client.get("/").data)
 
     def approve(self, item_id, act="approve", token=None, client=None):
         client = client or self.client
@@ -323,6 +330,55 @@ class AppTest(unittest.TestCase):
     def test_approvals_survive_a_reload(self):
         self.approve("D5")
         self.assertIn(b'"D5": {', self.client.get("/").data)
+
+
+class HardeningTest(unittest.TestCase):
+    def make(self, env=None):
+        return create_app(slack=SlackConnector(SlackConfig()), env=env or {})
+
+    def test_scripts_run_only_with_this_responses_nonce(self):
+        client = self.make().test_client()
+        client.get("/demo")
+        response = client.get("/")
+        csp = response.headers["Content-Security-Policy"]
+        script_src = next(part for part in csp.split(";") if "script-src" in part)
+        self.assertNotIn("unsafe-inline", script_src)
+        nonce = script_src.split("'nonce-")[1].split("'")[0]
+        page = response.get_data(as_text=True)
+        import re
+
+        executable = [m for m in re.findall(r"<script([^>]*)>", page) if "application/json" not in m]
+        self.assertTrue(executable)
+        self.assertTrue(all(f'nonce="{nonce}"' in attrs for attrs in executable), executable)
+        self.assertNotEqual(nonce, client.get("/").headers["Content-Security-Policy"].split("'nonce-")[1].split("'")[0])
+        self.assertIn("object-src 'none'", csp)
+
+    def test_browser_isolation_headers(self):
+        response = self.make().test_client().get("/")
+        for header in ("Cross-Origin-Opener-Policy", "Cross-Origin-Resource-Policy", "Permissions-Policy", "X-Frame-Options", "X-Content-Type-Options"):
+            self.assertIn(header, response.headers)
+        self.assertNotIn("Strict-Transport-Security", response.headers)  # only on https
+
+    def test_https_deploy_gets_hsts_and_a_host_locked_cookie(self):
+        client = self.make({"RENDER_EXTERNAL_URL": "https://benchmark.onrender.com"}).test_client()
+        response = client.get("/demo")
+        self.assertIn("max-age=31536000", response.headers["Strict-Transport-Security"])
+        cookie = response.headers["Set-Cookie"]
+        self.assertTrue(cookie.startswith("__Host-benchmark="), cookie)
+        self.assertIn("Secure", cookie)
+        self.assertIn("HttpOnly", cookie)
+
+    def test_oversized_bodies_are_refused(self):
+        client = self.make().test_client()
+        client.get("/demo")
+        client.get("/")
+        response = client.post("/api/approve", data="x" * 70_000, content_type="application/json", headers={"X-Form-Token": csrf(client)})
+        self.assertEqual(response.status_code, 413)
+
+    def test_api_responses_are_not_cached(self):
+        client = self.make().test_client()
+        client.get("/demo")
+        self.assertEqual(client.get("/api/team").headers["Cache-Control"], "no-store")
 
 
 class DeployTest(unittest.TestCase):

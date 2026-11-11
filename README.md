@@ -104,7 +104,7 @@ flowchart LR
   - the day-over-day diff is symmetric
 
   The first run found two real bugs: a crash, and a client email that promised a date that had already passed.
-- **Security:** OAuth `state`, per-session CSRF, `HttpOnly`/`SameSite=Lax`/`Secure` cookies, CSP with `frame-ancestors 'none'`, `nosniff`, `X-Frame-Options: DENY`, and secrets only in environment variables. The git history was scanned for keys before publishing.
+- **Security** ([SECURITY.md](SECURITY.md)): OAuth `state`, per-session CSRF tokens (sign-out included), `__Host-` `Secure` `HttpOnly` cookies, a nonce-based CSP with no inline scripts, HSTS, COOP/CORP, `Permissions-Policy`, a 64 KB body limit, and secrets only in environment variables. Dependabot, `npm audit`, `pip-audit` and CodeQL run in CI. The git history was scanned for keys before publishing.
 - **Reliability:** atomic JSON writes under a lock (a corrupt file is set aside, not fatal), a schema check on the snapshot that returns a helpful 503 instead of crashing, and JSON loads cached per file change.
 - **CI:** typecheck and the Node tests, then ruff and the Python tests on 3.10 and 3.12.
 
@@ -114,7 +114,7 @@ flowchart LR
 | **Service** | Python 3.10+, Flask 3, Jinja, gunicorn, ruff |
 | **Front end** | Server-rendered HTML, plain JavaScript, CSS tokens for light and dark, installable PWA |
 | **Infra** | Render (Blueprint), GitHub Actions (CI and a scheduled brief), n8n |
-| **Tests** | 70 TypeScript (fixtures, property tests, cross-language webhook signatures) and 81 Python (routes, OAuth, Slack, automation API, webhooks, scheduler, security, deploy) |
+| **Tests** | 150+: 70 TypeScript (fixtures, property tests, cross-language webhook signatures) and 87 Python (routes, OAuth, Slack, automation API, webhooks, scheduler, security headers, deploy) |
 
 ## Design decisions
 
