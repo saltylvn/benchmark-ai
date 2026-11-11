@@ -22,6 +22,9 @@ services:
       # Optional: fill these in Render's Environment tab when you are ready. Empty is fine.
       - key: ALLOWED_EMAIL_DOMAINS
         sync: false
+      # Exact addresses that may sign in, comma separated. Set this before turning sign-in on.
+      - key: ALLOWED_EMAILS
+        sync: false
       - key: SLACK_BOT_TOKEN
         sync: false
       - key: SLACK_CHANNEL

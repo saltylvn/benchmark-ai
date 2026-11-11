@@ -389,7 +389,23 @@ class SignInTest(unittest.TestCase):
         _, client = self.make(opener, env={**self.ENV, "ALLOWED_EMAIL_DOMAINS": "summitridge.example"})
         state = self.start(client)
         response = client.get(f"/auth/google/callback?code=abc&state={state}", follow_redirects=True)
-        self.assertIn(b"allowed company domain", response.data)
+        self.assertIn(b"sign-in list", response.data)
+        self.assertNotIn(b"Sign out", response.data)
+
+    def test_named_emails_can_sign_in_and_others_cannot(self):
+        env = {**self.ENV, "ALLOWED_EMAILS": "Owner@Gmail.com, pm@gmail.com"}
+        for email, ok in (("owner@gmail.com", True), ("stranger@gmail.com", False)):
+            opener = RecordingOpener(json.dumps({"access_token": "at"}), json.dumps({"email": email, "name": "N", "email_verified": True}))
+            _, client = self.make(opener, env=env)
+            state = self.start(client)
+            page = client.get(f"/auth/google/callback?code=abc&state={state}", follow_redirects=True).data
+            self.assertEqual(b"sign-in list" not in page, ok, email)
+
+    def test_unverified_email_is_refused(self):
+        opener = RecordingOpener(json.dumps({"access_token": "at"}), json.dumps({"email": "a@gmail.com", "name": "A", "email_verified": False}))
+        _, client = self.make(opener)
+        state = self.start(client)
+        self.assertIn(b"not verified", client.get(f"/auth/google/callback?code=abc&state={state}", follow_redirects=True).data)
 
     def test_demo_never_posts_even_when_sending_is_on(self):
         slack_opener = RecordingOpener(json.dumps({"ok": True, "team": "Summit", "user": "benchmark"}))

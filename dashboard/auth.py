@@ -10,6 +10,7 @@ from the provider's userinfo endpoint. No password ever reaches Benchmark.
     MICROSOFT_CLIENT_ID / MICROSOFT_CLIENT_SECRET  (Microsoft 365 / Entra ID; MICROSOFT_TENANT, default "organizations")
     PROCORE_CLIENT_ID / PROCORE_CLIENT_SECRET      (Procore OAuth)
     ALLOWED_EMAIL_DOMAINS=summitridge.example      (optional, comma separated)
+    ALLOWED_EMAILS=pat@gmail.com,sam@gmail.com     (optional, exact addresses; for teams on personal accounts)
     PUBLIC_URL=https://dash.example.com            (optional, for the callback URL behind a proxy)
 """
 
@@ -147,14 +148,26 @@ def exchange_and_identify(
     name = (info.get("name") or info.get("given_name") or email or "Signed-in user").strip()
     if not email:
         raise AuthError(f"{provider.label} did not share an email address.")
-    _check_domain(email, env)
+    if info.get("email_verified") is False or info.get("email_verified") == "false":
+        raise AuthError(f"{provider.label} has not verified that email address.")
+    _check_allowed(email, env)
     return {"name": name[:80], "email": email[:120], "provider": provider.id, "providerLabel": provider.label}
 
 
-def _check_domain(email: str, env: dict[str, str]) -> None:
-    allowed = [d.strip().lower().lstrip("@") for d in env.get("ALLOWED_EMAIL_DOMAINS", "").split(",") if d.strip()]
-    if allowed and email.rsplit("@", 1)[-1].lower() not in allowed:
-        raise AuthError("That account is not on an allowed company domain.")
+def _split(value: str) -> set[str]:
+    return {x.strip().lower().lstrip("@") for x in value.split(",") if x.strip()}
+
+
+def _check_allowed(email: str, env: dict[str, str]) -> None:
+    """With no list set, any account the provider vouches for may sign in. With either list, it must match one."""
+    domains = _split(env.get("ALLOWED_EMAIL_DOMAINS", ""))
+    emails = _split(env.get("ALLOWED_EMAILS", ""))
+    if not domains and not emails:
+        return
+    address = email.lower()
+    if address in emails or address.rsplit("@", 1)[-1] in domains:
+        return
+    raise AuthError("That account is not on this team's sign-in list. Ask the owner to add it.")
 
 
 def _json(opener: Opener, request: urllib.request.Request) -> dict[str, Any]:
