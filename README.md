@@ -5,6 +5,8 @@
 [![CI](https://github.com/saltylvn/benchmark-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/saltylvn/benchmark-ai/actions/workflows/ci.yml)
 &nbsp;**Live demo:** [benchmark-qypb.onrender.com](https://benchmark-qypb.onrender.com) (tap **View the demo**; the free host may take ~1 minute to wake)
 
+[![Benchmark overview: sources, TypeScript agents (Coordinator with 11 checks, supervisor team, critic), a versioned snapshot and fact guard, the Flask service with its approval queue, REST API and security, then a named PM approves before Slack, email drafts and signed webhooks; the app on iPad and iPhone; 157 tests and 300 property-test portfolios](docs/images/benchmark-linkedin.jpg)](https://benchmark-qypb.onrender.com)
+
 <p>
   <img src="docs/images/screens/landing-phone.jpg" width="24%" alt="Landing page on a phone">
   <img src="docs/images/screens/today-phone.jpg" width="24%" alt="Today: what is blocked and what is already drafted">
@@ -123,7 +125,7 @@ flowchart LR
 | --- | --- |
 | **Agents** | TypeScript, Node 20, `node:test` via `tsx`, esbuild |
 | **Service** | Python 3.10+, Flask 3, Jinja, gunicorn, ruff |
-| **Front end** | Server-rendered HTML, plain JavaScript, CSS tokens for light and dark, installable PWA |
+| **Front end** | Server-rendered HTML, plain JavaScript, design tokens for a paper-and-ink light mode and a navy dark mode, installable PWA |
 | **Infra** | Render (Blueprint), GitHub Actions (CI and a scheduled brief), n8n |
 | **Tests** | 150+: 70 TypeScript (fixtures, property tests, cross-language webhook signatures) and 87 Python (routes, OAuth, Slack, automation API, webhooks, scheduler, security headers, deploy) |
 
