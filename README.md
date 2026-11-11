@@ -132,6 +132,7 @@ python3 -m venv .venv && .venv/bin/pip install -r dashboard/requirements-dev.txt
 npm run dashboard                                     # export the snapshot, serve http://127.0.0.1:5050
 .venv/bin/python -m unittest discover -s dashboard/tests -t .
 npm run demo:team                                     # the morning check in the terminal
+npm run preview                                       # the playable Thursday demo, http://127.0.0.1:4173
 ```
 
 Configuration lives in [`.env.example`](.env.example). Deployment, Google and Slack setup are in [`docs/DEPLOY.md`](docs/DEPLOY.md).
@@ -151,7 +152,8 @@ tests/             TypeScript fixture and property tests
 dashboard/tests/   Python tests
 dashboard/automation.py  bearer-token checks, canonical JSON, HMAC signing, webhook delivery with retries
 integrations/      n8n workflow templates and a signed webhook fixture
-docs/              DEPLOY.md, AUTOMATION.md, PLAN.md, the original Thursday showcase (docs/index.html)
+demo/              the playable Thursday demo: a static site (index.html, app.js built from web/main.ts)
+docs/              DEPLOY.md, AUTOMATION.md, PLAN.md, SHOWCASE.md and the images
 render.yaml        one-click deploy
 ```
 

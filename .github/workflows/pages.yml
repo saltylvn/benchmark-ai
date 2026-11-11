@@ -2,8 +2,8 @@
 # This private repository does not have GitHub Pages enabled, so a push
 # trigger fails with "Get Pages site failed... Not Found".
 # Dispatch this workflow only after Benchmark has a public home and Pages
-# is turned on for that site. Until then, copy docs/ to any static host.
-# See the "Publish the static demo" section of the README.
+# is turned on for that site. It publishes the demo/ folder. Until then,
+# run `npm run preview`, or copy demo/ to any static host after `npm run build:web`.
 name: Pages
 
 on:
@@ -35,7 +35,7 @@ jobs:
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: docs
+          path: demo
           include-hidden-files: true
       - id: deployment
         uses: actions/deploy-pages@v5

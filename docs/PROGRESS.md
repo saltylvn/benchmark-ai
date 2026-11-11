@@ -2,6 +2,11 @@
 
 A dated log of how this repository became Benchmark. Older private names are not used here.
 
+## 2026-11-11
+
+- Moved the playable Thursday demo from `docs/` into its own `demo/` folder, so the demo lives in this repository next to the code that builds it. `npm run build:web` now writes `demo/app.js`, `npm run preview` serves `demo/`, and the manual Pages workflow publishes `demo/`.
+- Removed `scripts/publish-demo.sh`, which copied the demo to a separate `benchmark-demo` repository. That repository was never published to, and the demo no longer lives outside this one.
+
 ## 2026-11-10
 
 - Slack live-send stays off by default and sends only after a PM approves. `scripts/publish-demo.sh` copies `docs/` to a separate public demo repository when that repository already exists. It does not create one.
