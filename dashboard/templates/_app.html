@@ -66,11 +66,19 @@
       <div class="kpi"><b><span data-count="open">{{ t.queue|length }}</span></b><span>waiting on the team</span></div>
       <div class="kpi"><b><span data-count="done">0</span></b><span>approved today</span></div>
       <div class="kpi status-kpi">
-        <b>{{ t.jobsTotal }} jobs</b>
-        <div class="stack" role="img" aria-label="{{ t.counts['on-track'] }} on track, {{ t.counts['at-risk'] }} at risk, {{ t.counts['behind'] }} behind">
-          {% for k in ['on-track', 'at-risk', 'behind'] %}{% if t.counts[k] %}<i class="s-{{ k }}" style="flex:{{ t.counts[k] }}"></i>{% endif %}{% endfor %}
+        {%- set total = t.jobsTotal or 1 %}{% set c = 213.63 %}{% set ns = namespace(off=0) %}
+        <svg class="donut" viewBox="0 0 84 84" role="img" aria-label="{{ t.counts['on-track'] }} on track, {{ t.counts['at-risk'] }} at risk, {{ t.counts['behind'] }} behind">
+          <circle class="donut-track" cx="42" cy="42" r="34"/>
+          {%- for k in ['on-track', 'at-risk', 'behind'] %}{% if t.counts[k] %}{% set len = c * t.counts[k] / total %}
+          <circle class="donut-seg s-{{ k }}" cx="42" cy="42" r="34" stroke-dasharray="{{ '%.2f'|format(len - 2) }} {{ '%.2f'|format(c) }}" stroke-dashoffset="{{ '%.2f'|format(-ns.off) }}"/>{% set ns.off = ns.off + len %}{% endif %}{% endfor %}
+          <text x="42" y="46" text-anchor="middle" class="donut-num">{{ t.jobsTotal }}</text>
+        </svg>
+        <div class="donut-legend">
+          <b>jobs</b>
+          <span><i class="s-dot s-on-track"></i>{{ t.counts['on-track'] }} on track</span>
+          <span><i class="s-dot s-at-risk"></i>{{ t.counts['at-risk'] }} at risk</span>
+          <span><i class="s-dot s-behind"></i>{{ t.counts['behind'] }} behind</span>
         </div>
-        <span>{{ t.counts['on-track'] }} on track · {{ t.counts['at-risk'] }} at risk · {{ t.counts['behind'] }} behind</span>
       </div>
       <div class="kpi accent"><b>~{{ (t.ledger.netMinutes / 60)|round(1) }} h</b><span>team admin drafted this morning (est.)</span></div>
     </div>
@@ -321,6 +329,12 @@
     <h2>The morning workflow</h2>
     <p class="lede">What runs before anyone gets in: the Coordinator checks every job, drafts the follow-ups behind a fact guard, and waits for a named person before anything leaves.</p>
     {% include "_workflow.html" %}
+  </section>
+
+  <section>
+    <h2>Built like production software</h2>
+    <p class="lede">The controls that let a builder trust agents with buyers, lenders and subs.</p>
+    {% include "_engineering.html" %}
   </section>
 
   <section>
