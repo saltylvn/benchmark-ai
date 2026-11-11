@@ -20,7 +20,34 @@ Every merge to `main` redeploys on its own.
 - **8:00 brief:** the brief can't be relied on while the site sleeps, so `BRIEF_AT` is left off.
 - **Upgrade:** switch the plan to **Starter** in Render, about $7 a month on their pricing page. The site then stays awake. Add a disk mounted at `/var/data` and set `DASHBOARD_STATE_DIR=/var/data` to keep approvals.
 
-## Turning on sign-in and Slack later
+## Sign in with Google (free)
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com) and create a project named `Benchmark`.
+2. Open **APIs & Services → OAuth consent screen**. Choose **External**, set the app name to `Benchmark`, add your email, and save. Under **Test users**, add each person who should sign in.
+3. Open **APIs & Services → Credentials → Create credentials → OAuth client ID**.
+   - Application type: **Web application**
+   - Authorized redirect URI: `https://benchmark-qypb.onrender.com/auth/google/callback`
+4. Copy the **Client ID** and **Client secret** into Render under **Environment**, as `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
+5. In the same place, set `ALLOWED_EMAILS` to the addresses that may sign in, separated by commas. Use `ALLOWED_EMAIL_DOMAINS` instead if everyone shares a company domain.
+
+## Slack: sign-in and posting from one app (free)
+
+1. Go to [api.slack.com/apps](https://api.slack.com/apps) → **Create New App** → **From scratch**. Name it `Benchmark` and pick your workspace.
+2. Under **OAuth & Permissions**:
+   - Redirect URL: `https://benchmark-qypb.onrender.com/auth/slack/callback`
+   - Add these **User Token Scopes**, for sign-in: `openid`, `email`, `profile`
+   - Add this **Bot Token Scope**, for posting: `chat:write`
+3. Tap **Install to Workspace** and allow it. Copy the **Bot User OAuth Token**, which starts with `xoxb-`.
+4. Under **Basic Information**, copy the **Client ID** and **Client Secret**.
+5. In Slack, create a channel such as `#benchmark`. Type `/invite @Benchmark` there. Open the channel details and copy the **Channel ID**, which starts with `C`.
+6. In Render under **Environment**, set:
+   - `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET`: sign in with Slack.
+   - `SLACK_BOT_TOKEN` and `SLACK_CHANNEL`: the dashboard shows Slack as connected.
+   - `SLACK_SEND_ENABLED=1`: only when you want a signed-in PM's approval to post for real. Demo visitors never post.
+
+Never paste these secrets into chat, email, or the repo. They belong only in Render's Environment tab.
+
+## Every setting
 
 Everything is optional. Fill these in under the service's **Environment** tab, and Render restarts the site.
 
@@ -30,6 +57,7 @@ Everything is optional. Fill these in under the service's **Environment** tab, a
 | `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET` | Sign in with Slack. Callback: `/auth/slack/callback`. |
 | `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET` | Sign in with Microsoft 365. Callback: `/auth/microsoft/callback`. |
 | `ALLOWED_EMAIL_DOMAINS` | Only these email domains can sign in, for example `summitridge.com`. |
+| `ALLOWED_EMAILS` | Only these exact addresses can sign in. Use it when the team signs in with personal Gmail. |
 | `SLACK_BOT_TOKEN`, `SLACK_CHANNEL` | Connects Slack. Previews only, until the next line is set. |
 | `SLACK_SEND_ENABLED=1` | Lets a signed-in PM's approval actually post. Demo visitors never post. |
 
