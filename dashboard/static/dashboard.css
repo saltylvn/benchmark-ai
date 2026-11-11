@@ -608,3 +608,27 @@ body.touring { padding-bottom: 240px; }
 .landing section.land-proof { border: 0; margin-bottom: 0; }
 .landing section.land-final { margin-bottom: 0; }
 .land-check h2 { font-weight: 700; font-size: clamp(22px, 2.6vw, 26px); line-height: 1.2; border-left: 4px solid var(--title-rule); padding-left: 10px; }
+
+/* Colour roles, revisited.
+   Labels (eyebrows, kickers, step counters) read as quiet signposts in the accent blue on a tinted pill:
+   ~9:1 contrast in light and dark, where the old orange text was 4.6:1 light and 4.3:1 dark.
+   Orange is the brand colour, used only where it is not body text: title bars, numbered dots, the tour edge. */
+:root { --brand: #d9731a; --brand-ink: #221f1a; --title-rule: var(--brand); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --brand: #f0913a; } }
+:root[data-theme="dark"] { --brand: #f0913a; }
+
+.eyebrow, .found-label {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  background: var(--accent-bg); color: var(--accent);
+  font-size: 12.5px; font-weight: 700; letter-spacing: .08em;
+}
+.found-label { margin-right: 6px; }
+.land-kicker, .tour .tour-step { color: var(--accent); }
+.land-eyebrow { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+.pain-fix b { color: var(--accent); }
+.life-n { background: var(--brand); color: var(--brand-ink); }
+.signin-label { color: var(--muted); font-weight: 700; }
+/* Look-ahead labels: one readable colour per kind on a light tint of itself, instead of bare coloured text. */
+.ev-kind { justify-self: start; align-self: start; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, currentColor 11%, transparent); line-height: 1.5; }
+.ev-kind.k-crew { color: var(--ink); }
+.ev-kind.k-quote-due { color: var(--internal); }
