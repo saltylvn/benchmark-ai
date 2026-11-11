@@ -184,6 +184,15 @@ class AppTest(unittest.TestCase):
         page = self.client.get("/").get_data(as_text=True)
         self.assertRegex(page, r'/static/dashboard\.css\?v=\d{9,}')
 
+    def test_landing_uses_the_demo_numbers_not_claims(self):
+        page = self.app.test_client().get("/").get_data(as_text=True)
+        self.assertIn("For new-home builders", page)
+        self.assertIn("$82,200", page)  # the draw the Coordinator drafted
+        self.assertIn("the sample builder in the demo", page)
+        self.assertIn("Lien waivers before final payments", page)  # a real check name from the sweep
+        self.assertIn("estimate", page)
+        self.assertIn("View the demo", page)
+
     def test_welcome_comes_first(self):
         fresh = self.app.test_client()
         page = fresh.get("/").data

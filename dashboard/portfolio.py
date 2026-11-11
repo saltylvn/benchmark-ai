@@ -544,3 +544,25 @@ def client_view(snapshot: dict[str, Any], job_id: str) -> dict[str, Any] | None:
         "lastUpdate": short(job["lastClientUpdate"]),
         "today": short(p["sweep"]["today"]),
     }
+
+
+# ---------------------------------------------------------------------------
+# Landing page: honest numbers from the demo's morning check, never marketing claims
+
+
+def landing(snapshot: dict[str, Any], assumptions: dict[str, Any]) -> dict[str, Any]:
+    t = build_team_view(snapshot, assumptions)
+    sweep = snapshot["portfolio"]["sweep"]
+    draws = [d for d in sweep["drafts"] if d["task"] == "drawRequest" and d.get("amount")]
+    biggest = max(draws, key=lambda d: d["amount"], default=None)
+    hours = f"{t['ledger']['netMinutes'] / 60:.1f} hours"
+    proof = [
+        {"value": str(t["jobsTotal"]), "label": "homes and jobs checked before anyone got in"},
+        {"value": str(len(sweep["risks"])), "label": "issues found across the team"},
+        {"value": str(t["draftCount"]), "label": "follow-ups already written, waiting for approval"},
+        {"value": f"~{t['ledger']['netMinutes'] / 60:.1f} h", "label": "of PM admin drafted this morning (estimate)"},
+    ]
+    if biggest:
+        proof.insert(3, {"value": f"${biggest['amount']:,.0f}", "label": "construction-loan draw caught the day it was ready"})
+    checks = [{"check": s["check"], "looked": s["looked"], "found": s["found"]} for s in sweep["steps"]]
+    return {"company": t["company"], "todayLabel": t["todayLabel"], "proof": proof, "checks": checks, "hours": hours}

@@ -17,7 +17,7 @@ from flask import render_template
 
 from .app import create_app, provider_cards
 from .brief import with_brief
-from .portfolio import build_team_view
+from .portfolio import build_team_view, landing
 from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, HERE, build_view, load_json, load_snapshot
 
 STATIC_SLACK = {
@@ -49,7 +49,7 @@ def render_static(
             approvals={},
             form_token="",
         )
-        welcome = render_template("_welcome.html", static_mode=True, providers=provider_cards({}))
+        welcome = render_template("_welcome.html", static_mode=True, providers=provider_cards({}), landing=landing(snapshot, assumptions))
         return render_template(
             template,
             css=(HERE / "static" / "dashboard.css").read_text(encoding="utf-8"),
