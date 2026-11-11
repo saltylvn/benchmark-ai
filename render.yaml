@@ -42,7 +42,3 @@ services:
         sync: false
       - key: SLACK_CLIENT_SECRET
         sync: false
-      - key: MICROSOFT_CLIENT_ID
-        sync: false
-      - key: MICROSOFT_CLIENT_SECRET
-        sync: false

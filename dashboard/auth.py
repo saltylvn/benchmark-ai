@@ -7,8 +7,6 @@ from the provider's userinfo endpoint. No password ever reaches Benchmark.
 
     GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
     SLACK_CLIENT_ID / SLACK_CLIENT_SECRET          (Sign in with Slack, OpenID Connect)
-    MICROSOFT_CLIENT_ID / MICROSOFT_CLIENT_SECRET  (Microsoft 365 / Entra ID; MICROSOFT_TENANT, default "organizations")
-    PROCORE_CLIENT_ID / PROCORE_CLIENT_SECRET      (Procore OAuth)
     ALLOWED_EMAIL_DOMAINS=summitridge.example      (optional, comma separated)
     ALLOWED_EMAILS=pat@gmail.com,sam@gmail.com     (optional, exact addresses; for teams on personal accounts)
     PUBLIC_URL=https://dash.example.com            (optional, for the callback URL behind a proxy)
@@ -54,7 +52,6 @@ class Provider:
 
 def providers(env: dict[str, str] | None = None) -> list[Provider]:
     env = dict(os.environ if env is None else env)
-    tenant = env.get("MICROSOFT_TENANT", "organizations").strip() or "organizations"
     return [
         Provider(
             "google", "Google", "Google Workspace accounts",
@@ -69,20 +66,6 @@ def providers(env: dict[str, str] | None = None) -> list[Provider]:
             "https://slack.com/api/openid.connect.token",
             "https://slack.com/api/openid.connect.userInfo",
             "openid email profile", "SLACK",
-        ),
-        Provider(
-            "microsoft", "Microsoft 365", "Outlook and Teams accounts",
-            f"https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize",
-            f"https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token",
-            "https://graph.microsoft.com/oidc/userinfo",
-            "openid email profile", "MICROSOFT",
-        ),
-        Provider(
-            "procore", "Procore", "your project management login",
-            "https://login.procore.com/oauth/authorize",
-            "https://login.procore.com/oauth/token",
-            "https://api.procore.com/rest/v1.0/me",
-            "", "PROCORE",
         ),
     ]
 
@@ -104,7 +87,7 @@ def authorize_redirect(provider: Provider, redirect_uri: str, state: str, env: d
     params = {"response_type": "code", "client_id": client_id, "redirect_uri": redirect_uri, "state": state}
     if provider.scope:
         params["scope"] = provider.scope
-    if provider.id in ("google", "microsoft"):
+    if provider.id == "google":
         params["prompt"] = "select_account"
     return f"{provider.authorize_url}?{urllib.parse.urlencode(params)}"
 

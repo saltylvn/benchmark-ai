@@ -70,7 +70,6 @@ Everything is optional. Fill these in under the service's **Environment** tab, a
 | --- | --- |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Sign in with Google. Set the redirect URI to `https://<your-site>/auth/google/callback`. |
 | `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET` | Sign in with Slack. Callback: `/auth/slack/callback`. |
-| `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET` | Sign in with Microsoft 365. Callback: `/auth/microsoft/callback`. |
 | `ALLOWED_EMAIL_DOMAINS` | Only these email domains can sign in, for example `summitridge.com`. |
 | `ALLOWED_EMAILS` | Only these exact addresses can sign in. Use it when the team signs in with personal Gmail. |
 | `SLACK_BOT_TOKEN`, `SLACK_CHANNEL` | Connects Slack. Previews only, until the next line is set. |

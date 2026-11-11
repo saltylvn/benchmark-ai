@@ -197,8 +197,10 @@ class AppTest(unittest.TestCase):
         fresh = self.app.test_client()
         page = fresh.get("/").data
         self.assertIn(b"View the demo", page)
-        for label in (b"Google", b"Slack", b"Microsoft 365", b"Procore"):
+        for label in (b"Google", b"Slack"):
             self.assertIn(label, page)
+        for label in (b"Microsoft 365", b"/login/procore"):
+            self.assertNotIn(label, page)
         self.assertNotIn(b"Critic scorecard", page)
         self.assertEqual(fresh.get("/api/runs/thursday").status_code, 401)
 

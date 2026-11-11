@@ -234,8 +234,6 @@ The first screen offers **View the demo** (no account, nothing ever posts) or si
 | --- | --- | --- |
 | Google | Google Workspace offices and field crews on Gmail | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` |
 | Slack | The workspace the crew already talks in, same as the approval channel | `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET` |
-| Microsoft 365 | Most general contractors run Outlook and Teams on Entra ID | `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET`, `MICROSOFT_TENANT` |
-| Procore | The project management system of record on many jobs | `PROCORE_CLIENT_ID`, `PROCORE_CLIENT_SECRET` |
 
 Each provider uses the OAuth authorization-code flow with a `state` check, then reads only name and email (`dashboard/auth.py`). `ALLOWED_EMAIL_DOMAINS` limits sign-in to company accounts. A signed-in person's name and email become the approver on every Slack send. Demo visitors can press Approve and see the exact payload, but their approvals never post, even with `SLACK_SEND_ENABLED=1`. Providers that aren't configured still show on the welcome screen and say which keys to add.
 
