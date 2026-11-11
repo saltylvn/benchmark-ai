@@ -1,7 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="8" fill="#2c3d86"/>
-  <circle cx="16" cy="10" r="2.2" fill="#fffdf9"/>
-  <circle cx="9" cy="22" r="2" fill="#fffdf9"/>
-  <circle cx="23" cy="22" r="2" fill="#fffdf9"/>
-  <path d="M16 12.2 L10.2 20 M16 12.2 L21.8 20" stroke="#fffdf9" stroke-width="1.4" fill="none"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Benchmark: a roofline over the morning check. Flat, one stroke weight, reads at 16 px. -->
+  <rect width="512" height="512" rx="116" fill="#2c3a84"/>
+  <path d="M116 262 L256 140 L396 262" fill="none" stroke="#ffffff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M176 320 L232 374 L338 268" fill="none" stroke="#9fb6ff" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
