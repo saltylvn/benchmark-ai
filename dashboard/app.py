@@ -34,6 +34,11 @@ def provider_cards(env: dict[str, str] | None = None) -> list[dict[str, Any]]:
     ]
 
 
+def public_url(env: dict[str, str]) -> str:
+    """The site's public address: PUBLIC_URL if set, else the one Render provides."""
+    return (env.get("PUBLIC_URL") or env.get("RENDER_EXTERNAL_URL") or "").rstrip("/")
+
+
 def create_app(
     snapshot_path: Path | str = DEFAULT_SNAPSHOT,
     assumptions_path: Path | str = DEFAULT_ASSUMPTIONS,
@@ -49,7 +54,7 @@ def create_app(
     app.config.update(
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
-        SESSION_COOKIE_SECURE=env.get("PUBLIC_URL", "").startswith("https://"),
+        SESSION_COOKIE_SECURE=public_url(env).startswith("https://"),
         PERMANENT_SESSION_LIFETIME=timedelta(days=14),
     )
     connector = slack or SlackConnector(SlackConfig.from_env(env))
@@ -124,7 +129,7 @@ def create_app(
         return wrapper
 
     def callback_url(provider_id: str) -> str:
-        base = env.get("PUBLIC_URL", "").rstrip("/")
+        base = public_url(env)
         path = url_for("auth_callback", provider_id=provider_id)
         return f"{base}{path}" if base else url_for("auth_callback", provider_id=provider_id, _external=True)
 
@@ -284,6 +289,8 @@ def create_app(
 
     @app.get("/healthz")
     def healthz():
+        # Render restarts the service if this fails, so it checks the data the pages need.
+        snapshot()
         return {"ok": True}
 
     return app

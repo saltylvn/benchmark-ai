@@ -3,6 +3,7 @@ import json
 import unittest
 import urllib.parse
 import urllib.request
+from pathlib import Path
 
 from dashboard.app import create_app
 from dashboard.insights import (
@@ -311,6 +312,34 @@ class AppTest(unittest.TestCase):
     def test_approvals_survive_a_reload(self):
         self.approve("D5")
         self.assertIn(b'"D5": {', self.client.get("/").data)
+
+
+class DeployTest(unittest.TestCase):
+    def test_render_address_drives_callbacks_and_secure_cookies(self):
+        from dashboard.app import public_url
+
+        self.assertEqual(public_url({"RENDER_EXTERNAL_URL": "https://benchmark.onrender.com/"}), "https://benchmark.onrender.com")
+        self.assertEqual(public_url({"PUBLIC_URL": "https://pm.example.com", "RENDER_EXTERNAL_URL": "https://x.onrender.com"}), "https://pm.example.com")
+        app = create_app(slack=SlackConnector(SlackConfig()), env={"RENDER_EXTERNAL_URL": "https://benchmark.onrender.com", "GOOGLE_CLIENT_ID": "id", "GOOGLE_CLIENT_SECRET": "s"})
+        self.assertTrue(app.config["SESSION_COOKIE_SECURE"])
+        location = app.test_client().get("/login/google").headers["Location"]
+        self.assertIn("redirect_uri=https%3A%2F%2Fbenchmark.onrender.com%2Fauth%2Fgoogle%2Fcallback", location)
+
+    def test_wsgi_entry_trusts_the_proxy_for_https(self):
+        import importlib
+
+        wsgi = importlib.import_module("dashboard.wsgi")
+        client = wsgi.app.test_client()
+        self.assertEqual(client.get("/healthz").status_code, 200)
+        page = client.get("/", headers={"X-Forwarded-Proto": "https", "X-Forwarded-Host": "benchmark.onrender.com"})
+        self.assertEqual(page.status_code, 200)
+
+    def test_render_blueprint_matches_the_app(self):
+        text = (Path(__file__).resolve().parents[2] / "render.yaml").read_text(encoding="utf-8")
+        self.assertIn("gunicorn dashboard.wsgi:app", text)
+        self.assertIn("--workers 1", text)  # one process: file-backed approvals and a single brief scheduler
+        self.assertIn("healthCheckPath: /healthz", text)
+        self.assertIn("generateValue: true", text)
 
 
 class SignInTest(unittest.TestCase):
