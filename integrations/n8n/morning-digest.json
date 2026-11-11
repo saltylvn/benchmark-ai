@@ -1,0 +1,113 @@
+{
+  "name": "Benchmark: 7:55 digest",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "55 7 * * 1-5"
+            }
+          ]
+        }
+      },
+      "name": "Weekdays 7:55",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://benchmark-qypb.onrender.com/api/v1/morning",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 90000,
+          "retry": {
+            "maxTries": 3
+          }
+        }
+      },
+      "name": "Get the morning",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Turns /api/v1/morning into a short message for the PM channel or an email.\nconst m = $input.first().json;\nconst top = m.items.filter(i => i.level === 'blocked').slice(0, 5)\n  .map(i => `• ${i.title} (${(i.ownerName || '').split(' ')[0]})${i.dueLabel ? ' · ' + i.dueLabel : ''}`);\nconst text = [\n  `*${m.company} · ${m.date}*`,\n  `${m.blocked} blocked, ${m.waiting} waiting. About ${m.estimatedMinutesDrafted} minutes of follow-ups already drafted.`,\n  `Since yesterday: ${m.sinceYesterday.worse} slipped, ${m.sinceYesterday.better} moved forward.`,\n  '',\n  ...top,\n].join('\\n');\nreturn [{ json: { text, blocked: m.blocked, waiting: m.waiting } }];\n"
+      },
+      "name": "Write the digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#benchmark",
+          "mode": "name"
+        },
+        "text": "={{ $json.text }}",
+        "otherOptions": {}
+      },
+      "name": "Post to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        780,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Weekdays 7:55": {
+      "main": [
+        [
+          {
+            "node": "Get the morning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the morning": {
+      "main": [
+        [
+          {
+            "node": "Write the digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write the digest": {
+      "main": [
+        [
+          {
+            "node": "Post to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -358,6 +358,8 @@ class DeployTest(unittest.TestCase):
         self.assertIn("--workers 1", text)  # one process: file-backed approvals and a single brief scheduler
         self.assertIn("healthCheckPath: /healthz", text)
         self.assertIn("generateValue: true", text)
+        # A literal value here would be re-applied on every deploy and undo the owner's setting.
+        self.assertNotRegex(text, r"key: SLACK_SEND_ENABLED\s+value:")
 
 
 class SignInTest(unittest.TestCase):

@@ -1,0 +1,65 @@
+# Free scheduler for the 8:00 brief. GitHub Actions wakes the Render service
+# (which sleeps on the free plan), then asks it to post the brief to Slack.
+# Benchmark posts at most once a day, so a retry or a manual run is safe.
+#
+# Setup (repo → Settings → Secrets and variables → Actions):
+#   BENCHMARK_URL    https://benchmark-qypb.onrender.com
+#   BENCHMARK_TOKEN  the AUTOMATION_TOKEN value from Render → Environment
+name: Morning brief
+
+on:
+  schedule:
+    # 15:00 UTC = 8:00 in Mountain Standard Time, weekdays. Cron runs in UTC; adjust for your timezone.
+    - cron: "0 15 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Post again even if today's brief was already sent"
+        type: boolean
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: morning-brief
+  cancel-in-progress: false
+
+jobs:
+  brief:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      BENCHMARK_URL: ${{ secrets.BENCHMARK_URL }}
+      BENCHMARK_TOKEN: ${{ secrets.BENCHMARK_TOKEN }}
+      FORCE: ${{ inputs.force && 'true' || 'false' }}
+    steps:
+      - name: Skip when not configured
+        id: check
+        run: |
+          if [ -z "$BENCHMARK_URL" ] || [ -z "$BENCHMARK_TOKEN" ]; then
+            echo "BENCHMARK_URL or BENCHMARK_TOKEN is not set; nothing to do." >> "$GITHUB_STEP_SUMMARY"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Wake the service
+        if: steps.check.outputs.ready == 'true'
+        run: |
+          for i in $(seq 1 12); do
+            if curl -fsS --max-time 20 "$BENCHMARK_URL/healthz" > /dev/null; then echo "awake"; exit 0; fi
+            echo "waiting for the service to wake ($i/12)"; sleep 10
+          done
+          echo "::error::Benchmark did not answer /healthz"; exit 1
+
+      - name: Post the brief
+        if: steps.check.outputs.ready == 'true'
+        run: |
+          status=$(curl -sS --max-time 30 -o response.json -w "%{http_code}" \
+            -X POST "$BENCHMARK_URL/api/v1/brief/send" \
+            -H "Authorization: Bearer $BENCHMARK_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"force\": $FORCE}")
+          echo "HTTP $status"; cat response.json; echo
+          { echo "### Morning brief"; echo; echo "HTTP $status"; echo '```json'; cat response.json; echo; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          test "$status" -lt 300

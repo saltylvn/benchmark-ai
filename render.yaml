@@ -17,8 +17,18 @@ services:
       - key: DASHBOARD_SECRET
         generateValue: true
       # Nothing posts to Slack unless this is 1 AND a signed-in PM approves.
+      # Set in Render's Environment tab, not here: a value in this file would be
+      # re-applied on every deploy and switch sending back off.
       - key: SLACK_SEND_ENABLED
-        value: "0"
+        sync: false
+      # Automation API (/api/v1) and signed webhooks. Render generates the token and
+      # secret once; copy the token into GitHub Actions or n8n. See docs/AUTOMATION.md.
+      - key: AUTOMATION_TOKEN
+        generateValue: true
+      - key: WEBHOOK_SECRET
+        generateValue: true
+      - key: WEBHOOK_URLS
+        sync: false
       # Optional: fill these in Render's Environment tab when you are ready. Empty is fine.
       - key: ALLOWED_EMAIL_DOMAINS
         sync: false

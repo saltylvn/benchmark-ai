@@ -133,7 +133,7 @@ def exchange_and_identify(
         raise AuthError(f"{provider.label} did not share an email address.")
     if info.get("email_verified") is False or info.get("email_verified") == "false":
         raise AuthError(f"{provider.label} has not verified that email address.")
-    _check_allowed(email, env)
+    check_allowed(email, env)
     return {"name": name[:80], "email": email[:120], "provider": provider.id, "providerLabel": provider.label}
 
 
@@ -141,7 +141,7 @@ def _split(value: str) -> set[str]:
     return {x.strip().lower().lstrip("@") for x in value.split(",") if x.strip()}
 
 
-def _check_allowed(email: str, env: dict[str, str]) -> None:
+def check_allowed(email: str, env: dict[str, str]) -> None:
     """With no list set, any account the provider vouches for may sign in. With either list, it must match one."""
     domains = _split(env.get("ALLOWED_EMAIL_DOMAINS", ""))
     emails = _split(env.get("ALLOWED_EMAILS", ""))

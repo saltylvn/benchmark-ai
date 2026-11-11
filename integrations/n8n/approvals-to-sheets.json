@@ -1,0 +1,89 @@
+{
+  "name": "Benchmark: approvals to Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "benchmark-events",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "name": "Benchmark webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "5f0d6a0e-7c1b-4d9e-9a51-6b1e2c3d4f50"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Verifies Benchmark's signature, then turns approval events into one sheet row each.\n// n8n needs NODE_FUNCTION_ALLOW_BUILTIN=crypto for require('crypto').\nconst crypto = require('crypto');\nconst SECRET = 'PASTE_WEBHOOK_SECRET_FROM_RENDER';\nconst TOLERANCE_SECONDS = 300;\n\nconst rows = [];\nfor (const item of $input.all()) {\n  const headers = item.json.headers || {};\n  const body = JSON.stringify(item.json.body); // Benchmark sends canonical JSON, so this rebuilds the exact bytes\n  const ts = headers['x-benchmark-timestamp'];\n  const expected = 'sha256=' + crypto.createHmac('sha256', SECRET).update(`${ts}.${body}`).digest('hex');\n  const given = headers['x-benchmark-signature'] || '';\n  const fresh = Math.abs(Date.now() / 1000 - Number(ts)) <= TOLERANCE_SECONDS;\n  const same = given.length === expected.length && crypto.timingSafeEqual(Buffer.from(given), Buffer.from(expected));\n  if (!fresh || !same) throw new Error('Rejected: bad or stale Benchmark signature');\n\n  const event = item.json.body;\n  if (event.event !== 'approval.recorded') continue;\n  const d = event.data;\n  rows.push({ json: {\n    received: event.at, day: d.day, item: d.item.id, label: d.item.label,\n    action: d.act, approvedBy: d.by, via: d.via, detail: d.detail, delivery: event.id,\n  } });\n}\nreturn rows;\n"
+      },
+      "name": "Verify and shape",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "name": "Append to approval log",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        520,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Benchmark webhook": {
+      "main": [
+        [
+          {
+            "node": "Verify and shape",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify and shape": {
+      "main": [
+        [
+          {
+            "node": "Append to approval log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
