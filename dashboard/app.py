@@ -16,6 +16,7 @@ from typing import Any
 
 from flask import Flask, abort, flash, jsonify, redirect, render_template, request, session, url_for
 
+from . import ask as asker
 from . import auth
 from .insights import DEFAULT_ASSUMPTIONS, DEFAULT_SNAPSHOT, SnapshotError, build_view, load_json, load_snapshot
 from .store import JsonStore
@@ -46,6 +47,7 @@ def create_app(
     env: dict[str, str] | None = None,
     auth_opener: auth.Opener | None = None,
     state_dir: Path | str | None = None,
+    ask_client: Any = None,
 ) -> Flask:
     env = dict(os.environ if env is None else env)
     app = Flask(__name__)
@@ -155,6 +157,7 @@ def create_app(
             audit=list(reversed(connector.audit))[:8],
             approvals=approvals_for(snap["portfolio"]["sweep"]["today"]),
             form_token=csrf_token(),
+            ask={"ready": ask_ready(), "suggestions": asker.SUGGESTIONS, "max": asker.MAX_QUESTION},
         )
 
     @app.get("/jobs/<job_id>/client")
@@ -257,6 +260,45 @@ def create_app(
         else:
             store.put_in(["approvals", snapshot()["portfolio"]["sweep"]["today"], item_id], record)
         return jsonify(record)
+
+    # -- Ask Benchmark ------------------------------------------------------
+
+    ask_state: dict[str, Any] = {"client": ask_client}
+
+    def ask_ready() -> bool:
+        return ask_state["client"] is not None or asker.configured(env)
+
+    def ask_client_now() -> Any:
+        if ask_state["client"] is None:
+            ask_state["client"] = asker.make_client(env)
+        return ask_state["client"]
+
+    @app.post("/api/ask")
+    @signed_in
+    def api_ask():
+        expected = session.get("csrf")
+        if not expected or not secrets.compare_digest(request.headers.get("X-Form-Token", ""), expected):
+            return jsonify({"error": "This page is out of date. Reload and try again."}), 400
+        if not ask_ready():
+            return jsonify({"error": "Ask Benchmark isn't turned on yet. The owner adds an Anthropic API key in Render to enable it."}), 503
+        question = " ".join(str((request.get_json(silent=True) or {}).get("question", "")).split())
+        if not question:
+            return jsonify({"error": "Type a question first."}), 400
+        if len(question) > asker.MAX_QUESTION:
+            return jsonify({"error": f"Keep it under {asker.MAX_QUESTION} characters."}), 400
+        user = current_user()
+        limit = asker.SESSION_LIMIT_DEMO if user["provider"] == "demo" else asker.SESSION_LIMIT_SIGNED_IN
+        if session.get("askCount", 0) >= limit:
+            return jsonify({"error": f"That's the {limit}-question limit for this session. Sign in for more."}), 429
+        day = asker.today_key()
+        used_today = store.get("askDaily", {}).get(day, 0)
+        if used_today >= asker.daily_limit(env):
+            return jsonify({"error": "Ask Benchmark has reached today's limit. It resets tomorrow."}), 429
+        session["askCount"] = session.get("askCount", 0) + 1
+        store.set("askDaily", {day: used_today + 1})
+        result = asker.ask(ask_client_now(), snapshot(), question, asker.model_for(env))
+        store.append("askLog", {"at": datetime.now().isoformat(timespec="seconds"), "by": user["name"], "question": question, "ok": result.ok, "reason": result.reason, "usage": result.usage}, keep=200)
+        return jsonify({"ok": result.ok, "answer": result.answer, "jobs": result.jobs, "left": limit - session["askCount"]})
 
     # -- JSON API: the same data the page renders --------------------------
 

@@ -20,6 +20,21 @@ Every merge to `main` redeploys on its own.
 - **8:00 brief:** the brief can't be relied on while the site sleeps, so `BRIEF_AT` is left off.
 - **Upgrade:** switch the plan to **Starter** in Render, about $7 a month on their pricing page. The site then stays awake. Add a disk mounted at `/var/data` and set `DASHBOARD_STATE_DIR=/var/data` to keep approvals.
 
+## Turn on Ask Benchmark (Claude)
+
+1. Create an API key at [platform.claude.com](https://platform.claude.com) under **API keys**. Add a small monthly spend limit under **Billing**, for example $20.
+2. In Render under **Environment**, set `ANTHROPIC_API_KEY` to the key. Do not paste it anywhere else.
+3. After the restart, the **Ask Benchmark** card on Today takes questions.
+
+**Limits that protect the bill:**
+- Demo visitors get 8 questions per session, and signed-in users get 40.
+- Everyone together gets `ASK_DAILY_LIMIT` per day (default 300).
+- Each question is capped at 300 characters.
+
+**Cost:** each answer is roughly a few cents. This morning's data is cached between questions, which keeps repeat questions cheap.
+
+**Trust:** Claude sees only this morning's check. Before an answer is shown, every dollar amount, date, percentage and job number in it is checked against that data. If any of them can't be found, the answer is withheld.
+
 ## Sign in with Google (free)
 
 1. Go to [console.cloud.google.com](https://console.cloud.google.com) and create a project named `Benchmark`.

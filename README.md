@@ -196,7 +196,12 @@ What is on it, top to bottom:
 | **Approval queue · Slack** | The executor's Slack draft and the morning brief, each with **Approve & send**. Every press is written to an audit log with the approver's name and the exact payload. |
 | **Under the hood** | The full trace and JSON endpoints: `/api/runs/thursday`, `/api/snapshot`, `/api/slack/status`, `/api/slack/audit`. |
 
-### New-home builders
+### Ask Benchmark and the guided tour
+
+- **Ask Benchmark** (Today tab): ask about this morning in plain language, for example "Which homes could miss closing?" Claude (`claude-opus-5-5`, low effort) answers from the morning check only, and cites job numbers. `dashboard/ask.py` checks every dollar amount, date, percentage and job number against the data and withholds any answer that has one it can't find, so the model can't invent or add up figures. Usage is capped per session and per day. It's off until `ANTHROPIC_API_KEY` is set.
+- **Guided tour:** six stops covering the morning check, since yesterday, one-tap approval, Ask, the next two weeks, and why it can be trusted. It starts once for demo visitors, and **Take the 1-minute tour** replays it.
+
+## New-home builders
 
 The main audience is PMs who build new homes. On top of the remodel checks, the morning check also:
 
