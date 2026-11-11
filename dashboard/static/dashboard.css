@@ -848,3 +848,49 @@ section .eng { box-shadow: none; }
 }
 .signout { display: inline; margin: 0; }
 .signout .chip { font: inherit; cursor: pointer; }
+
+/* =====================================================================================
+   Light mode: paper and ink, after the architecture drawings. Warm paper surface,
+   off-white cards with crisp 1.5px borders and no shadows, serif section titles,
+   navy for the lead action, green for done, amber for drafts and planned work,
+   crimson for blockers and the human gate. Dark mode keeps its look: every change
+   below goes through tokens that the dark blocks set back.
+   ===================================================================================== */
+:root {
+  --bg: #f3f0e9; --paper: #fdfcf8; --ink: #1f1d1a; --muted: #57514a;
+  --line: #ddd6c9; --line-strong: #c4bba9; --dot: #e4ded2;
+  --accent: #2c3a84; --accent-bg: #e6e8f3; --stage: #ebe6db; --on-accent: #ffffff;
+  --focus: #2c3a84;
+  --good: #1e7a50; --good-bg: #e4f0e8; --warn: #8a5216; --warn-bg: #f6ecdd;
+  --bad: #9e2a3f; --bad-bg: #f9ecee;
+  --on-track: #1e7a50; --at-risk: #a8640f; --behind: #9e2a3f; --upcoming: #8a8275;
+  --header: rgba(243, 240, 233, 0.95); --title-rule: var(--accent); --shadow: none;
+  --tile-blue: #e6e8f3; --tile-blue-ink: #2c3a84; --tile-green: #e4f0e8; --tile-green-ink: #1e7a50;
+  --tile-amber: #f6ecdd; --tile-amber-ink: #8a5216;
+  --title-font: Georgia, "Iowan Old Style", "Times New Roman", serif; --title-weight: 400; --title-track: -0.01em;
+  --card-radius: 14px; --card-border: 1.5px; --draft-border: dashed; --draft-pre-border: 1.5px dashed #c4bba9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --title-font: var(--serif); --title-weight: 600; --title-track: normal;
+    --card-radius: 18px; --card-border: 1px; --draft-border: solid; --draft-pre-border: 0;
+  }
+}
+:root[data-theme="dark"] {
+  --title-font: var(--serif); --title-weight: 600; --title-track: normal;
+  --card-radius: 18px; --card-border: 1px; --draft-border: solid; --draft-pre-border: 0;
+}
+
+/* Titles: serif section and page titles; card titles stay a bold sans. */
+h1, h2, .land-title, section > h2, .section-head h2, .mgroup h2, .land-check h2, .since-title { font-family: var(--title-font); font-weight: var(--title-weight); letter-spacing: var(--title-track); }
+.land-title em { font-weight: var(--title-weight); }
+
+/* Cards: crisp borders, no shadows, slightly tighter corners. */
+section, .since, .qcard, .jcard, .kpi, .pain, .life, .eng, .faq details, .welcome-card, .land-final, .check-feed, .proof {
+  border-width: var(--card-border); border-radius: var(--card-radius);
+}
+.qcard { border-left-width: 4px; }
+
+/* Drafts and "not sent yet" read as dashed amber, like planned work in the drawings. */
+.integrations .chip.draft { border-style: var(--draft-border); }
+.draft pre { border: var(--draft-pre-border); }
