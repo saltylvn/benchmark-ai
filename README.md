@@ -20,9 +20,20 @@
 
 ---
 
+## Reviewing the code? Start here
+
+| Look at | Why |
+| --- | --- |
+| [Live demo](https://benchmark-qypb.onrender.com) | The product end to end: tap **View the demo**, then **Under the hood** |
+| [`src/agents/coordinator.ts`](src/agents/coordinator.ts) | The morning agent: 11 checks as one pure, tested function |
+| [`tests/coordinator.properties.test.ts`](tests/coordinator.properties.test.ts) | Property tests on 300 random portfolios |
+| [`src/providers/guard.ts`](src/providers/guard.ts) | The guard that stops a model from changing a date, dollar amount or contact |
+| [`dashboard/automation.py`](dashboard/automation.py) | Bearer-token API and HMAC-signed webhooks with retries |
+| [`dashboard/app.py`](dashboard/app.py) and [SECURITY.md](SECURITY.md) | CSRF, nonce CSP, OAuth and the two locks on sending |
+
 ## The problem
 
-A new-home PM runs 6 to 10 houses at once, each with a lender, a buyer, 15 to 25 trades and a closing date. Most of the day goes to checking things nobody else is checking: is the electrician's insurance current, were the trusses ordered in time, did the buyer pick cabinets, has the draw been requested, will we still make closing? Each miss costs real money.
+A construction PM runs 6 to 10 jobs at once, whether homes, remodels or commercial work, each with an owner or buyer, often a lender, 15 to 25 trades and a hard deadline. Most of the day goes to checking things nobody else is checking: is the electrician's insurance current, were the trusses ordered in time, did the buyer pick cabinets, has the draw been requested, will we still make closing? Each miss costs real money.
 
 ## What Benchmark does
 
