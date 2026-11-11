@@ -60,6 +60,7 @@
       <p class="eyebrow">Morning sweep · {{ t.todayLabel }}</p>
       <h1><span data-count="blocked">{{ t.blockedCount }}</span> things are blocked. {{ t.draftCount }} follow-ups are already drafted.</h1>
       <p class="lede">The Coordinator checked {{ t.jobsTotal }} jobs, {{ t.subs|length }} subs, and {{ t.team|length }} PMs before anyone got in. Approve what's right, skip what isn't. Nothing goes out until someone approves it.</p>
+      <button type="button" class="tour-start" data-tour-start>▶ Take the 1-minute tour</button>
     </div>
     <div class="kpis">
       <div class="kpi"><b><span data-count="open">{{ t.queue|length }}</span></b><span>waiting on the team</span></div>
@@ -74,6 +75,29 @@
       <div class="kpi accent"><b>~{{ (t.ledger.netMinutes / 60)|round(1) }} h</b><span>team admin drafted this morning (est.)</span></div>
     </div>
   </section>
+
+  {% if not static_mode and ask %}
+  <section class="ask" id="ask" aria-labelledby="ask-title">
+    <div class="ask-head">
+      <h2 id="ask-title">Ask Benchmark</h2>
+      <span class="pill ask-badge">Claude · answers from this morning's check</span>
+    </div>
+    {% if ask.ready %}
+    <form class="ask-form" data-ask-form>
+      <label class="sr-only" for="ask-q">Your question</label>
+      <input id="ask-q" name="q" type="text" maxlength="{{ ask.max }}" autocomplete="off" enterkeyhint="send" placeholder="e.g. Which homes could miss closing?">
+      <button type="submit" class="ask-go">Ask</button>
+    </form>
+    <div class="ask-suggest" role="group" aria-label="Suggested questions">
+      {% for q in ask.suggestions %}<button type="button" data-ask="{{ q }}">{{ q }}</button>{% endfor %}
+    </div>
+    <div class="ask-answer" data-ask-answer hidden aria-live="polite"></div>
+    <p class="muted small ask-note">Every dollar amount, date and job number in an answer is checked against the data. If one can't be found, the answer is not shown.</p>
+    {% else %}
+    <p class="muted">Ask questions like "Which homes could miss closing?" and get answers from this morning's check. It turns on when the owner adds an Anthropic API key in Render.</p>
+    {% endif %}
+  </section>
+  {% endif %}
 
   {% if t.since.total %}
   <details class="since" open>
@@ -345,5 +369,7 @@
 </div>
 </main>
 
-<script id="app-state" type="application/json">{{ {'mode': 'static' if static_mode else 'server', 'approvals': approvals or {}, 'token': form_token, 'user': (user.name if user else 'You')} | tojson }}</script>
+<script id="app-state" type="application/json">{{ {'mode': 'static' if static_mode else 'server', 'approvals': approvals or {}, 'token': form_token, 'user': (user.name if user else 'You'), 'tourAuto': static_mode or (user and user.provider == 'demo')} | tojson }}</script>
 {% include "_app_js.html" %}
+{% include "_tour_js.html" %}
+{% if not static_mode and ask and ask.ready %}{% include "_ask_js.html" %}{% endif %}

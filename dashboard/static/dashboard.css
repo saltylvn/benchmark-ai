@@ -505,3 +505,41 @@ section > h2, .section-head h2, .mgroup h2 {
 .ev-kind.k-order-by { color: var(--bad); }
 .ev-kind.k-closing { color: var(--good); }
 .jcard .closing { font-size: 12.5px; font-weight: 600; }
+
+/* Ask Benchmark */
+.ask { border-top: 3px solid var(--accent); }
+.ask-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin-bottom: 10px; }
+.ask-head h2 { margin: 0; }
+.ask-badge { background: var(--accent-bg); color: var(--accent); text-transform: none; letter-spacing: 0; font-size: 12px; }
+.ask-form { display: flex; gap: 8px; }
+.ask-form input { flex: 1; min-width: 0; min-height: var(--tap); padding: 0 14px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--bg); color: var(--ink); font: 16px var(--sans); }
+.ask-form input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.ask-go { flex: none; min-height: var(--tap); padding: 0 18px; border-radius: 12px; border: 0; background: var(--accent); color: var(--on-ink); font: 700 15px var(--sans); cursor: pointer; }
+.ask-go:disabled { opacity: .6; }
+.ask-suggest { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 10px 0 4px; padding-bottom: 2px; }
+.ask-suggest::-webkit-scrollbar { display: none; }
+.ask-suggest button { flex: none; min-height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--paper); color: var(--ink); font: 500 13.5px var(--sans); cursor: pointer; }
+.ask-answer { margin-top: 10px; padding: 12px 14px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); line-height: 1.5; overflow-wrap: anywhere; }
+.ask-answer p { margin: 0 0 6px; } .ask-answer ul { margin: 0 0 6px; padding-left: 20px; }
+.ask-answer .ask-q { font-weight: 700; color: var(--ink); }
+.ask-answer.loading { color: var(--muted); }
+.ask-answer.held { border-color: var(--warn); }
+.ask-job { display: inline-block; padding: 0 6px; border-radius: 6px; background: var(--accent-bg); color: var(--accent); font: 600 13px var(--mono); text-decoration: none; }
+.ask-note { margin: 8px 0 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.jcard.flash { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ask-head h2 { border-left: 4px solid var(--title-rule); padding-left: 10px; font-weight: 700; font-size: clamp(22px, 2.6vw, 26px); line-height: 1.2; }
+
+/* Guided tour: a card pinned to the bottom (thumb reach on a phone) and a spotlight on the stop. */
+.tour-start { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap); margin: 2px 0 14px; padding: 0 16px; border-radius: 999px; border: 0; background: var(--ink); color: var(--on-ink); font: 700 14.5px var(--sans); cursor: pointer; }
+.tour { position: fixed; z-index: 80; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); max-width: 520px; margin: 0 auto; background: var(--paper); color: var(--ink); border: 1px solid var(--line-strong); border-top: 4px solid var(--title-rule); border-radius: 16px; padding: 14px 16px 12px; box-shadow: 0 12px 40px rgba(0, 0, 0, .28); }
+.tour h3 { margin: 2px 0 6px; font: 700 18px/1.25 var(--serif); }
+.tour p { margin: 0 0 10px; font-size: 15px; line-height: 1.45; }
+.tour .tour-step { margin: 0; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--title-rule); }
+.tour-actions { display: flex; gap: 8px; align-items: center; }
+.tour-gap { flex: 1; }
+.tour-actions button { min-height: 40px; padding: 0 14px; border-radius: 10px; font: 600 14px var(--sans); cursor: pointer; border: 1px solid var(--line-strong); background: var(--paper); color: var(--ink); }
+.tour-actions .tour-next { background: var(--accent); border-color: var(--accent); color: var(--on-ink); font-weight: 700; }
+.tour-actions .tour-skip { border: 0; background: none; color: var(--muted); padding: 0 4px; }
+.tour-focus { position: relative; z-index: 70; border-radius: 14px; box-shadow: 0 0 0 4px var(--title-rule), 0 0 0 100vmax rgba(0, 0, 0, .42); scroll-margin-top: 80px; }
+body.touring { padding-bottom: 240px; }

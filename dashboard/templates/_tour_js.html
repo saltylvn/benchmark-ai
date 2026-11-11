@@ -1,0 +1,93 @@
+{#- Guided tour: six stops through the morning. Works in the server app and the static copy. -#}
+<div class="tour" data-tour hidden role="dialog" aria-modal="false" aria-labelledby="tour-title">
+  <p class="tour-step" data-tour-count></p>
+  <h3 id="tour-title" data-tour-title></h3>
+  <p data-tour-text></p>
+  <div class="tour-actions">
+    <button type="button" class="tour-skip" data-tour-end>Skip tour</button>
+    <span class="tour-gap"></span>
+    <button type="button" class="tour-back" data-tour-back>Back</button>
+    <button type="button" class="tour-next" data-tour-next>Next</button>
+  </div>
+</div>
+<script>
+(function () {
+  var state = JSON.parse(document.getElementById('app-state').textContent);
+  var KEY = 'benchmark-tour-seen-v1';
+  var box = document.querySelector('[data-tour]');
+  if (!box) return;
+  var STEPS = [
+    { tab: 'today', el: '.summary', title: 'Before anyone got in',
+      text: 'The Coordinator agent checked every home, trade and PM overnight. It found what is blocked and already wrote the follow-ups.' },
+    { tab: 'today', el: '.since', title: 'What changed since yesterday',
+      text: 'What slipped, what moved forward and what is new, computed by comparing this morning with yesterday. No meeting needed.' },
+    { tab: 'today', el: '.qcard.blocked', title: 'Approve in one tap',
+      text: 'Each card says what is wrong, why it matters and has the fix drafted: a sub nudge, a buyer email, a draw request to the lender. Nothing goes out until a person approves.' },
+    { tab: 'today', el: '#ask', title: 'Ask anything about today',
+      text: 'Ask "Which homes could miss closing?" and Claude answers from this morning’s check only. Every dollar amount, date and job number is checked before you see it.' },
+    { tab: 'jobs', el: '.days', title: 'The next two weeks',
+      text: 'Crews, inspections, order-by dates, buyer selections and closings across every home. Conflicts show in red before they cost a day.' },
+    { tab: 'hood', el: '.layers', title: 'Why you can trust it',
+      text: 'Code computes every date and dollar. AI only writes the wording. A named person approves anything that leaves the building.' },
+  ];
+  var steps = [], i = 0, focused = null;
+
+  function seen(v) { try { if (v) localStorage.setItem(KEY, '1'); return localStorage.getItem(KEY) === '1'; } catch (e) { return true; } }
+  function clear() { if (focused) focused.classList.remove('tour-focus'); focused = null; }
+
+  function go(n) {
+    clear();
+    i = n;
+    var s = steps[i];
+    if (location.hash.slice(1) !== s.tab) location.hash = s.tab;
+    setTimeout(function () {
+      var target = document.querySelector(s.el);
+      if (target) {
+        focused = target;
+        target.classList.add('tour-focus');
+        // Put the top of the stop just under the sticky tabs; the card sits at the bottom.
+        var top = window.scrollY + target.getBoundingClientRect().top - 72;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }
+    }, 80);
+    box.querySelector('[data-tour-count]').textContent = (i + 1) + ' of ' + steps.length;
+    box.querySelector('[data-tour-title]').textContent = s.title;
+    box.querySelector('[data-tour-text]').textContent = s.text;
+    box.querySelector('[data-tour-back]').hidden = i === 0;
+    box.querySelector('[data-tour-next]').textContent = i === steps.length - 1 ? 'Done' : 'Next';
+  }
+
+  function start() {
+    steps = STEPS.filter(function (s) { return document.querySelector(s.el); });
+    if (!steps.length) return;
+    box.hidden = false;
+    document.body.classList.add('touring');
+    go(0);
+    box.querySelector('[data-tour-next]').focus({ preventScroll: true });
+  }
+  function end() {
+    clear();
+    box.hidden = true;
+    document.body.classList.remove('touring');
+    seen(true);
+    if (location.hash.slice(1) !== 'today') location.hash = 'today';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-tour-start]')) { start(); return; }
+    if (e.target.closest('[data-tour-end]')) { end(); return; }
+    if (e.target.closest('[data-tour-back]')) { if (i > 0) go(i - 1); return; }
+    if (e.target.closest('[data-tour-next]')) { if (i < steps.length - 1) go(i + 1); else end(); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (box.hidden) return;
+    if (e.key === 'Escape') end();
+    else if (e.key === 'ArrowRight' && i < steps.length - 1) go(i + 1);
+    else if (e.key === 'ArrowLeft' && i > 0) go(i - 1);
+  });
+
+  // First visit to the demo: offer the tour once, a moment after the page settles.
+  if (state.tourAuto && !seen(false) && !location.hash) setTimeout(start, 700);
+})();
+</script>
